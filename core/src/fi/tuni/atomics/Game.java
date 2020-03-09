@@ -20,17 +20,22 @@ public class Game extends ApplicationAdapter {
 
 	// Initiated fields
 	private float scale = 1/100f;
-	//width is 2048pixels
-	private float WORLD_WIDTH_PIXELS = 64*32;
-	//height is 512pixels
-	private float WORLD_HEIGHT_PIXELS = 16*32;
+	private float TILE_LENGTH_PIXELS = 32;
+	private float TILES_AMOUNT_WIDTH = 64;
+	private float TILES_AMOUNT_HEIGHT = 16;
+	private float WORLD_WIDTH_PIXELS =
+			TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // = 2048 pixels
+	private float WORLD_HEIGHT_PIXELS =
+			TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // = 512 pixels
 	
 	@Override
 	public void create () {
 		// libGDX
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 5.12f, 5.12f);
+		camera.setToOrtho(false,
+                WORLD_HEIGHT_PIXELS * scale,
+                WORLD_HEIGHT_PIXELS * scale);
 
 		// TiledMap
 		tiledMap = new TmxMapLoader().load("atomicsdemo.tmx");
@@ -40,7 +45,7 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void render () {
 		batch.setProjectionMatrix(camera.combined);
-		clearScreen(101/255f, 214/255f, 186/255f);
+		clearScreen(101/255f, 214/255f, 186/255f); // color: teal
 		moveCamera(camera);
 
 		tiledMapRenderer.render();
@@ -51,9 +56,9 @@ public class Game extends ApplicationAdapter {
 	}
 
 	private void moveCamera(OrthographicCamera camera) {
-		// Change camera position accordingly!!
-		camera.position.x = 10.24f;
-		camera.position.y = 2.56f;
+		// Change camera position accordingly!! Camera is centered at the moment.
+		camera.position.x = WORLD_WIDTH_PIXELS / 2 * scale;
+		camera.position.y = WORLD_HEIGHT_PIXELS / 2 * scale;
 
 		camera.update();
 	}
