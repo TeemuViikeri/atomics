@@ -4,7 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -22,6 +21,7 @@ public class Game extends ApplicationAdapter {
 	private TiledMapRenderer tiledMapRenderer;
     private World world;
     private Box2DDebugRenderer debugRenderer;
+    private Player player;
 
 	// Initiated fields
 	private float scale = 1/100f;
@@ -51,6 +51,11 @@ public class Game extends ApplicationAdapter {
 		// Box2D
         world = new World(new Vector2(0, -9.8f), true);
         debugRenderer = new Box2DDebugRenderer();
+
+		// Game objects
+		player = new Player(
+				WORLD_WIDTH_PIXELS / 2 * scale,
+				WORLD_HEIGHT_PIXELS / 2 * scale);
 	}
 
 	@Override
@@ -65,10 +70,13 @@ public class Game extends ApplicationAdapter {
         doPhysicsStep(Gdx.graphics.getDeltaTime());
 
 		batch.begin();
+
+		player.draw(batch);
+
 		batch.end();
 	}
 
-	// fixed timestep
+	// Fixed time step
     private void doPhysicsStep(float deltaTime) {
 
         float frameTime = deltaTime;
