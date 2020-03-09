@@ -10,6 +10,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class Game extends ApplicationAdapter {
 	// Non-initiated fields
@@ -17,6 +20,8 @@ public class Game extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private TiledMap tiledMap;
 	private TiledMapRenderer tiledMapRenderer;
+    private World world;
+    private Box2DDebugRenderer debugRenderer;
 
 	// Initiated fields
 	private float scale = 1/100f;
@@ -27,6 +32,8 @@ public class Game extends ApplicationAdapter {
 			TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // = 2048 pixels
 	private float WORLD_HEIGHT_PIXELS =
 			TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // = 512 pixels
+    private double accumulator = 0;
+    private float TIME_STEP = 1 / 60f;
 	
 	@Override
 	public void create () {
@@ -40,6 +47,10 @@ public class Game extends ApplicationAdapter {
 		// TiledMap
 		tiledMap = new TmxMapLoader().load("atomicsdemo.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
+
+		// Box2D
+        world = new World(new Vector2(0, -9.8f), true);
+        debugRenderer = new Box2DDebugRenderer();
 	}
 
 	@Override
@@ -50,10 +61,29 @@ public class Game extends ApplicationAdapter {
 
 		tiledMapRenderer.render();
 		tiledMapRenderer.setView(camera);
+        debugRenderer.render(world, camera.combined);
+        doPhysicsStep(Gdx.graphics.getDeltaTime());
 
 		batch.begin();
 		batch.end();
 	}
+
+	// fixed timestep
+    private void doPhysicsStep(float deltaTime) {
+
+        float frameTime = deltaTime;
+
+        if(deltaTime > 1 / 4f) {
+            frameTime = 1 / 4f;
+        }
+
+        accumulator += frameTime;
+
+        while (accumulator >= TIME_STEP) {
+            world.step(TIME_STEP, 8, 3);
+            accumulator -= TIME_STEP;
+        }
+    }
 
 	private void moveCamera(OrthographicCamera camera) {
 		// Change camera position accordingly!! Camera is centered at the moment.
