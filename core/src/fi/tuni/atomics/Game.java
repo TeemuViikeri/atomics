@@ -2,6 +2,7 @@ package fi.tuni.atomics;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +13,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+
+import java.util.ArrayList;
 
 public class Game extends ApplicationAdapter {
 	// Non-initiated fields
@@ -22,6 +26,7 @@ public class Game extends ApplicationAdapter {
     private World world;
     private Box2DDebugRenderer debugRenderer;
     private Player player;
+    private ArrayList<Bullet> bullets;
 
 	// Initiated fields
 	private float scale = 1/100f;
@@ -56,6 +61,7 @@ public class Game extends ApplicationAdapter {
 		player = new Player(
 				WORLD_WIDTH_PIXELS / 2 * scale,
 				WORLD_HEIGHT_PIXELS / 2 * scale);
+		bullets = new ArrayList<>();
 	}
 
 	@Override
@@ -69,11 +75,45 @@ public class Game extends ApplicationAdapter {
         debugRenderer.render(world, camera.combined);
         doPhysicsStep(Gdx.graphics.getDeltaTime());
 
+		submarineMovement();
+
 		batch.begin();
+
+		for (int i = 0; i < bullets.size(); i++) {
+			bullets.get(i).getSprite().setX(bullets.get(i).getSprite().getX()
+					+ 0.5f * (float) Math.cos( Math.toRadians(bullets.get(i).getDegrees())));
+			bullets.get(i).getSprite().setY(bullets.get(i).getSprite().getY()
+			+ 0.5f * (float) Math.sin( Math.toRadians(bullets.get(i).getDegrees())));
+			bullets.get(i).draw(batch);
+		}
 
 		player.draw(batch);
 
 		batch.end();
+	}
+
+	private void submarineMovement() {
+
+		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+			float x = player.getSprite().getX();
+			float y = player.getSprite().getY();
+			bullets.add(new Bullet(player.getDegrees(), x, y));
+		}
+
+		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			player.rotateRight();
+		}
+
+		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+			player.rotateLeft();
+		}
+
+		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			player.getSprite().setX(player.getSprite().getX() + player.getSpeed() *
+					(float) Math.cos( Math.toRadians( player.getDegrees())));
+			player.getSprite().setY(player.getSprite().getY() + player.getSpeed() *
+					(float) Math.sin( Math.toRadians( player.getDegrees())));
+		}
 	}
 
 	// Fixed time step

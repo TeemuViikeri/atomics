@@ -5,41 +5,27 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Player {
-
+public class Bullet {
     private Sprite sprite;
     private Texture texture;
     private float speed;
-    private float degrees = 0;
+    private float degrees;
 
-    Player(float x, float y) {
+    Bullet(float degrees, float x, float y) {
         // Texture area too big --> crop smaller
         texture = new Texture("subbikuva2.png");
         sprite = new Sprite(texture);
         speed = 0.05f; // Check the right speed variable
+        this.degrees = degrees;
 
         sprite.setPosition(x, y);
         sprite.setSize(0.75f, 0.75f);
         sprite.setOriginCenter();
+        sprite.setRotation(degrees);
     }
 
-    void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch) {
         sprite.draw(batch);
-    }
-
-    public void rotateLeft() {
-        if (degrees == 360) {
-            degrees = 0;
-        }
-        sprite.setRotation(degrees+=250 * Gdx.graphics.getDeltaTime());
-
-    }
-
-    public void rotateRight() {
-        if (degrees == -360) {
-            degrees = 0;
-        }
-        sprite.setRotation(degrees-=250 * Gdx.graphics.getDeltaTime());
     }
 
     public float getDegrees() {
