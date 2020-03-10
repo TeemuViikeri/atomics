@@ -7,32 +7,26 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Player {
     private Sprite sprite;
     private Texture texture;
-    private float x;
-    private float y;
-    private float width;
-    private float height;
     private float speed;
 
     Player(float x, float y) {
         // Texture area too big --> crop smaller
         texture = new Texture("subbikuva2.png");
         sprite = new Sprite(texture);
+        speed = 5.0f; // Check the right speed variable
 
-        setX(x);
-        setY(y);
-
-        sprite.setPosition(getX(), getY());
+        sprite.setPosition(x, y);
         sprite.setSize(1f, 1f);
         sprite.setOriginCenter();
     }
 
     void draw(SpriteBatch batch) {
-        x = getX();
-        y = getY();
-        width = getWidth();
-        height = getHeight();
-
-        batch.draw(getTexture(), x, y, width, height);
+        batch.draw(
+                getTexture(),
+                sprite.getX(),
+                sprite.getY(),
+                sprite.getWidth(),
+                sprite.getHeight());
     }
 
     // Getters and setters
@@ -42,38 +36,6 @@ public class Player {
 
     void setTexture(Texture texture) {
         this.texture = texture;
-    }
-
-    float getX() {
-        return x;
-    }
-
-    void setX(float x) {
-        this.x = x;
-    }
-
-    float getY() {
-        return y;
-    }
-
-    void setY(float y) {
-        this.y = y;
-    }
-
-    float getWidth() {
-        return width;
-    }
-
-    void setWidth(float width) {
-        this.width = width;
-    }
-
-    float getHeight() {
-        return height;
-    }
-
-    void setHeight(float height) {
-        this.height = height;
     }
 
     float getSpeed() {
