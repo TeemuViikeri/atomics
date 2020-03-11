@@ -97,9 +97,11 @@ public class Game extends ApplicationAdapter {
 
 		for (int i = 0; i < bullets.size(); i++) {
 			bullets.get(i).getSprite().setX(bullets.get(i).getSprite().getX()
-					+ 0.5f * (float) Math.cos( Math.toRadians(bullets.get(i).getDegrees())));
+					+ bullets.get(i).getSpeed()
+                    * (float) Math.cos( Math.toRadians(bullets.get(i).getDegrees())));
 			bullets.get(i).getSprite().setY(bullets.get(i).getSprite().getY()
-			+ 0.5f * (float) Math.sin( Math.toRadians(bullets.get(i).getDegrees())));
+                    + bullets.get(i).getSpeed()
+                    * (float) Math.sin( Math.toRadians(bullets.get(i).getDegrees())));
 			bullets.get(i).draw(batch);
 		}
 
@@ -112,8 +114,9 @@ public class Game extends ApplicationAdapter {
 
 	private void submarineMovement() {
 		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			float x = player.getSprite().getX();
-			float y = player.getSprite().getY();
+            float x = player.getSprite().getX();
+            float y = player.getSprite().getY();
+
 			bullets.add(new Bullet(player.getDegrees(), x, y));
 		}
 

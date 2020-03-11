@@ -13,9 +13,9 @@ public class Bullet {
 
     Bullet(float degrees, float x, float y) {
         // Texture area too big --> crop smaller
-        texture = new Texture("subbikuva2.png");
+        texture = new Texture("bullet.png");
         sprite = new Sprite(texture);
-        speed = 0.05f; // Check the right speed variable
+        speed = 0.10f; // Check the right speed variable
         this.degrees = degrees;
 
         sprite.setPosition(x, y);
