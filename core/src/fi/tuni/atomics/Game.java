@@ -159,24 +159,24 @@ public class Game extends ApplicationAdapter {
 		System.out.println(room);
 
 		if (
-		player.getSprite().getX() >= FIRST_SCREEN_RIGHT_SIDE
+		position >= FIRST_SCREEN_RIGHT_SIDE
 		&&
 		room == 1
 		) {
 			player.getSprite().setX(SECOND_SCREEN_LEFT_SPAWN_POINT);
 		} else if (
-		player.getSprite().getX() <= SECOND_SCREEN_LEFT_SIDE
+		position <= SECOND_SCREEN_LEFT_SIDE
 		&&
 		room == 2
 		) {
 			player.getSprite().setX(FIRST_SCREEN_SPAWN_POINT);
 		} else if (
-		player.getSprite().getX() >= SECOND_SCREEN_RIGHT_SIDE
+		position >= SECOND_SCREEN_RIGHT_SIDE
 		&&
 		room == 2) {
 			player.getSprite().setX(THIRD_SCREEN_SPAWN_POINT);
 		} else if (
-		player.getSprite().getX() <= THIRD_SCREEN_LEFT_SIDE
+		position <= THIRD_SCREEN_LEFT_SIDE
 		&&
 		room == 3) {
 			player.getSprite().setX(SECOND_SCREEN_RIGHT_SPAWN_POINT);
