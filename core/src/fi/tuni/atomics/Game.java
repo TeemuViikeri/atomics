@@ -27,9 +27,12 @@ public class Game extends ApplicationAdapter {
     private Box2DDebugRenderer debugRenderer;
     private Player player;
     private ArrayList<Bullet> bullets;
+    private int room;
 
 	// Initiated fields
 	private float scale = 1/100f;
+    private double accumulator = 0;
+    private float TIME_STEP = 1 / 60f;
 	private float TILE_LENGTH_PIXELS = 32;
 	private float TILES_AMOUNT_WIDTH = 64;
 	private float TILES_AMOUNT_HEIGHT = 16;
@@ -37,9 +40,21 @@ public class Game extends ApplicationAdapter {
 			TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // = 2048 pixels
 	private float WORLD_HEIGHT_PIXELS =
 			TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // = 512 pixels
-    private double accumulator = 0;
-    private float TIME_STEP = 1 / 60f;
-	
+    private float ROOM_TILES_AMOUNT = 16;
+    private float ROOM_LENGTH_PIXELS = ROOM_TILES_AMOUNT * TILE_LENGTH_PIXELS ;
+	private float PIPE_HORIZONTAL_TILES_AMOUNT = 8;
+	private float PIPE_VERTICAL_TILES_AMOUNT = 2;
+	private float PIPE_HORIZONTAL_PIXELS = PIPE_HORIZONTAL_TILES_AMOUNT * TILE_LENGTH_PIXELS;
+	private float PIPE_VERTICAL_PIXELS = PIPE_VERTICAL_TILES_AMOUNT * TILE_LENGTH_PIXELS;
+	float FIRST_SCREEN_RIGHT_SIDE = 17 * TILE_LENGTH_PIXELS * scale;
+	float SECOND_SCREEN_LEFT_SIDE = 24 * TILE_LENGTH_PIXELS * scale;
+	float SECOND_SCREEN_RIGHT_SIDE = 39 * TILE_LENGTH_PIXELS * scale;
+	float THIRD_SCREEN_LEFT_SIDE = 48 * TILE_LENGTH_PIXELS * scale;
+	float FIRST_SCREEN_SPAWN_POINT = 15 * TILE_LENGTH_PIXELS * scale;
+	float SECOND_SCREEN_LEFT_SPAWN_POINT = 26 * TILE_LENGTH_PIXELS * scale;
+	float SECOND_SCREEN_RIGHT_SPAWN_POINT = 37 * TILE_LENGTH_PIXELS * scale;
+	float THIRD_SCREEN_SPAWN_POINT = 50 * TILE_LENGTH_PIXELS * scale;
+
 	@Override
 	public void create () {
 		// libGDX
@@ -61,6 +76,7 @@ public class Game extends ApplicationAdapter {
 		player = new Player(
 				WORLD_WIDTH_PIXELS / 2 * scale,
 				WORLD_HEIGHT_PIXELS / 2 * scale);
+		room = 2;
 		bullets = new ArrayList<>();
 	}
 
@@ -73,9 +89,9 @@ public class Game extends ApplicationAdapter {
 		tiledMapRenderer.render();
 		tiledMapRenderer.setView(camera);
         debugRenderer.render(world, camera.combined);
-        doPhysicsStep(Gdx.graphics.getDeltaTime());
 
 		submarineMovement();
+		checkIfChangeRoom(player.getSprite().getX());
 
 		batch.begin();
 
@@ -90,10 +106,11 @@ public class Game extends ApplicationAdapter {
 		player.draw(batch);
 
 		batch.end();
+
+        doPhysicsStep(Gdx.graphics.getDeltaTime());
 	}
 
 	private void submarineMovement() {
-
 		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			float x = player.getSprite().getX();
 			float y = player.getSprite().getY();
@@ -133,10 +150,64 @@ public class Game extends ApplicationAdapter {
         }
     }
 
+    private void checkIfChangeRoom(float position) {
+		checkInWhatRoom(position);
+
+		System.out.println(room);
+
+		if (
+		player.getSprite().getX() >= FIRST_SCREEN_RIGHT_SIDE
+		&&
+		room == 1
+		) {
+			player.getSprite().setX(SECOND_SCREEN_LEFT_SPAWN_POINT);
+		} else if (
+		player.getSprite().getX() <= SECOND_SCREEN_LEFT_SIDE
+		&&
+		room == 2
+		) {
+			player.getSprite().setX(FIRST_SCREEN_SPAWN_POINT);
+		} else if (
+		player.getSprite().getX() >= SECOND_SCREEN_RIGHT_SIDE
+		&&
+		room == 2) {
+			player.getSprite().setX(THIRD_SCREEN_SPAWN_POINT);
+		} else if (
+		player.getSprite().getX() <= THIRD_SCREEN_LEFT_SIDE
+		&&
+		room == 3) {
+			player.getSprite().setX(SECOND_SCREEN_RIGHT_SPAWN_POINT);
+		}
+ 	}
+
+ 	private void checkInWhatRoom(float position) {
+		if ( // Check if in the first room
+		position <= ROOM_LENGTH_PIXELS * scale
+		) {
+			room = 1;
+		} else if ( // Check if in the second room
+		 position >= (ROOM_LENGTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale &&
+		 position <= (ROOM_LENGTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale
+		) {
+			room = 2;
+		} else if ( // Check if in the third room
+		position >= (ROOM_LENGTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale
+		) {
+			room = 3;
+		}
+	}
+
 	private void moveCamera(OrthographicCamera camera) {
-		// Change camera position accordingly!! Camera is centered at the moment.
-		camera.position.x = WORLD_WIDTH_PIXELS / 2 * scale;
-		camera.position.y = WORLD_HEIGHT_PIXELS / 2 * scale;
+		if (room == 1) {
+			camera.position.x = ROOM_LENGTH_PIXELS / 2 * scale;
+			camera.position.y = WORLD_HEIGHT_PIXELS / 2 * scale;
+		} else if (room == 2) {
+			camera.position.x = WORLD_WIDTH_PIXELS / 2 * scale;
+			camera.position.y = WORLD_HEIGHT_PIXELS / 2 * scale;
+		} else if (room == 3) {
+			camera.position.x = (WORLD_WIDTH_PIXELS - ROOM_LENGTH_PIXELS / 2) * scale;
+			camera.position.y = WORLD_HEIGHT_PIXELS / 2 * scale;
+		}
 
 		camera.update();
 	}

@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Player {
-
     private Sprite sprite;
     private Texture texture;
     private float speed;
@@ -16,7 +15,8 @@ public class Player {
         // Texture area too big --> crop smaller
         texture = new Texture("subbikuva2.png");
         sprite = new Sprite(texture);
-        speed = 0.05f; // Check the right speed variable
+
+        setSpeed(0.05f); // Check the right speed variable
 
         sprite.setPosition(x, y);
         sprite.setSize(0.75f, 0.75f);
@@ -32,7 +32,6 @@ public class Player {
             degrees = 0;
         }
         sprite.setRotation(degrees+=250 * Gdx.graphics.getDeltaTime());
-
     }
 
     public void rotateRight() {
@@ -42,11 +41,15 @@ public class Player {
         sprite.setRotation(degrees-=250 * Gdx.graphics.getDeltaTime());
     }
 
+    // Getters and setters
     public float getDegrees() {
         return degrees;
     }
 
-    // Getters and setters
+    void setDegrees(float degrees) {
+        this.degrees = degrees;
+    }
+
     Texture getTexture() {
         return texture;
     }
