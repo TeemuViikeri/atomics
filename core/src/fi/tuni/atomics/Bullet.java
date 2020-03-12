@@ -13,13 +13,13 @@ public class Bullet {
 
     Bullet(float degrees, float x, float y) {
         // Texture area too big --> crop smaller
-        texture = new Texture("bullet.png");
+        texture = new Texture("bullt.png");
         sprite = new Sprite(texture);
         speed = 0.10f; // Check the right speed variable
         this.degrees = degrees;
 
         sprite.setPosition(x, y);
-        sprite.setSize(0.75f, 0.75f);
+        sprite.setSize(0.2f, 0.2f);
         sprite.setOriginCenter();
         sprite.setRotation(degrees);
     }

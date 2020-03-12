@@ -46,14 +46,14 @@ public class Game extends ApplicationAdapter {
 	private float PIPE_VERTICAL_TILES_AMOUNT = 2;
 	private float PIPE_HORIZONTAL_PIXELS = PIPE_HORIZONTAL_TILES_AMOUNT * TILE_LENGTH_PIXELS;
 	private float PIPE_VERTICAL_PIXELS = PIPE_VERTICAL_TILES_AMOUNT * TILE_LENGTH_PIXELS;
-	float FIRST_SCREEN_RIGHT_SIDE = 17 * TILE_LENGTH_PIXELS * scale;
-	float SECOND_SCREEN_LEFT_SIDE = 24 * TILE_LENGTH_PIXELS * scale;
+	float FIRST_SCREEN_RIGHT_SIDE = 16 * TILE_LENGTH_PIXELS * scale;
+	float SECOND_SCREEN_LEFT_SIDE = 23 * TILE_LENGTH_PIXELS * scale;
 	float SECOND_SCREEN_RIGHT_SIDE = 39 * TILE_LENGTH_PIXELS * scale;
-	float THIRD_SCREEN_LEFT_SIDE = 48 * TILE_LENGTH_PIXELS * scale;
-	float FIRST_SCREEN_SPAWN_POINT = 15 * TILE_LENGTH_PIXELS * scale;
-	float SECOND_SCREEN_LEFT_SPAWN_POINT = 26 * TILE_LENGTH_PIXELS * scale;
-	float SECOND_SCREEN_RIGHT_SPAWN_POINT = 37 * TILE_LENGTH_PIXELS * scale;
-	float THIRD_SCREEN_SPAWN_POINT = 50 * TILE_LENGTH_PIXELS * scale;
+	float THIRD_SCREEN_LEFT_SIDE = 47 * TILE_LENGTH_PIXELS * scale;
+	float FIRST_SCREEN_SPAWN_POINT = 14 * TILE_LENGTH_PIXELS * scale;
+	float SECOND_SCREEN_LEFT_SPAWN_POINT = 24 * TILE_LENGTH_PIXELS * scale;
+	float SECOND_SCREEN_RIGHT_SPAWN_POINT = 38 * TILE_LENGTH_PIXELS * scale;
+	float THIRD_SCREEN_SPAWN_POINT = 48 * TILE_LENGTH_PIXELS * scale;
 
 	@Override
 	public void create () {
@@ -83,7 +83,7 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void render () {
 		batch.setProjectionMatrix(camera.combined);
-		clearScreen(101/255f, 214/255f, 186/255f); // color: teal
+		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
 		moveCamera(camera);
 
 		tiledMapRenderer.render();
