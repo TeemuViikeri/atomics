@@ -4,12 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class Player {
     private Sprite sprite;
     private Texture texture;
     private float speed;
     private float degrees = 0;
+    private FixtureDef playerFixtureDef;
+    private BodyDef subBodyDef;
 
     Player(float x, float y) {
         // Texture area too big --> crop smaller
@@ -21,6 +26,7 @@ public class Player {
         sprite.setPosition(x, y);
         sprite.setSize(0.75f, 0.75f);
         sprite.setOriginCenter();
+        createSubmarine();
     }
 
     void draw(SpriteBatch batch) {
@@ -72,5 +78,33 @@ public class Player {
 
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
+    }
+
+    public void createSubmarine() {
+
+        subBodyDef = new BodyDef();
+        subBodyDef.type = BodyDef.BodyType.DynamicBody;
+
+        subBodyDef.position.set(Game.WORLD_WIDTH_PIXELS / 2 * Game.scale,
+                Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale);
+
+        playerFixtureDef = new FixtureDef();
+
+        playerFixtureDef.density     = 2;
+        playerFixtureDef.restitution = 0.5f;
+        playerFixtureDef.friction    = 0.5f;
+
+        PolygonShape polygon = new PolygonShape();
+        polygon.setAsBox(0.25f, 0.125f);
+        playerFixtureDef.shape = polygon;
+
+    }
+
+    public FixtureDef getFixture() {
+        return playerFixtureDef;
+    }
+
+    public BodyDef getBodyDef() {
+        return subBodyDef;
     }
 }

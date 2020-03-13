@@ -11,6 +11,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -28,17 +29,18 @@ public class Game extends ApplicationAdapter {
     private Player player;
     private ArrayList<Bullet> bullets;
     private int room;
+    private Body submarineBody;
 
 	// Initiated fields
-	private float scale = 1/100f;
+    static float scale = 1/100f;
     private double accumulator = 0;
     private float TIME_STEP = 1 / 60f;
-	private float TILE_LENGTH_PIXELS = 32;
-	private float TILES_AMOUNT_WIDTH = 64;
-	private float TILES_AMOUNT_HEIGHT = 16;
-	private float WORLD_WIDTH_PIXELS =
+    static float TILE_LENGTH_PIXELS = 32;
+    static float TILES_AMOUNT_WIDTH = 64;
+    static float TILES_AMOUNT_HEIGHT = 16;
+    static float WORLD_WIDTH_PIXELS =
 			TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // = 2048 pixels
-	private float WORLD_HEIGHT_PIXELS =
+	static float WORLD_HEIGHT_PIXELS =
 			TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // = 512 pixels
     private float ROOM_TILES_AMOUNT = 16;
     private float ROOM_LENGTH_PIXELS = ROOM_TILES_AMOUNT * TILE_LENGTH_PIXELS ;
@@ -69,13 +71,15 @@ public class Game extends ApplicationAdapter {
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
 
 		// Box2D
-        world = new World(new Vector2(0, -9.8f), true);
+        world = new World(new Vector2(0, 0), true);
         debugRenderer = new Box2DDebugRenderer();
+        player = new Player(
+                WORLD_WIDTH_PIXELS / 2 * scale,
+                WORLD_HEIGHT_PIXELS / 2 * scale);
+        submarineBody = world.createBody(player.getBodyDef());
+        submarineBody.createFixture(player.getFixture());
 
 		// Game objects
-		player = new Player(
-				WORLD_WIDTH_PIXELS / 2 * scale,
-				WORLD_HEIGHT_PIXELS / 2 * scale);
 		room = 2;
 		bullets = new ArrayList<>();
 	}
@@ -88,7 +92,6 @@ public class Game extends ApplicationAdapter {
 
 		tiledMapRenderer.render();
 		tiledMapRenderer.setView(camera);
-        debugRenderer.render(world, camera.combined);
 
 		submarineMovement();
 		checkIfChangeRoom(player.getSprite().getX());
@@ -108,7 +111,7 @@ public class Game extends ApplicationAdapter {
 		player.draw(batch);
 
 		batch.end();
-
+        debugRenderer.render(world, camera.combined);
         doPhysicsStep(Gdx.graphics.getDeltaTime());
 	}
 
