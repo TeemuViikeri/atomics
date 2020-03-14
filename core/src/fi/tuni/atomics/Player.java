@@ -85,14 +85,14 @@ public class Player {
         subBodyDef = new BodyDef();
         subBodyDef.type = BodyDef.BodyType.DynamicBody;
 
-        subBodyDef.position.set(Game.WORLD_WIDTH_PIXELS / 2 * Game.scale,
-                Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale);
+        subBodyDef.position.set(Game.WORLD_WIDTH_PIXELS / 2 * Game.scale + 0.375f,
+                Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale + 0.375f);
 
         playerFixtureDef = new FixtureDef();
 
-        playerFixtureDef.density     = 2;
-        playerFixtureDef.restitution = 0.5f;
-        playerFixtureDef.friction    = 0.5f;
+        playerFixtureDef.density     = 0;
+        playerFixtureDef.restitution = 0;
+        playerFixtureDef.friction    = 0;
 
         PolygonShape polygon = new PolygonShape();
         polygon.setAsBox(0.25f, 0.125f);

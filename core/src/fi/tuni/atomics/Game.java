@@ -6,13 +6,19 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
@@ -78,6 +84,7 @@ public class Game extends ApplicationAdapter {
                 WORLD_HEIGHT_PIXELS / 2 * scale);
         submarineBody = world.createBody(player.getBodyDef());
         submarineBody.createFixture(player.getFixture());
+        transformWallsToBodies("walls", "wall");
 
 		// Game objects
 		room = 2;
@@ -124,19 +131,31 @@ public class Game extends ApplicationAdapter {
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			player.rotateRight();
+		    //player.rotateRight();
+			submarineBody.applyForceToCenter(new Vector2(2f, 0), true);
+			submarineBody.setAngularVelocity(-2);
+			System.out.println(submarineBody.getAngle());
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			player.rotateLeft();
+			//player.rotateLeft();
+            submarineBody.applyForceToCenter(new Vector2(-2f, 0), true);
+            submarineBody.setAngularVelocity(2);
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			player.getSprite().setX(player.getSprite().getX() + player.getSpeed() *
+		    submarineBody.applyForceToCenter(new Vector2(0, 2f), true);
+			/*player.getSprite().setX(player.getSprite().getX() + player.getSpeed() *
 					(float) Math.cos( Math.toRadians( player.getDegrees())));
 			player.getSprite().setY(player.getSprite().getY() + player.getSpeed() *
 					(float) Math.sin( Math.toRadians( player.getDegrees())));
+			submarineBody.setTransform(player.getSprite().getX() + 0.375f,player.getSprite().getY() + 0.375f, submarineBody.getAngle());
+					 */
 		}
+
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            submarineBody.applyForceToCenter(new Vector2(0, -2f), true);
+        }
 	}
 
 	// Fixed time step
@@ -158,8 +177,6 @@ public class Game extends ApplicationAdapter {
 
     private void checkIfChangeRoom(float position) {
 		checkInWhatRoom(position);
-
-		System.out.println(room);
 
 		if (
 		position >= FIRST_SCREEN_RIGHT_SIDE
@@ -217,6 +234,48 @@ public class Game extends ApplicationAdapter {
 
 		camera.update();
 	}
+
+    private void transformWallsToBodies(String layer, String userData) {
+        MapLayer collisionObjectLayer = tiledMap.getLayers().get(layer);
+        MapObjects mapObjects = collisionObjectLayer.getObjects();
+        Array<RectangleMapObject> rectangleObjects = mapObjects.getByType(RectangleMapObject.class);
+        for (RectangleMapObject rectangleObject : rectangleObjects) {
+            Rectangle tmp = rectangleObject.getRectangle();
+            Rectangle rectangle = scaleRect(tmp, 1 / 100f);
+            createStaticBody(rectangle, userData);
+        }
+    }
+
+    private Rectangle scaleRect(Rectangle r, float scale) {
+        Rectangle rectangle = new Rectangle();
+        rectangle.x = r.x * scale;
+        rectangle.y = r.y * scale;
+        rectangle.width = r.width * scale;
+        rectangle.height = r.height * scale;
+        return rectangle;
+    }
+
+    public void createStaticBody(Rectangle rect, String userData) {
+        BodyDef myBodyDef = new BodyDef();
+        myBodyDef.type = BodyDef.BodyType.StaticBody;
+
+        float x = rect.getX();
+        float y = rect.getY();
+        float width = rect.width;
+        float height = rect.height;
+
+        float centerX = width / 2 + x;
+        float centerY = height / 2 + y;
+
+        myBodyDef.position.set(centerX, centerY);
+        Body wall = world.createBody(myBodyDef);
+
+        wall.setUserData(userData);
+
+        PolygonShape groundBox = new PolygonShape();
+        groundBox.setAsBox(width / 2, height / 2);
+        wall.createFixture(groundBox, 0f);
+    }
 
 	private void clearScreen(float r, float g, float b) {
 		Gdx.gl.glClearColor(r, g, b, 1);
