@@ -131,31 +131,17 @@ public class Game extends ApplicationAdapter {
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-		    //player.rotateRight();
-			submarineBody.applyForceToCenter(new Vector2(2f, 0), true);
-			submarineBody.setAngularVelocity(-2);
-			System.out.println(submarineBody.getAngle());
+            submarineBody.setTransform(submarineBody.getPosition().x, submarineBody.getPosition().y, submarineBody.getAngle() + (float) Math.toRadians(-250 * Gdx.graphics.getDeltaTime()));
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			//player.rotateLeft();
-            submarineBody.applyForceToCenter(new Vector2(-2f, 0), true);
-            submarineBody.setAngularVelocity(2);
+            submarineBody.setTransform(submarineBody.getPosition().x, submarineBody.getPosition().y, submarineBody.getAngle() + (float) Math.toRadians(250 * Gdx.graphics.getDeltaTime()));
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-		    submarineBody.applyForceToCenter(new Vector2(0, 2f), true);
-			/*player.getSprite().setX(player.getSprite().getX() + player.getSpeed() *
-					(float) Math.cos( Math.toRadians( player.getDegrees())));
-			player.getSprite().setY(player.getSprite().getY() + player.getSpeed() *
-					(float) Math.sin( Math.toRadians( player.getDegrees())));
-			submarineBody.setTransform(player.getSprite().getX() + 0.375f,player.getSprite().getY() + 0.375f, submarineBody.getAngle());
-					 */
+		    submarineBody.setTransform(submarineBody.getPosition().x + player.getSpeed() * (float) Math.cos(submarineBody.getAngle()),
+                    submarineBody.getPosition().y + player.getSpeed() * (float) Math.sin(submarineBody.getAngle()), submarineBody.getAngle());
 		}
-
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            submarineBody.applyForceToCenter(new Vector2(0, -2f), true);
-        }
 	}
 
 	// Fixed time step
