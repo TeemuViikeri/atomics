@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -18,19 +20,21 @@ public class Player {
 
     Player(float x, float y) {
         // Texture area too big --> crop smaller
-        texture = new Texture("subbikuva2.png");
+        texture = new Texture("cropped-sub.png");
         sprite = new Sprite(texture);
 
         setSpeed(2f); // Check the right speed variable
 
         sprite.setPosition(x, y);
-        sprite.setSize(0.75f, 0.75f);
+        sprite.setSize(0.50f, 0.25f);
         sprite.setOriginCenter();
         createSubmarine();
     }
 
-    void draw(SpriteBatch batch) {
-        sprite.draw(batch);
+    void draw(SpriteBatch batch, Body body) {
+       sprite.setPosition(body.getPosition().x - sprite.getWidth() / 2f, body.getPosition().y - sprite.getHeight() / 2f);
+       sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+       sprite.draw(batch);
     }
 
     // Getters and setters

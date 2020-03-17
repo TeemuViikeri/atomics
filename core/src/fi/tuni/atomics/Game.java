@@ -155,7 +155,7 @@ public class Game extends ApplicationAdapter {
                     * (float) Math.sin( Math.toRadians(bullets.get(i).getDegrees())));
 			bullets.get(i).draw(batch);
 		}
-        player.draw(batch);
+        player.draw(batch, submarineBody);
 
 		batch.end();
         debugRenderer.render(world, camera.combined);
