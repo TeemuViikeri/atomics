@@ -51,6 +51,7 @@ public class Game extends ApplicationAdapter {
     private Drawable touchBackground;
     private Drawable touchKnob;
     private Stage stage;
+    private float desiredAngle;
 
 	// Initiated fields
     static float scale = 1/100f;
@@ -58,26 +59,28 @@ public class Game extends ApplicationAdapter {
     private float magnitude = 1;
     private float TIME_STEP = 1 / 60f;
     static float TILE_LENGTH_PIXELS = 32;
-    static float TILES_AMOUNT_WIDTH = 64;
-    static float TILES_AMOUNT_HEIGHT = 16;
+    static float TILES_AMOUNT_WIDTH = 106;
+    static float TILES_AMOUNT_HEIGHT = 20;
     static float WORLD_WIDTH_PIXELS =
-			TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // = 2048 pixels
+			TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // = 3392 px
 	static float WORLD_HEIGHT_PIXELS =
-			TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // = 512 pixels
-    private float ROOM_TILES_AMOUNT = 16;
-    private float ROOM_LENGTH_PIXELS = ROOM_TILES_AMOUNT * TILE_LENGTH_PIXELS ;
+			TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // = 640 px
+    private float ROOM_TILES_AMOUNT_WIDTH = 30;
+    private float ROOM_TILES_AMOUNT_HEIGHT = 20;
+    private float ROOM_WIDTH_PIXELS = ROOM_TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // 960 px
+    private float ROOM_HEIGHT_PIXELS = ROOM_TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // 640 px
 	private float PIPE_HORIZONTAL_TILES_AMOUNT = 8;
 	private float PIPE_VERTICAL_TILES_AMOUNT = 2;
 	private float PIPE_HORIZONTAL_PIXELS = PIPE_HORIZONTAL_TILES_AMOUNT * TILE_LENGTH_PIXELS;
 	private float PIPE_VERTICAL_PIXELS = PIPE_VERTICAL_TILES_AMOUNT * TILE_LENGTH_PIXELS;
-	float FIRST_SCREEN_RIGHT_SIDE = 16 * TILE_LENGTH_PIXELS * scale;
-	float SECOND_SCREEN_LEFT_SIDE = 23 * TILE_LENGTH_PIXELS * scale;
-	float SECOND_SCREEN_RIGHT_SIDE = 39 * TILE_LENGTH_PIXELS * scale;
-	float THIRD_SCREEN_LEFT_SIDE = 47 * TILE_LENGTH_PIXELS * scale;
-	float FIRST_SCREEN_SPAWN_POINT = 14 * TILE_LENGTH_PIXELS * scale;
-	float SECOND_SCREEN_LEFT_SPAWN_POINT = 24 * TILE_LENGTH_PIXELS * scale;
-	float SECOND_SCREEN_RIGHT_SPAWN_POINT = 38 * TILE_LENGTH_PIXELS * scale;
-	float THIRD_SCREEN_SPAWN_POINT = 48 * TILE_LENGTH_PIXELS * scale;
+	private float FIRST_SCREEN_RIGHT_SIDE = 31 * TILE_LENGTH_PIXELS * scale;
+    private float SECOND_SCREEN_LEFT_SIDE = 37 * TILE_LENGTH_PIXELS * scale;
+    private float SECOND_SCREEN_RIGHT_SIDE = 69 * TILE_LENGTH_PIXELS * scale;
+    private float THIRD_SCREEN_LEFT_SIDE = 75 * TILE_LENGTH_PIXELS * scale;
+    private float FIRST_SCREEN_SPAWN_POINT = 30 * TILE_LENGTH_PIXELS * scale;
+    private float SECOND_SCREEN_LEFT_SPAWN_POINT = 38 * TILE_LENGTH_PIXELS * scale;
+    private float SECOND_SCREEN_RIGHT_SPAWN_POINT = 68 * TILE_LENGTH_PIXELS * scale;
+    private float THIRD_SCREEN_SPAWN_POINT = 76 * TILE_LENGTH_PIXELS * scale;
 	private boolean moving = false;
 
 	@Override
@@ -86,11 +89,11 @@ public class Game extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false,
-                WORLD_HEIGHT_PIXELS * scale,
-                WORLD_HEIGHT_PIXELS * scale);
+                ROOM_WIDTH_PIXELS * scale,
+                ROOM_HEIGHT_PIXELS * scale);
 
 		// TiledMap
-		tiledMap = new TmxMapLoader().load("atomicsdemo.tmx");
+		tiledMap = new TmxMapLoader().load("atomics.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
 
 		// Box2D
@@ -101,7 +104,7 @@ public class Game extends ApplicationAdapter {
                 WORLD_HEIGHT_PIXELS / 2 * scale);
         submarineBody = world.createBody(player.getBodyDef());
         submarineBody.createFixture(player.getFixture());
-        transformWallsToBodies("walls", "wall");
+        transformWallsToBodies("wall-rectangles", "wall");
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         touchpad = new Touchpad(10, getTouchpadStyle());
@@ -116,7 +119,7 @@ public class Game extends ApplicationAdapter {
             float deltaY = ((Touchpad) actor).getKnobPercentY();
             if (deltaX != -0.0 && deltaY != -0.0) {
                 moving = true;
-            float desiredAngle = (float) Math.atan2(-deltaX, deltaY);
+            desiredAngle = (float) Math.atan2(-deltaX, deltaY);
             submarineBody.setTransform(submarineBody.getPosition(),
                     desiredAngle + (float) Math.toRadians(90));
         } else {
@@ -125,8 +128,6 @@ public class Game extends ApplicationAdapter {
         }
     });
 
-
-
 		// Game objects
 		room = 2;
 		bullets = new ArrayList<>();
@@ -134,6 +135,10 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+//        System.out.println("room: " + room);
+//        System.out.println("Player X: " + player.getSprite().getX());
+//        System.out.println("FIRST_SCREEN_RIGHT_SIDE: " + FIRST_SCREEN_RIGHT_SIDE );
+
 		batch.setProjectionMatrix(camera.combined);
 		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
 		moveCamera(camera);
@@ -143,7 +148,7 @@ public class Game extends ApplicationAdapter {
 		tiledMapRenderer.setView(camera);
 
 		submarineMovement();
-		checkIfChangeRoom(player.getSprite().getX());
+		checkIfChangeRoom(submarineBody.getPosition().x);
 		batch.begin();
 
 		for (int i = 0; i < bullets.size(); i++) {
@@ -183,31 +188,31 @@ public class Game extends ApplicationAdapter {
     }
 
 	private void submarineMovement() {
-		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             float x = player.getSprite().getX();
             float y = player.getSprite().getY();
 
 			bullets.add(new Bullet(player.getDegrees(), x, y));
 		}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             submarineBody.setTransform(submarineBody.getPosition().x, submarineBody.getPosition().y,
                     submarineBody.getAngle()
                             + (float) Math.toRadians(-200 * Gdx.graphics.getDeltaTime()));
 		}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             submarineBody.setTransform(submarineBody.getPosition().x, submarineBody.getPosition().y,
                     submarineBody.getAngle()
                             + (float) Math.toRadians(200 * Gdx.graphics.getDeltaTime()));
 		}
 
-		if(moving) {
+		if (moving) {
             Vector2 force = new Vector2((float) Math.cos(submarineBody.getAngle()) * magnitude,
                     (float) Math.sin(submarineBody.getAngle()) * magnitude);
             submarineBody.applyForce(force, submarineBody.getPosition(), true);
 		}
-		System.out.println(moving);
+//		System.out.println(moving);
 	}
 
 	// Fixed time step
@@ -231,42 +236,60 @@ public class Game extends ApplicationAdapter {
 		checkInWhatRoom(position);
 
 		if (
-		position >= FIRST_SCREEN_RIGHT_SIDE
-		&&
-		room == 1
+				position >= FIRST_SCREEN_RIGHT_SIDE
+						&&
+						room == 1
 		) {
-			player.getSprite().setX(SECOND_SCREEN_LEFT_SPAWN_POINT);
+			submarineBody.setTransform(
+					SECOND_SCREEN_LEFT_SPAWN_POINT,
+					submarineBody.getPosition().y,
+					desiredAngle
+			);
 		} else if (
-		position <= SECOND_SCREEN_LEFT_SIDE
-		&&
-		room == 2
+				position <= SECOND_SCREEN_LEFT_SIDE
+						&&
+						room == 2
 		) {
-			player.getSprite().setX(FIRST_SCREEN_SPAWN_POINT);
+			submarineBody.setTransform(
+					FIRST_SCREEN_SPAWN_POINT,
+					submarineBody.getPosition().y,
+					desiredAngle
+			);
 		} else if (
-		position >= SECOND_SCREEN_RIGHT_SIDE
-		&&
-		room == 2) {
-			player.getSprite().setX(THIRD_SCREEN_SPAWN_POINT);
+				position >= SECOND_SCREEN_RIGHT_SIDE
+						&&
+						room == 2
+		) {
+			submarineBody.setTransform(
+					THIRD_SCREEN_SPAWN_POINT,
+					submarineBody.getPosition().y,
+					desiredAngle
+			);
 		} else if (
-		position <= THIRD_SCREEN_LEFT_SIDE
-		&&
-		room == 3) {
-			player.getSprite().setX(SECOND_SCREEN_RIGHT_SPAWN_POINT);
+				position <= THIRD_SCREEN_LEFT_SIDE
+						&&
+						room == 3
+		) {
+			submarineBody.setTransform(
+					SECOND_SCREEN_RIGHT_SPAWN_POINT,
+					submarineBody.getPosition().y,
+					desiredAngle
+			);
 		}
- 	}
+	}
 
  	private void checkInWhatRoom(float position) {
 		if ( // Check if in the first room
-		position <= ROOM_LENGTH_PIXELS * scale
+		position <= ROOM_WIDTH_PIXELS * scale
 		) {
 			room = 1;
 		} else if ( // Check if in the second room
-		 position >= (ROOM_LENGTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale &&
-		 position <= (ROOM_LENGTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale
+		 position >= (ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale &&
+		 position <= (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale
 		) {
 			room = 2;
 		} else if ( // Check if in the third room
-		position >= (ROOM_LENGTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale
+		position >= (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale
 		) {
 			room = 3;
 		}
@@ -274,13 +297,13 @@ public class Game extends ApplicationAdapter {
 
 	private void moveCamera(OrthographicCamera camera) {
 		if (room == 1) {
-			camera.position.x = ROOM_LENGTH_PIXELS / 2 * scale;
+			camera.position.x = ROOM_WIDTH_PIXELS / 2 * scale;
 			camera.position.y = WORLD_HEIGHT_PIXELS / 2 * scale;
 		} else if (room == 2) {
 			camera.position.x = WORLD_WIDTH_PIXELS / 2 * scale;
 			camera.position.y = WORLD_HEIGHT_PIXELS / 2 * scale;
 		} else if (room == 3) {
-			camera.position.x = (WORLD_WIDTH_PIXELS - ROOM_LENGTH_PIXELS / 2) * scale;
+			camera.position.x = (WORLD_WIDTH_PIXELS - ROOM_WIDTH_PIXELS / 2) * scale;
 			camera.position.y = WORLD_HEIGHT_PIXELS / 2 * scale;
 		}
 

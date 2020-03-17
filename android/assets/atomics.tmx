@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="right-down" width="106" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="30">
+ <tileset firstgid="1" source="atomicsdemo-tileset.tsx"/>
+ <layer id="1" name="walls" width="106" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztlrEJA0EQA68AOz0cOnAhLkWluBSV4tL88NGi4BV4723QwnKJYIZVcnMM3sZ4r9y57TiYuXs9V+7GvJtey++1vTxy+/ZsTBgZ9psIE0aG/SbCRO5RmDAy7DcRZnqqTBgZ9psIMz1VJowM+02EmZ4qE0aG/SbCTE+VCSPDfhNhpqfKhJFhv4kwT+npam689jmrp8dq4J9PevqPOauni7nx2if/CGHCyLDfRJjpqTJhZNhvIsz0VJkwMuw3EWZ6qkwYGfabCDM9VSaMDPtNhJmeKhNGhv0mwkxPlQkjw34TYWLu79Kdxj1O8nr9qBc+MCB/ZQ==
+  </data>
+ </layer>
+ <objectgroup id="2" name="wall-rectangles">
+  <object id="2" x="0" y="0" width="31.3333" height="639.333"/>
+  <object id="3" x="32" y="0" width="927.333" height="31.3333"/>
+  <object id="4" x="32" y="608" width="928" height="31.3333"/>
+  <object id="6" x="928" y="32" width="32" height="223.333"/>
+  <object id="7" x="928" y="384" width="32" height="224"/>
+  <object id="9" x="928" y="256" width="319.879" height="15.5758"/>
+  <object id="10" x="928" y="368" width="320" height="15.8182"/>
+  <object id="11" x="1216" y="-0.00568182" width="31.8182" height="256.006"/>
+  <object id="13" x="1216" y="384" width="32" height="256"/>
+  <object id="14" x="1248.02" y="608" width="927.984" height="32"/>
+  <object id="16" x="1248" y="0" width="928" height="32"/>
+  <object id="17" x="2144" y="32.125" width="32" height="223.875"/>
+  <object id="18" x="2144" y="384" width="32" height="224"/>
+  <object id="19" x="2144" y="256" width="320" height="16"/>
+  <object id="20" x="2144" y="368" width="320" height="16"/>
+  <object id="21" x="2432" y="0" width="32" height="256"/>
+  <object id="22" x="2432" y="380.125" width="31.9972" height="259.878"/>
+  <object id="24" x="2464" y="608.004" width="927.996" height="32"/>
+  <object id="25" x="2464" y="0" width="928" height="32"/>
+  <object id="29" x="3360" y="32.0625" width="32" height="576"/>
+ </objectgroup>
+</map>

@@ -15,11 +15,11 @@ public class Player {
     private Texture texture;
     private float speed;
     private float degrees = 0;
-    private FixtureDef playerFixtureDef;
+    private Body body;
     private BodyDef subBodyDef;
+    private FixtureDef playerFixtureDef;
 
     Player(float x, float y) {
-        // Texture area too big --> crop smaller
         texture = new Texture("cropped-sub.png");
         sprite = new Sprite(texture);
 
@@ -29,6 +29,24 @@ public class Player {
         sprite.setSize(0.50f, 0.25f);
         sprite.setOriginCenter();
         createSubmarine();
+    }
+
+    public void createSubmarine() {
+        subBodyDef = new BodyDef();
+        subBodyDef.type = BodyDef.BodyType.DynamicBody;
+
+        subBodyDef.position.set(Game.WORLD_WIDTH_PIXELS / 2 * Game.scale,
+                Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale);
+
+        playerFixtureDef = new FixtureDef();
+
+        playerFixtureDef.density     = 0;
+        playerFixtureDef.restitution = 0;
+        playerFixtureDef.friction    = 0;
+
+        PolygonShape polygon = new PolygonShape();
+        polygon.setAsBox(0.25f, 0.125f);
+        playerFixtureDef.shape = polygon;
     }
 
     void draw(SpriteBatch batch, Body body) {
@@ -68,26 +86,6 @@ public class Player {
 
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
-    }
-
-    public void createSubmarine() {
-
-        subBodyDef = new BodyDef();
-        subBodyDef.type = BodyDef.BodyType.DynamicBody;
-
-        subBodyDef.position.set(Game.WORLD_WIDTH_PIXELS / 2 * Game.scale + 0.375f,
-                Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale + 0.375f);
-
-        playerFixtureDef = new FixtureDef();
-
-        playerFixtureDef.density     = 0;
-        playerFixtureDef.restitution = 0;
-        playerFixtureDef.friction    = 0;
-
-        PolygonShape polygon = new PolygonShape();
-        polygon.setAsBox(0.25f, 0.125f);
-        playerFixtureDef.shape = polygon;
-
     }
 
     public FixtureDef getFixture() {
