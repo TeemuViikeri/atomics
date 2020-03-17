@@ -21,7 +21,7 @@ public class Player {
         texture = new Texture("subbikuva2.png");
         sprite = new Sprite(texture);
 
-        setSpeed(0.05f); // Check the right speed variable
+        setSpeed(2f); // Check the right speed variable
 
         sprite.setPosition(x, y);
         sprite.setSize(0.75f, 0.75f);
@@ -31,20 +31,6 @@ public class Player {
 
     void draw(SpriteBatch batch) {
         sprite.draw(batch);
-    }
-
-    public void rotateLeft() {
-        if (degrees == 360) {
-            degrees = 0;
-        }
-        sprite.setRotation(degrees+=250 * Gdx.graphics.getDeltaTime());
-    }
-
-    public void rotateRight() {
-        if (degrees == -360) {
-            degrees = 0;
-        }
-        sprite.setRotation(degrees-=250 * Gdx.graphics.getDeltaTime());
     }
 
     // Getters and setters
@@ -65,7 +51,7 @@ public class Player {
     }
 
     float getSpeed() {
-        return speed;
+        return speed * Gdx.graphics.getDeltaTime();
     }
 
     void setSpeed(float speed) {

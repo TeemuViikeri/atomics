@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObjects;
@@ -20,6 +21,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
@@ -36,10 +45,17 @@ public class Game extends ApplicationAdapter {
     private ArrayList<Bullet> bullets;
     private int room;
     private Body submarineBody;
+    private Touchpad touchpad;
+    private Touchpad.TouchpadStyle touchpadStyle;
+    private Skin touchpadSkin;
+    private Drawable touchBackground;
+    private Drawable touchKnob;
+    private Stage stage;
 
 	// Initiated fields
     static float scale = 1/100f;
     private double accumulator = 0;
+    private float magnitude = 1;
     private float TIME_STEP = 1 / 60f;
     static float TILE_LENGTH_PIXELS = 32;
     static float TILES_AMOUNT_WIDTH = 64;
@@ -62,6 +78,7 @@ public class Game extends ApplicationAdapter {
 	float SECOND_SCREEN_LEFT_SPAWN_POINT = 24 * TILE_LENGTH_PIXELS * scale;
 	float SECOND_SCREEN_RIGHT_SPAWN_POINT = 38 * TILE_LENGTH_PIXELS * scale;
 	float THIRD_SCREEN_SPAWN_POINT = 48 * TILE_LENGTH_PIXELS * scale;
+	private boolean moving = false;
 
 	@Override
 	public void create () {
@@ -85,6 +102,30 @@ public class Game extends ApplicationAdapter {
         submarineBody = world.createBody(player.getBodyDef());
         submarineBody.createFixture(player.getFixture());
         transformWallsToBodies("walls", "wall");
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+        touchpad = new Touchpad(10, getTouchpadStyle());
+        touchpad.setBounds(100, 100,100,100);
+        touchpad.setPosition(50, 50);
+        stage.addActor(touchpad);
+
+    touchpad.addListener(new ChangeListener() {
+        @Override
+        public void changed(ChangeEvent event, Actor actor) {
+            float deltaX = ((Touchpad) actor).getKnobPercentX();
+            float deltaY = ((Touchpad) actor).getKnobPercentY();
+            if (deltaX != -0.0 && deltaY != -0.0) {
+                moving = true;
+            float desiredAngle = (float) Math.atan2(-deltaX, deltaY);
+            submarineBody.setTransform(submarineBody.getPosition(),
+                    desiredAngle + (float) Math.toRadians(90));
+        } else {
+                moving = false;
+            }
+        }
+    });
+
+
 
 		// Game objects
 		room = 2;
@@ -96,13 +137,13 @@ public class Game extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
 		moveCamera(camera);
-
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
 		tiledMapRenderer.render();
 		tiledMapRenderer.setView(camera);
 
 		submarineMovement();
 		checkIfChangeRoom(player.getSprite().getX());
-
 		batch.begin();
 
 		for (int i = 0; i < bullets.size(); i++) {
@@ -114,13 +155,32 @@ public class Game extends ApplicationAdapter {
                     * (float) Math.sin( Math.toRadians(bullets.get(i).getDegrees())));
 			bullets.get(i).draw(batch);
 		}
-
-		player.draw(batch);
+        player.draw(batch);
 
 		batch.end();
         debugRenderer.render(world, camera.combined);
         doPhysicsStep(Gdx.graphics.getDeltaTime());
 	}
+
+	private Touchpad.TouchpadStyle getTouchpadStyle() {
+	    touchpadSkin = new Skin();
+	    touchpadSkin.add("touchBackground", new Texture("touchpadbg.png"));
+
+	    touchpadSkin.add("touchKnob", new Texture("touchpadknob.png"));
+
+	    touchpadStyle = new Touchpad.TouchpadStyle();
+
+	    touchBackground = touchpadSkin.getDrawable("touchBackground");
+	    touchKnob = touchpadSkin.getDrawable("touchKnob");
+
+	    touchKnob.setMinHeight(35);
+	    touchKnob.setMinWidth(35);
+
+	    touchpadStyle.background = touchBackground;
+	    touchpadStyle.knob = touchKnob;
+
+	    return touchpadStyle;
+    }
 
 	private void submarineMovement() {
 		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
@@ -131,17 +191,23 @@ public class Game extends ApplicationAdapter {
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            submarineBody.setTransform(submarineBody.getPosition().x, submarineBody.getPosition().y, submarineBody.getAngle() + (float) Math.toRadians(-250 * Gdx.graphics.getDeltaTime()));
+            submarineBody.setTransform(submarineBody.getPosition().x, submarineBody.getPosition().y,
+                    submarineBody.getAngle()
+                            + (float) Math.toRadians(-200 * Gdx.graphics.getDeltaTime()));
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            submarineBody.setTransform(submarineBody.getPosition().x, submarineBody.getPosition().y, submarineBody.getAngle() + (float) Math.toRadians(250 * Gdx.graphics.getDeltaTime()));
+            submarineBody.setTransform(submarineBody.getPosition().x, submarineBody.getPosition().y,
+                    submarineBody.getAngle()
+                            + (float) Math.toRadians(200 * Gdx.graphics.getDeltaTime()));
 		}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-		    submarineBody.setTransform(submarineBody.getPosition().x + player.getSpeed() * (float) Math.cos(submarineBody.getAngle()),
-                    submarineBody.getPosition().y + player.getSpeed() * (float) Math.sin(submarineBody.getAngle()), submarineBody.getAngle());
+		if(moving) {
+            Vector2 force = new Vector2((float) Math.cos(submarineBody.getAngle()) * magnitude,
+                    (float) Math.sin(submarineBody.getAngle()) * magnitude);
+            submarineBody.applyForce(force, submarineBody.getPosition(), true);
 		}
+		System.out.println(moving);
 	}
 
 	// Fixed time step
