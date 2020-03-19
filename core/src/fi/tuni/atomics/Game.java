@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -52,11 +53,13 @@ public class Game extends ApplicationAdapter {
     private Drawable touchKnob;
     private Stage stage;
     private float desiredAngle;
+    private float deltaX;
+    private float deltaY;
 
 	// Initiated fields
     static float scale = 1/100f;
     private double accumulator = 0;
-    private float magnitude = 1;
+    private float magnitude = 2.5f;
     private float TIME_STEP = 1 / 60f;
     static float TILE_LENGTH_PIXELS = 32;
     static float TILES_AMOUNT_WIDTH = 106;
@@ -115,14 +118,11 @@ public class Game extends ApplicationAdapter {
     touchpad.addListener(new ChangeListener() {
         @Override
         public void changed(ChangeEvent event, Actor actor) {
-            float deltaX = ((Touchpad) actor).getKnobPercentX();
-            float deltaY = ((Touchpad) actor).getKnobPercentY();
+            deltaX = ((Touchpad) actor).getKnobPercentX();
+            deltaY = ((Touchpad) actor).getKnobPercentY();
             if (deltaX != -0.0 && deltaY != -0.0) {
                 moving = true;
-            desiredAngle = (float) Math.atan2(-deltaX, deltaY);
-            submarineBody.setTransform(submarineBody.getPosition(),
-                    desiredAngle + (float) Math.toRadians(90));
-        } else {
+            } else {
                 moving = false;
             }
         }
@@ -135,6 +135,10 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+
+	    if (touchpad.isTouched()) {
+	        submarineMovement();
+            }
 //        System.out.println("room: " + room);
 //        System.out.println("Player X: " + player.getSprite().getX());
 //        System.out.println("FIRST_SCREEN_RIGHT_SIDE: " + FIRST_SCREEN_RIGHT_SIDE );
@@ -147,7 +151,6 @@ public class Game extends ApplicationAdapter {
 		tiledMapRenderer.render();
 		tiledMapRenderer.setView(camera);
 
-		submarineMovement();
 		checkIfChangeRoom(submarineBody.getPosition().x);
 		batch.begin();
 
@@ -188,31 +191,24 @@ public class Game extends ApplicationAdapter {
     }
 
 	private void submarineMovement() {
-		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            float x = player.getSprite().getX();
-            float y = player.getSprite().getY();
+        desiredAngle = (float) Math.atan2( -deltaX, deltaY) + (float) Math.toRadians(90);
+        float totalRotation = desiredAngle - submarineBody.getAngle();
+        while (totalRotation < -180 * MathUtils.degreesToRadians)
+            totalRotation += 360 * MathUtils.degreesToRadians;
+        while (totalRotation > 180 * MathUtils.degreesToRadians)
+            totalRotation -= 360 * MathUtils.degreesToRadians;
+        float maxRotation = 20 * MathUtils.degreesToRadians;
+        float newAngle = submarineBody.getAngle()
+                + Math.min(maxRotation, Math.max(-maxRotation, totalRotation));
+        submarineBody.setTransform(submarineBody.getPosition(), newAngle);
 
-			bullets.add(new Bullet(player.getDegrees(), x, y));
-		}
-
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            submarineBody.setTransform(submarineBody.getPosition().x, submarineBody.getPosition().y,
-                    submarineBody.getAngle()
-                            + (float) Math.toRadians(-200 * Gdx.graphics.getDeltaTime()));
-		}
-
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            submarineBody.setTransform(submarineBody.getPosition().x, submarineBody.getPosition().y,
-                    submarineBody.getAngle()
-                            + (float) Math.toRadians(200 * Gdx.graphics.getDeltaTime()));
-		}
-
-		if (moving) {
+        if (moving) {
             Vector2 force = new Vector2((float) Math.cos(submarineBody.getAngle()) * magnitude,
                     (float) Math.sin(submarineBody.getAngle()) * magnitude);
-            submarineBody.applyForce(force, submarineBody.getPosition(), true);
-		}
-//		System.out.println(moving);
+
+            submarineBody.setLinearVelocity(force);
+            //submarineBody.applyForce(force, submarineBody.getPosition(), true);
+        }
 	}
 
 	// Fixed time step
