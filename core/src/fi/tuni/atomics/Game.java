@@ -193,10 +193,12 @@ public class Game extends ApplicationAdapter {
 	private void submarineMovement() {
         desiredAngle = (float) Math.atan2( -deltaX, deltaY) + (float) Math.toRadians(90);
         float totalRotation = desiredAngle - submarineBody.getAngle();
+        // Finds the shortest route
         while (totalRotation < -180 * MathUtils.degreesToRadians)
             totalRotation += 360 * MathUtils.degreesToRadians;
         while (totalRotation > 180 * MathUtils.degreesToRadians)
             totalRotation -= 360 * MathUtils.degreesToRadians;
+        // maximum rotation per render
         float maxRotation = 20 * MathUtils.degreesToRadians;
         float newAngle = submarineBody.getAngle()
                 + Math.min(maxRotation, Math.max(-maxRotation, totalRotation));
