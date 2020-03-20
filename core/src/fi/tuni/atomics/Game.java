@@ -149,10 +149,10 @@ public class Game extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
 		moveCamera(camera);
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
 		tiledMapRenderer.render();
 		tiledMapRenderer.setView(camera);
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
 
 		checkIfChangeRoom(submarineBody.getPosition().x);
 		batch.begin();
