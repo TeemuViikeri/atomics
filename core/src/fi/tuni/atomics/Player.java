@@ -20,7 +20,7 @@ public class Player {
     private FixtureDef playerFixtureDef;
 
     Player(float x, float y) {
-        texture = new Texture("cropped-sub.png");
+        texture = new Texture("cropped-subbi.png");
         sprite = new Sprite(texture);
 
         setSpeed(0); // Check the right speed variable
