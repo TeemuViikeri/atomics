@@ -59,15 +59,12 @@ public class Game extends ApplicationAdapter {
 	// Initiated fields
     static float scale = 1/100f;
     private double accumulator = 0;
-    private float magnitude = 2.5f;
     private float TIME_STEP = 1 / 60f;
     static float TILE_LENGTH_PIXELS = 32;
     static float TILES_AMOUNT_WIDTH = 106;
     static float TILES_AMOUNT_HEIGHT = 20;
-    static float WORLD_WIDTH_PIXELS =
-			TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // = 3392 px
-	static float WORLD_HEIGHT_PIXELS =
-			TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // = 640 px
+    static float WORLD_WIDTH_PIXELS = TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // = 3392 px
+	static float WORLD_HEIGHT_PIXELS = TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // = 640 px
     private float ROOM_TILES_AMOUNT_WIDTH = 30;
     private float ROOM_TILES_AMOUNT_HEIGHT = 20;
     private float ROOM_WIDTH_PIXELS = ROOM_TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // 960 px
@@ -84,6 +81,7 @@ public class Game extends ApplicationAdapter {
     private float SECOND_SCREEN_LEFT_SPAWN_POINT = 38 * TILE_LENGTH_PIXELS * scale;
     private float SECOND_SCREEN_RIGHT_SPAWN_POINT = 68 * TILE_LENGTH_PIXELS * scale;
     private float THIRD_SCREEN_SPAWN_POINT = 76 * TILE_LENGTH_PIXELS * scale;
+    private float magnitude = 2.5f;
 	private boolean moving = false;
 	private float speedDecrement = 3f;
 	private float maxSpeed = 150f;
@@ -93,7 +91,8 @@ public class Game extends ApplicationAdapter {
 		// libGDX
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false,
+		camera.setToOrtho(
+				false,
                 ROOM_WIDTH_PIXELS * scale,
                 ROOM_HEIGHT_PIXELS * scale);
 
@@ -117,18 +116,18 @@ public class Game extends ApplicationAdapter {
         touchpad.setPosition(50, 50);
         stage.addActor(touchpad);
 
-    touchpad.addListener(new ChangeListener() {
-        @Override
-        public void changed(ChangeEvent event, Actor actor) {
-            deltaX = ((Touchpad) actor).getKnobPercentX();
-            deltaY = ((Touchpad) actor).getKnobPercentY();
-            if (deltaX != -0.0 && deltaY != -0.0) {
-                moving = true;
-            } else {
-                moving = false;
-            }
-        }
-    });
+		touchpad.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				deltaX = ((Touchpad) actor).getKnobPercentX();
+				deltaY = ((Touchpad) actor).getKnobPercentY();
+				if (deltaX != -0.0 && deltaY != -0.0) {
+					moving = true;
+				} else {
+					moving = false;
+				}
+			}
+		});
 
 		// Game objects
 		room = 2;
@@ -143,10 +142,7 @@ public class Game extends ApplicationAdapter {
 	        submarineRotation();
             player.setSpeed(maxSpeed);
 
-            }
-//        System.out.println("room: " + room);
-//        System.out.println("Player X: " + player.getSprite().getX());
-//        System.out.println("FIRST_SCREEN_RIGHT_SIDE: " + FIRST_SCREEN_RIGHT_SIDE );
+	    }
 
 		batch.setProjectionMatrix(camera.combined);
 		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
@@ -168,6 +164,7 @@ public class Game extends ApplicationAdapter {
                     * (float) Math.sin( Math.toRadians(bullets.get(i).getDegrees())));
 			bullets.get(i).draw(batch);
 		}
+
         player.draw(batch, submarineBody);
 
 		batch.end();
@@ -259,64 +256,50 @@ public class Game extends ApplicationAdapter {
     private void checkIfChangeRoom(float position) {
 		checkInWhatRoom(position);
 
-		if (
-				position >= FIRST_SCREEN_RIGHT_SIDE
-						&&
-						room == 1
-		) {
+		if (position >= FIRST_SCREEN_RIGHT_SIDE && room == 1) {
 			submarineBody.setTransform(
-					SECOND_SCREEN_LEFT_SPAWN_POINT,
-					submarineBody.getPosition().y,
-					desiredAngle
+				SECOND_SCREEN_LEFT_SPAWN_POINT,
+				submarineBody.getPosition().y,
+				desiredAngle
 			);
-		} else if (
-				position <= SECOND_SCREEN_LEFT_SIDE
-						&&
-						room == 2
-		) {
+		} else if (position <= SECOND_SCREEN_LEFT_SIDE && room == 2) {
 			submarineBody.setTransform(
-					FIRST_SCREEN_SPAWN_POINT,
-					submarineBody.getPosition().y,
-					desiredAngle
+				FIRST_SCREEN_SPAWN_POINT,
+				submarineBody.getPosition().y,
+				desiredAngle
 			);
-		} else if (
-				position >= SECOND_SCREEN_RIGHT_SIDE
-						&&
-						room == 2
-		) {
+		} else if (position >= SECOND_SCREEN_RIGHT_SIDE && room == 2) {
 			submarineBody.setTransform(
-					THIRD_SCREEN_SPAWN_POINT,
-					submarineBody.getPosition().y,
-					desiredAngle
+				THIRD_SCREEN_SPAWN_POINT,
+				submarineBody.getPosition().y,
+				desiredAngle
 			);
-		} else if (
-				position <= THIRD_SCREEN_LEFT_SIDE
-						&&
-						room == 3
-		) {
+		} else if (position <= THIRD_SCREEN_LEFT_SIDE && room == 3) {
 			submarineBody.setTransform(
-					SECOND_SCREEN_RIGHT_SPAWN_POINT,
-					submarineBody.getPosition().y,
-					desiredAngle
+				SECOND_SCREEN_RIGHT_SPAWN_POINT,
+				submarineBody.getPosition().y,
+				desiredAngle
 			);
 		}
 	}
 
  	private void checkInWhatRoom(float position) {
 		if ( // Check if in the first room
-		position <= ROOM_WIDTH_PIXELS * scale
+			position <= ROOM_WIDTH_PIXELS * scale
 		) {
 			room = 1;
 		} else if ( // Check if in the second room
-		 position >= (ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale &&
-		 position <= (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale
+		 	position >= (ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale &&
+		 	position <= (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale
 		) {
 			room = 2;
 		} else if ( // Check if in the third room
-		position >= (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale
+			position >= (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2) * scale
 		) {
 			room = 3;
 		}
+
+		System.out.println(room);
 	}
 
 	private void moveCamera(OrthographicCamera camera) {
