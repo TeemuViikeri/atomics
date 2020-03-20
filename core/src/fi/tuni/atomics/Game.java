@@ -85,6 +85,8 @@ public class Game extends ApplicationAdapter {
     private float SECOND_SCREEN_RIGHT_SPAWN_POINT = 68 * TILE_LENGTH_PIXELS * scale;
     private float THIRD_SCREEN_SPAWN_POINT = 76 * TILE_LENGTH_PIXELS * scale;
 	private boolean moving = false;
+	private float speedDecrement = 3f;
+	private float maxSpeed = 150f;
 
 	@Override
 	public void create () {
@@ -135,9 +137,12 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+	    submarineMove();
 
 	    if (touchpad.isTouched()) {
-	        submarineMovement();
+	        submarineRotation();
+            player.setSpeed(maxSpeed);
+
             }
 //        System.out.println("room: " + room);
 //        System.out.println("Player X: " + player.getSprite().getX());
@@ -190,7 +195,36 @@ public class Game extends ApplicationAdapter {
 	    return touchpadStyle;
     }
 
-	private void submarineMovement() {
+    private void submarineMove() {
+        if (moving) {
+            Vector2 force = new Vector2((float) Math.cos(submarineBody.getAngle())
+                    * player.getSpeed() * Gdx.graphics.getDeltaTime(),
+                    (float) Math.sin(submarineBody.getAngle())
+                            * player.getSpeed() * Gdx.graphics.getDeltaTime());
+
+            submarineBody.setLinearVelocity(force);
+        }
+
+        if (!moving && player.getSpeed() >= speedDecrement) {
+            player.setSpeed(player.getSpeed() - speedDecrement);
+            Vector2 force = new Vector2((float) Math.cos(submarineBody.getAngle())
+                    * player.getSpeed() * Gdx.graphics.getDeltaTime(),
+                    (float) Math.sin(submarineBody.getAngle())
+                            * player.getSpeed() * Gdx.graphics.getDeltaTime());
+
+            submarineBody.setLinearVelocity(force);
+        } else if (player.getSpeed() < speedDecrement) {
+            player.setSpeed(0);
+            Vector2 force = new Vector2((float) Math.cos(submarineBody.getAngle())
+                    * player.getSpeed() * Gdx.graphics.getDeltaTime(),
+                    (float) Math.sin(submarineBody.getAngle())
+                            * player.getSpeed() * Gdx.graphics.getDeltaTime());
+            
+            submarineBody.setLinearVelocity(force);
+        }
+    }
+
+	private void submarineRotation() {
         desiredAngle = (float) Math.atan2( -deltaX, deltaY) + (float) Math.toRadians(90);
         float totalRotation = desiredAngle - submarineBody.getAngle();
         // Finds the shortest route
@@ -199,18 +233,10 @@ public class Game extends ApplicationAdapter {
         while (totalRotation > 180 * MathUtils.degreesToRadians)
             totalRotation -= 360 * MathUtils.degreesToRadians;
         // maximum rotation per render
-        float maxRotation = 20 * MathUtils.degreesToRadians;
+        float maxRotation = 1000 * MathUtils.degreesToRadians * Gdx.graphics.getDeltaTime();
         float newAngle = submarineBody.getAngle()
                 + Math.min(maxRotation, Math.max(-maxRotation, totalRotation));
         submarineBody.setTransform(submarineBody.getPosition(), newAngle);
-
-        if (moving) {
-            Vector2 force = new Vector2((float) Math.cos(submarineBody.getAngle()) * magnitude,
-                    (float) Math.sin(submarineBody.getAngle()) * magnitude);
-
-            submarineBody.setLinearVelocity(force);
-            //submarineBody.applyForce(force, submarineBody.getPosition(), true);
-        }
 	}
 
 	// Fixed time step

@@ -23,7 +23,7 @@ public class Player {
         texture = new Texture("cropped-sub.png");
         sprite = new Sprite(texture);
 
-        setSpeed(2f); // Check the right speed variable
+        setSpeed(0); // Check the right speed variable
 
         sprite.setPosition(x, y);
         sprite.setSize(0.50f, 0.25f);
@@ -73,7 +73,7 @@ public class Player {
     }
 
     float getSpeed() {
-        return speed * Gdx.graphics.getDeltaTime();
+        return speed;
     }
 
     void setSpeed(float speed) {
