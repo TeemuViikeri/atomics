@@ -27,6 +27,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
@@ -53,6 +54,11 @@ public class Game extends ApplicationAdapter {
     private Skin touchpadSkin;
     private Drawable touchBackground;
     private Drawable touchKnob;
+    private Button speedButton;
+    private Button.ButtonStyle speedButtonStyle;
+    private Skin buttonSkin;
+    private Drawable up;
+    private Drawable down;
     private Stage stage;
     private float desiredAngle;
     private float deltaX;
@@ -83,7 +89,6 @@ public class Game extends ApplicationAdapter {
     private float SECOND_SCREEN_LEFT_SPAWN_POINT = 38 * TILE_LENGTH_PIXELS * scale;
     private float SECOND_SCREEN_RIGHT_SPAWN_POINT = 68 * TILE_LENGTH_PIXELS * scale;
     private float THIRD_SCREEN_SPAWN_POINT = 76 * TILE_LENGTH_PIXELS * scale;
-    private float magnitude = 2.5f;
 	private boolean moving = false;
 	private float speedDecrement = 3f;
 	private float maxSpeed = 150f;
@@ -115,19 +120,16 @@ public class Game extends ApplicationAdapter {
         Gdx.input.setInputProcessor(stage);
         touchpad = new Touchpad(10, getTouchpadStyle());
         touchpad.setBounds(100, 100,100,100);
-        touchpad.setPosition(50, 50);
         stage.addActor(touchpad);
+        speedButton = new Button(getButtonStyle());
+        speedButton.setBounds(650, 100, 100, 100);
+        stage.addActor(speedButton);
 
 		touchpad.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				deltaX = ((Touchpad) actor).getKnobPercentX();
 				deltaY = ((Touchpad) actor).getKnobPercentY();
-				if (deltaX != -0.0 && deltaY != -0.0) {
-					moving = true;
-				} else {
-					moving = false;
-				}
 			}
 		});
 
@@ -138,13 +140,20 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-	    submarineMove();
 
-	    if (touchpad.isTouched()) {
-	        submarineRotation();
+        if (touchpad.isTouched()) {
+            submarineRotation();
+
+        }
+
+        if (speedButton.isPressed()) {
+            moving = true;
             player.setSpeed(maxSpeed);
+        } else {
+            moving = false;
+        }
 
-	    }
+        submarineMove();
 
 		batch.setProjectionMatrix(camera.combined);
 		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
@@ -173,6 +182,21 @@ public class Game extends ApplicationAdapter {
         debugRenderer.render(world, camera.combined);
         doPhysicsStep(Gdx.graphics.getDeltaTime());
 	}
+
+    private Button.ButtonStyle getButtonStyle() {
+        buttonSkin = new Skin();
+        speedButtonStyle = new Button.ButtonStyle();
+        buttonSkin.add("down", new Texture("down.png"));
+        buttonSkin.add("up", new Texture("up.png"));
+        up = buttonSkin.getDrawable("up");
+        down = buttonSkin.getDrawable("down");
+
+
+        speedButtonStyle.up = up;
+        speedButtonStyle.down = down;
+
+        return speedButtonStyle;
+    }
 
 	private Touchpad.TouchpadStyle getTouchpadStyle() {
 	    touchpadSkin = new Skin();
