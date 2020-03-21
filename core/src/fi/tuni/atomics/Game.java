@@ -120,14 +120,6 @@ public class Game extends ApplicationAdapter {
         transformWallsToBodies("wall-rectangles", "wall");
         createButtons();
 
-		touchpad.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				deltaX = ((Touchpad) actor).getKnobPercentX();
-				deltaY = ((Touchpad) actor).getKnobPercentY();
-			}
-		});
-
 		// Game objects
 		room = 2;
 		bullets = new ArrayList<>();
@@ -217,6 +209,13 @@ public class Game extends ApplicationAdapter {
                 .fill();
         stage.addActor(joysticTable);
         stage.addActor(speedButtonTable);
+        touchpad.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                deltaX = ((Touchpad) actor).getKnobPercentX();
+                deltaY = ((Touchpad) actor).getKnobPercentY();
+            }
+        });
     }
 
     private Button.ButtonStyle getButtonStyle() {
