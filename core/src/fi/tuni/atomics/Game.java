@@ -22,6 +22,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -45,9 +49,13 @@ public class Game extends ApplicationAdapter {
     private World world;
     private Box2DDebugRenderer debugRenderer;
     private Player player;
+    private Bullet bullet;
+    private Array<Body> bodies;
+    private Array<Body> bodiesToBeDestroyed;
     private ArrayList<Bullet> bullets;
     private int room;
     private Body submarineBody;
+    private Texture bulletTexture;
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
     private Skin touchpadSkin;
@@ -110,13 +118,21 @@ public class Game extends ApplicationAdapter {
                 WORLD_HEIGHT_PIXELS / 2 * scale);
         submarineBody = world.createBody(player.getBodyDef());
         submarineBody.createFixture(player.getFixture());
-        transformWallsToBodies("wall-rectangles", "wall");
+        bullet = new Bullet(world);
+        bulletTexture = new Texture("bullet.png");
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         touchpad = new Touchpad(10, getTouchpadStyle());
         touchpad.setBounds(100, 100,100,100);
         touchpad.setPosition(50, 50);
         stage.addActor(touchpad);
+        transformWallsToBodies("wall-rectangles", "wall");
+
+		// Game objects
+		room = 2;
+		bullets = new ArrayList<>();
+		bodies = new Array<>();
+		bodiesToBeDestroyed = new Array<>();
 
 		touchpad.addListener(new ChangeListener() {
 			@Override
@@ -131,30 +147,55 @@ public class Game extends ApplicationAdapter {
 			}
 		});
 
-		// Game objects
-		room = 2;
-		bullets = new ArrayList<>();
+//        Use ContactListener with:
+//            - Submarine collides with phosphorus
+//            - Bullet collides with wall
+//            - Bullet collides with phosphorus
+//
+//        world.setContactListener(new ContactListener() {
+//            @Override
+//            public void beginContact(Contact contact) {
+//
+//            }
+//
+//            @Override
+//            public void endContact(Contact contact) {
+//
+//            }
+//
+//            @Override
+//            public void preSolve(Contact contact, Manifold oldManifold) {
+//
+//            }
+//
+//            @Override
+//            public void postSolve(Contact contact, ContactImpulse impulse) {
+//
+//            }
+//        });
 	}
 
 	@Override
 	public void render () {
-	    submarineMove();
-
-	    if (touchpad.isTouched()) {
-	        submarineRotation();
-            player.setSpeed(maxSpeed);
-
-	    }
-
 		batch.setProjectionMatrix(camera.combined);
 		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
 		moveCamera(camera);
 		tiledMapRenderer.render();
 		tiledMapRenderer.setView(camera);
+		world.getBodies(bodies);
+		checkIfChangeRoom(submarineBody.getPosition().x);
+
+	    submarineMove();
+		submarineShoot();
+
+	    if (touchpad.isTouched()) {
+	        submarineRotation();
+            player.setSpeed(maxSpeed);
+	    }
+
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-		checkIfChangeRoom(submarineBody.getPosition().x);
 		batch.begin();
 
 		for (int i = 0; i < bullets.size(); i++) {
@@ -167,10 +208,15 @@ public class Game extends ApplicationAdapter {
 			bullets.get(i).draw(batch);
 		}
 
+		drawBullets(); // Use drawBullets() method to draw from Array<Body> bullets
+
         player.draw(batch, submarineBody);
 
 		batch.end();
         debugRenderer.render(world, camera.combined);
+
+        clearBullets(); // use Array<Body> bodiesToBeDestroyed
+
         doPhysicsStep(Gdx.graphics.getDeltaTime());
 	}
 
@@ -218,7 +264,7 @@ public class Game extends ApplicationAdapter {
                     * player.getSpeed() * Gdx.graphics.getDeltaTime(),
                     (float) Math.sin(submarineBody.getAngle())
                             * player.getSpeed() * Gdx.graphics.getDeltaTime());
-            
+
             submarineBody.setLinearVelocity(force);
         }
     }
@@ -238,7 +284,64 @@ public class Game extends ApplicationAdapter {
         submarineBody.setTransform(submarineBody.getPosition(), newAngle);
 	}
 
-	// Fixed time step
+	private void submarineShoot() {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+			fireBullet();
+		}
+	}
+
+    private void fireBullet() {
+        Bullet bulletObj = new Bullet(
+				world,
+				desiredAngle,
+				player.getSprite().getX(),
+				player.getSprite().getY()
+        );
+
+		System.out.println(desiredAngle);
+
+		Body bulletBody = bulletObj.getBody();
+
+        bulletBody.applyLinearImpulse(
+            new Vector2(bulletObj.getSpeed(), 0),
+            bulletBody.getWorldCenter(),
+            true
+		);
+    }
+
+    private void drawBullets() {
+		System.out.println(bullet.getTexture().getWidth());
+
+        for (Body body: bodies) {
+            if (body.getUserData().equals("bullet")) {
+                batch.draw(
+                	bulletTexture,
+                	body.getPosition().x - bullet.getFixture().shape.getRadius(),
+                	body.getPosition().y - bullet.getFixture().shape.getRadius(),
+                	bullet.getFixture().shape.getRadius(),
+                	bullet.getFixture().shape.getRadius(),
+                	bullet.getFixture().shape.getRadius() * 2,
+                	bullet.getFixture().shape.getRadius() * 2,
+                	1.0f,
+                	1.0f,
+                	submarineBody.getTransform().getRotation() * MathUtils.radiansToDegrees,
+                	0,
+                	0,
+						(int) (bulletTexture.getWidth() * scale),
+						(int) (bulletTexture.getHeight() * scale),
+                	false,
+                	false
+				);
+            } else {
+            	break;
+			}
+        }
+    }
+
+	private void clearBullets() {
+	}
+
+    // Fixed time step
     private void doPhysicsStep(float deltaTime) {
 
         float frameTime = deltaTime;
@@ -300,8 +403,6 @@ public class Game extends ApplicationAdapter {
 		) {
 			room = 3;
 		}
-
-		System.out.println(room);
 	}
 
 	private void moveCamera(OrthographicCamera camera) {
@@ -369,5 +470,6 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		world.dispose();
 	}
 }
