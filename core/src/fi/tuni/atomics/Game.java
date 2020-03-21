@@ -22,12 +22,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
@@ -46,22 +49,19 @@ public class Game extends ApplicationAdapter {
     private World world;
     private Box2DDebugRenderer debugRenderer;
     private Player player;
+    private Bullet bullet;
+    private Array<Body> bodies;
+    private Array<Body> bodiesToBeDestroyed;
     private ArrayList<Bullet> bullets;
     private int room;
     private Body submarineBody;
+    private Texture bulletTexture;
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
     private Skin touchpadSkin;
     private Drawable touchBackground;
     private Drawable touchKnob;
-    private Button speedButton;
-    private Button.ButtonStyle speedButtonStyle;
-    private Skin buttonSkin;
-    private Drawable up;
-    private Drawable down;
     private Stage stage;
-    private Table joysticTable;
-    private Table speedButtonTable;
     private float desiredAngle;
     private float deltaX;
     private float deltaY;
@@ -91,6 +91,7 @@ public class Game extends ApplicationAdapter {
     private float SECOND_SCREEN_LEFT_SPAWN_POINT = 38 * TILE_LENGTH_PIXELS * scale;
     private float SECOND_SCREEN_RIGHT_SPAWN_POINT = 68 * TILE_LENGTH_PIXELS * scale;
     private float THIRD_SCREEN_SPAWN_POINT = 76 * TILE_LENGTH_PIXELS * scale;
+    private float magnitude = 2.5f;
 	private boolean moving = false;
 	private float speedDecrement = 3f;
 	private float maxSpeed = 150f;
@@ -117,40 +118,84 @@ public class Game extends ApplicationAdapter {
                 WORLD_HEIGHT_PIXELS / 2 * scale);
         submarineBody = world.createBody(player.getBodyDef());
         submarineBody.createFixture(player.getFixture());
+        bullet = new Bullet(world);
+        bulletTexture = new Texture("bullet.png");
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+        touchpad = new Touchpad(10, getTouchpadStyle());
+        touchpad.setBounds(100, 100,100,100);
+        touchpad.setPosition(50, 50);
+        stage.addActor(touchpad);
         transformWallsToBodies("wall-rectangles", "wall");
-        createButtons();
 
 		// Game objects
 		room = 2;
 		bullets = new ArrayList<>();
+		bodies = new Array<>();
+		bodiesToBeDestroyed = new Array<>();
+
+		touchpad.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				deltaX = ((Touchpad) actor).getKnobPercentX();
+				deltaY = ((Touchpad) actor).getKnobPercentY();
+				if (deltaX != -0.0 && deltaY != -0.0) {
+					moving = true;
+				} else {
+					moving = false;
+				}
+			}
+		});
+
+//        Use ContactListener with:
+//            - Submarine collides with phosphorus
+//            - Bullet collides with wall
+//            - Bullet collides with phosphorus
+//
+//        world.setContactListener(new ContactListener() {
+//            @Override
+//            public void beginContact(Contact contact) {
+//
+//            }
+//
+//            @Override
+//            public void endContact(Contact contact) {
+//
+//            }
+//
+//            @Override
+//            public void preSolve(Contact contact, Manifold oldManifold) {
+//
+//            }
+//
+//            @Override
+//            public void postSolve(Contact contact, ContactImpulse impulse) {
+//
+//            }
+//        });
 	}
 
 	@Override
 	public void render () {
-
-        if (touchpad.isTouched()) {
-            submarineRotation();
-
-        }
-
-        if (speedButton.isPressed()) {
-            moving = true;
-            player.setSpeed(maxSpeed);
-        } else {
-            moving = false;
-        }
-
-        submarineMove();
-
 		batch.setProjectionMatrix(camera.combined);
 		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
 		moveCamera(camera);
 		tiledMapRenderer.render();
 		tiledMapRenderer.setView(camera);
+		world.getBodies(bodies);
+		checkIfChangeRoom(submarineBody.getPosition().x);
+
+	    submarineMove();
+		submarineShoot();
+
+	    if (touchpad.isTouched()) {
+	        submarineRotation();
+            player.setSpeed(maxSpeed);
+	    }
+
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-		checkIfChangeRoom(submarineBody.getPosition().x);
 		batch.begin();
 
 		for (int i = 0; i < bullets.size(); i++) {
@@ -163,76 +208,17 @@ public class Game extends ApplicationAdapter {
 			bullets.get(i).draw(batch);
 		}
 
+		drawBullets(); // Use drawBullets() method to draw from Array<Body> bullets
+
         player.draw(batch, submarineBody);
 
 		batch.end();
-        //joysticTable.setDebug(true);
-        //speedButtonTable.setDebug(true);
         debugRenderer.render(world, camera.combined);
+
+        clearBullets(); // use Array<Body> bodiesToBeDestroyed
+
         doPhysicsStep(Gdx.graphics.getDeltaTime());
 	}
-
-    // For debugging button responsivity. delete later.
-    public void resize(int width, int height) {
-        stage.getViewport().update(width,height,true);
-        createButtons();
-    }
-
-	private void createButtons() {
-        stage = new Stage();
-        joysticTable = new Table();
-        speedButtonTable = new Table();
-        joysticTable.setFillParent(true);
-        speedButtonTable.setFillParent(true);
-        Gdx.input.setInputProcessor(stage);
-        touchpad = new Touchpad(10, getTouchpadStyle());
-        joysticTable.add(touchpad).width(Gdx.graphics.getWidth() / 8)
-                .height(Gdx.graphics.getWidth() / 8)
-                .left()
-                .bottom()
-                .padLeft(-Gdx.graphics.getWidth() / 3f)
-                .padBottom(-Gdx.graphics.getHeight() / 3.5f)
-                .padTop(Gdx.graphics.getHeight() / 3.5f)
-                .padRight(Gdx.graphics.getWidth() / 3f)
-                .fill();
-        touchpadStyle.knob.setMinWidth(Gdx.graphics.getWidth() / 16);
-        touchpadStyle.knob.setMinHeight(Gdx.graphics.getWidth() / 16);
-        speedButton = new Button(getButtonStyle());
-        speedButtonTable.add(speedButton).width(Gdx.graphics.getWidth() / 8)
-                .height(Gdx.graphics.getWidth() / 8)
-                .right()
-                .bottom()
-                .padLeft(+Gdx.graphics.getWidth() / 3f)
-                .padBottom(-Gdx.graphics.getHeight() / 3.5f)
-                .padTop(+Gdx.graphics.getHeight() / 3.5f)
-                .padRight(-Gdx.graphics.getWidth() / 3f)
-                .fill();
-        stage.addActor(joysticTable);
-        stage.addActor(speedButtonTable);
-        touchpad.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                deltaX = ((Touchpad) actor).getKnobPercentX();
-                deltaY = ((Touchpad) actor).getKnobPercentY();
-            }
-        });
-    }
-
-    private Button.ButtonStyle getButtonStyle() {
-        buttonSkin = new Skin();
-        speedButtonStyle = new Button.ButtonStyle();
-
-        buttonSkin.add("down", new Texture("down.png"));
-        buttonSkin.add("up", new Texture("up.png"));
-
-        up = buttonSkin.getDrawable("up");
-        down = buttonSkin.getDrawable("down");
-
-        speedButtonStyle.up = up;
-        speedButtonStyle.down = down;
-
-        return speedButtonStyle;
-    }
 
 	private Touchpad.TouchpadStyle getTouchpadStyle() {
 	    touchpadSkin = new Skin();
@@ -244,6 +230,9 @@ public class Game extends ApplicationAdapter {
 
 	    touchBackground = touchpadSkin.getDrawable("touchBackground");
 	    touchKnob = touchpadSkin.getDrawable("touchKnob");
+
+	    touchKnob.setMinHeight(35);
+	    touchKnob.setMinWidth(35);
 
 	    touchpadStyle.background = touchBackground;
 	    touchpadStyle.knob = touchKnob;
@@ -275,7 +264,7 @@ public class Game extends ApplicationAdapter {
                     * player.getSpeed() * Gdx.graphics.getDeltaTime(),
                     (float) Math.sin(submarineBody.getAngle())
                             * player.getSpeed() * Gdx.graphics.getDeltaTime());
-            
+
             submarineBody.setLinearVelocity(force);
         }
     }
@@ -295,7 +284,64 @@ public class Game extends ApplicationAdapter {
         submarineBody.setTransform(submarineBody.getPosition(), newAngle);
 	}
 
-	// Fixed time step
+	private void submarineShoot() {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+			fireBullet();
+		}
+	}
+
+    private void fireBullet() {
+        Bullet bulletObj = new Bullet(
+				world,
+				desiredAngle,
+				player.getSprite().getX(),
+				player.getSprite().getY()
+        );
+
+		System.out.println(desiredAngle);
+
+		Body bulletBody = bulletObj.getBody();
+
+        bulletBody.applyLinearImpulse(
+            new Vector2(bulletObj.getSpeed(), 0),
+            bulletBody.getWorldCenter(),
+            true
+		);
+    }
+
+    private void drawBullets() {
+		System.out.println(bullet.getTexture().getWidth());
+
+        for (Body body: bodies) {
+            if (body.getUserData().equals("bullet")) {
+                batch.draw(
+                	bulletTexture,
+                	body.getPosition().x - bullet.getFixture().shape.getRadius(),
+                	body.getPosition().y - bullet.getFixture().shape.getRadius(),
+                	bullet.getFixture().shape.getRadius(),
+                	bullet.getFixture().shape.getRadius(),
+                	bullet.getFixture().shape.getRadius() * 2,
+                	bullet.getFixture().shape.getRadius() * 2,
+                	1.0f,
+                	1.0f,
+                	submarineBody.getTransform().getRotation() * MathUtils.radiansToDegrees,
+                	0,
+                	0,
+						(int) (bulletTexture.getWidth() * scale),
+						(int) (bulletTexture.getHeight() * scale),
+                	false,
+                	false
+				);
+            } else {
+            	break;
+			}
+        }
+    }
+
+	private void clearBullets() {
+	}
+
+    // Fixed time step
     private void doPhysicsStep(float deltaTime) {
 
         float frameTime = deltaTime;
@@ -357,8 +403,6 @@ public class Game extends ApplicationAdapter {
 		) {
 			room = 3;
 		}
-
-		System.out.println(room);
 	}
 
 	private void moveCamera(OrthographicCamera camera) {
@@ -426,5 +470,6 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		world.dispose();
 	}
 }

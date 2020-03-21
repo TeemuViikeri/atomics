@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
 
 public class Player {
     private Sprite sprite;
@@ -32,7 +31,7 @@ public class Player {
         createSubmarine();
     }
 
-    private void createSubmarine() {
+    public void createSubmarine() {
         subBodyDef = new BodyDef();
         subBodyDef.type = BodyDef.BodyType.DynamicBody;
 
@@ -88,8 +87,6 @@ public class Player {
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
     }
-
-    public Body getBody() { return body; }
 
     public FixtureDef getFixture() {
         return playerFixtureDef;
