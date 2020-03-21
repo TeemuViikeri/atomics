@@ -60,6 +60,8 @@ public class Game extends ApplicationAdapter {
     private Drawable up;
     private Drawable down;
     private Stage stage;
+    private Table joysticTable;
+    private Table speedButtonTable;
     private float desiredAngle;
     private float deltaX;
     private float deltaY;
@@ -116,14 +118,7 @@ public class Game extends ApplicationAdapter {
         submarineBody = world.createBody(player.getBodyDef());
         submarineBody.createFixture(player.getFixture());
         transformWallsToBodies("wall-rectangles", "wall");
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-        touchpad = new Touchpad(10, getTouchpadStyle());
-        touchpad.setBounds(100, 100,100,100);
-        stage.addActor(touchpad);
-        speedButton = new Button(getButtonStyle());
-        speedButton.setBounds(650, 100, 100, 100);
-        stage.addActor(speedButton);
+        createButtons();
 
 		touchpad.addListener(new ChangeListener() {
 			@Override
@@ -179,18 +174,60 @@ public class Game extends ApplicationAdapter {
         player.draw(batch, submarineBody);
 
 		batch.end();
+        //joysticTable.setDebug(true);
+        //speedButtonTable.setDebug(true);
         debugRenderer.render(world, camera.combined);
         doPhysicsStep(Gdx.graphics.getDeltaTime());
 	}
 
+    // For debugging button responsivity. delete later.
+    public void resize(int width, int height) {
+        stage.getViewport().update(width,height,true);
+        createButtons();
+    }
+
+	private void createButtons() {
+        stage = new Stage();
+        joysticTable = new Table();
+        speedButtonTable = new Table();
+        joysticTable.setFillParent(true);
+        speedButtonTable.setFillParent(true);
+        Gdx.input.setInputProcessor(stage);
+        touchpad = new Touchpad(10, getTouchpadStyle());
+        joysticTable.add(touchpad).width(Gdx.graphics.getWidth() / 8)
+                .height(Gdx.graphics.getWidth() / 8)
+                .left()
+                .bottom()
+                .padLeft(-Gdx.graphics.getWidth() / 3f)
+                .padBottom(-Gdx.graphics.getHeight() / 3.5f)
+                .padTop(Gdx.graphics.getHeight() / 3.5f)
+                .padRight(Gdx.graphics.getWidth() / 3f)
+                .fill();
+        touchpadStyle.knob.setMinWidth(Gdx.graphics.getWidth() / 16);
+        touchpadStyle.knob.setMinHeight(Gdx.graphics.getWidth() / 16);
+        speedButton = new Button(getButtonStyle());
+        speedButtonTable.add(speedButton).width(Gdx.graphics.getWidth() / 8)
+                .height(Gdx.graphics.getWidth() / 8)
+                .right()
+                .bottom()
+                .padLeft(+Gdx.graphics.getWidth() / 3f)
+                .padBottom(-Gdx.graphics.getHeight() / 3.5f)
+                .padTop(+Gdx.graphics.getHeight() / 3.5f)
+                .padRight(-Gdx.graphics.getWidth() / 3f)
+                .fill();
+        stage.addActor(joysticTable);
+        stage.addActor(speedButtonTable);
+    }
+
     private Button.ButtonStyle getButtonStyle() {
         buttonSkin = new Skin();
         speedButtonStyle = new Button.ButtonStyle();
+
         buttonSkin.add("down", new Texture("down.png"));
         buttonSkin.add("up", new Texture("up.png"));
+
         up = buttonSkin.getDrawable("up");
         down = buttonSkin.getDrawable("down");
-
 
         speedButtonStyle.up = up;
         speedButtonStyle.down = down;
@@ -208,9 +245,6 @@ public class Game extends ApplicationAdapter {
 
 	    touchBackground = touchpadSkin.getDrawable("touchBackground");
 	    touchKnob = touchpadSkin.getDrawable("touchKnob");
-
-	    touchKnob.setMinHeight(35);
-	    touchKnob.setMinWidth(35);
 
 	    touchpadStyle.background = touchBackground;
 	    touchpadStyle.knob = touchKnob;
