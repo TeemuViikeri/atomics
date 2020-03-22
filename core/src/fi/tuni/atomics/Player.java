@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class Player {
-    private Sprite sprite;
+    static Sprite sprite;
     private Texture texture;
     private float speed;
     private float degrees = 0;

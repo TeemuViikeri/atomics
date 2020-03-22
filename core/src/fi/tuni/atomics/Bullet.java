@@ -14,10 +14,10 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Bullet {
     private Body body;
-    private BodyDef myBodyDef;
-    private FixtureDef playerFixtureDef;
+    private BodyDef bodyDef;
+    private FixtureDef fixtureDef;
     private Sprite sprite;
-    private Texture texture;
+    private static Texture texture;
     private float speed;
     private float degrees;
 
@@ -25,7 +25,7 @@ public class Bullet {
         // Texture area too big --> crop smaller
         texture = new Texture("bullet.png");
         sprite = new Sprite(texture);
-        speed = 0.20f; // Check the right speed variable
+        speed = 3f; // Check the right speed variable
         this.degrees = degrees;
 
         sprite.setPosition(x, y);
@@ -36,7 +36,7 @@ public class Bullet {
         createBulletBody(world);
     }
 
-    public Bullet(World world) {
+    Bullet(World world) {
         texture = new Texture("bullet.png");
         createSimpleBulletBody(world);
     }
@@ -44,51 +44,49 @@ public class Bullet {
     private void createBulletBody(World world) {
         body = world.createBody(getDefinitionOfBody());
         body.createFixture(getFixtureDefinition());
-        body.setUserData("bullet");
+        body.setUserData(this);
     }
 
     private void createSimpleBulletBody(World world) {
         body = world.createBody(getSimpleDefinitionOfBody());
         body.createFixture(getFixtureDefinition());
-        body.setUserData("bullet");
+        body.setUserData("simple bullet");
     }
 
     private BodyDef getDefinitionOfBody() {
-        myBodyDef = new BodyDef();
+        bodyDef = new BodyDef();
 
-        myBodyDef.type = BodyDef.BodyType.DynamicBody;
-        myBodyDef.position.set(Game.submarineBody.getWorldCenter());
-        myBodyDef.angle = Game.submarineBody.getAngle();
-        System.out.println(Game.player.getSprite().getX() + "a" + Game.player.getSprite().getY());
-        System.out.println(Game.submarineBody.getPosition().x + "b" + Game.submarineBody.getPosition().y);
-        System.out.println(Game.submarineBody.getWorldCenter() + "c");
-        return myBodyDef;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(Game.submarineBody.getWorldCenter());
+        bodyDef.angle = Game.submarineBody.getAngle();
+
+        return bodyDef;
     }
 
     private BodyDef getSimpleDefinitionOfBody() {
-        myBodyDef = new BodyDef();
-        myBodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
 
-        return myBodyDef;
+        return bodyDef;
     }
 
     private FixtureDef getFixtureDefinition() {
-        playerFixtureDef = new FixtureDef();
+        fixtureDef = new FixtureDef();
 
-        playerFixtureDef.filter.groupIndex = -1;
+        fixtureDef.filter.groupIndex = -1;
         // Mass per square meter (kg^m2)
-        playerFixtureDef.density = 1f;
+        fixtureDef.density = 1f;
         // How bouncy object? Very bouncy [0,1]
-        playerFixtureDef.restitution = 0f;
+        fixtureDef.restitution = 0f;
         // How slipper object? [0,1]
-        playerFixtureDef.friction = 0f;
+        fixtureDef.friction = 0f;
 
         CircleShape circleshape = new CircleShape();
 
-        circleshape.setRadius(0.1f);
-        playerFixtureDef.shape = circleshape;
+        circleshape.setRadius(0.05f);
+        fixtureDef.shape = circleshape;
 
-        return playerFixtureDef;
+        return fixtureDef;
     }
 
     public void draw(SpriteBatch batch) {
@@ -127,10 +125,10 @@ public class Bullet {
     public Body getBody() { return body; }
 
     public BodyDef getBodyDef() {
-        return myBodyDef;
+        return bodyDef;
     }
 
     public FixtureDef getFixture() {
-        return playerFixtureDef;
+        return fixtureDef;
     }
 }

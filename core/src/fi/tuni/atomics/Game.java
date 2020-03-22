@@ -54,7 +54,7 @@ public class Game extends ApplicationAdapter {
     private Texture bulletTexture;
     private Array<Body> bodies;
     private Array<Body> bodiesToBeDestroyed;
-    private ArrayList<Bullet> bullets;
+    private Array<Body> bullets;
     static Body submarineBody;
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
@@ -129,10 +129,8 @@ public class Game extends ApplicationAdapter {
                 WORLD_HEIGHT_PIXELS / 2 * scale);
         submarineBody = world.createBody(player.getBodyDef());
         submarineBody.createFixture(player.getFixture());
+        submarineBody.setUserData("player");
         bullet = new Bullet(world);
-        bulletTexture = new Texture("bullet.png");
-		bullets = new ArrayList<>();
-        bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
         transformWallsToBodies("wall-rectangles", "wall");
         createButtons();
@@ -167,7 +165,6 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-	    //System.out.println(submarineBody.getPosition().x + " " + submarineBody.getPosition().y);
 		batch.setProjectionMatrix(camera.combined);
 		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
 		tiledMapRenderer.render();
@@ -175,6 +172,7 @@ public class Game extends ApplicationAdapter {
         debugRenderer.render(world, camera.combined);
 		moveCamera(camera);
 		checkIfChangeRoom(submarineBody.getPosition().x);
+		bodies = new Array<Body>(world.getBodyCount());
 		world.getBodies(bodies);
 
         if (touchpad.isTouched()) {
@@ -195,16 +193,6 @@ public class Game extends ApplicationAdapter {
         stage.draw();
 
 		batch.begin();
-
-		for (int i = 0; i < bullets.size(); i++) {
-			bullets.get(i).getSprite().setX(bullets.get(i).getSprite().getX()
-					+ bullets.get(i).getSpeed()
-                    * (float) Math.cos( Math.toRadians(bullets.get(i).getDegrees())));
-			bullets.get(i).getSprite().setY(bullets.get(i).getSprite().getY()
-                    + bullets.get(i).getSpeed()
-                    * (float) Math.sin( Math.toRadians(bullets.get(i).getDegrees())));
-			bullets.get(i).draw(batch);
-		}
 
         player.draw(batch, submarineBody);
         drawBullets(); // Use drawBullets() method to draw from Array<Body> bullets
@@ -355,9 +343,9 @@ public class Game extends ApplicationAdapter {
         );
 
         Vector2 force = new Vector2((float) Math.cos(bulletObj.getBody().getAngle())
-                * 10 * Gdx.graphics.getDeltaTime(),
+                * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime(),
                 (float) Math.sin(bulletObj.getBody().getAngle())
-                        * 10 * Gdx.graphics.getDeltaTime());
+                        * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime());
 
 
         Body bulletBody = bulletObj.getBody();
@@ -367,34 +355,30 @@ public class Game extends ApplicationAdapter {
                 bulletBody.getWorldCenter(),
                 true
         );
-        System.out.println(bulletBody.getPosition().x + " " + bulletBody.getPosition().y);
     }
 
     private void drawBullets() {
-        //System.out.println(bullet.getTexture().getWidth());
-
         for (Body body: bodies) {
-            if (body.getUserData().equals("bullet")) {
+            Object temp = body.getUserData();
+            if (temp instanceof Bullet) {
                 batch.draw(
-                        bulletTexture,
-                        body.getPosition().x - bullet.getFixture().shape.getRadius(),
-                        body.getPosition().y - bullet.getFixture().shape.getRadius(),
-                        bullet.getFixture().shape.getRadius(),
-                        bullet.getFixture().shape.getRadius(),
-                        bullet.getFixture().shape.getRadius() * 2,
-                        bullet.getFixture().shape.getRadius() * 2,
-                        1.0f,
-                        1.0f,
-                        submarineBody.getTransform().getRotation() * MathUtils.radiansToDegrees,
-                        0,
-                        0,
-                        (int) (bulletTexture.getWidth() * scale),
-                        (int) (bulletTexture.getHeight() * scale),
-                        false,
-                        false
+                    bullet.getTexture(),
+                    body.getPosition().x - bullet.getFixture().shape.getRadius(),
+                    body.getPosition().y - bullet.getFixture().shape.getRadius(),
+                    bullet.getFixture().shape.getRadius(),
+                    bullet.getFixture().shape.getRadius(),
+                    bullet.getFixture().shape.getRadius() * 2,
+                    bullet.getFixture().shape.getRadius() * 2,
+                    1.0f,
+                    1.0f,
+                    submarineBody.getAngle() * MathUtils.radiansToDegrees,
+                    0,
+                    0,
+                    bullet.getTexture().getWidth(),
+                    bullet.getTexture().getHeight(),
+                    false,
+                    false
                 );
-            } else {
-                break;
             }
         }
     }
