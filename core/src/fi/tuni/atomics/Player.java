@@ -40,9 +40,10 @@ public class Player {
 
         playerFixtureDef = new FixtureDef();
 
-        playerFixtureDef.density     = 0;
-        playerFixtureDef.restitution = 0;
-        playerFixtureDef.friction    = 0;
+        playerFixtureDef.filter.groupIndex = -1;
+        //playerFixtureDef.density     = 1f;
+        //playerFixtureDef.restitution = 0;
+        //playerFixtureDef.friction    = 0;
 
         PolygonShape polygon = new PolygonShape();
         polygon.setAsBox(0.25f, 0.125f);
@@ -58,6 +59,10 @@ public class Player {
     // Getters and setters
     public float getDegrees() {
         return degrees;
+    }
+
+    public Body getBody() {
+        return body;
     }
 
     void setDegrees(float degrees) {

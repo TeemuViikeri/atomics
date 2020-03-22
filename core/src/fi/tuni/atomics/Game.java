@@ -49,13 +49,13 @@ public class Game extends ApplicationAdapter {
 	private TiledMapRenderer tiledMapRenderer;
     private World world;
     private Box2DDebugRenderer debugRenderer;
-    private Player player;
+    static Player player;
     private Bullet bullet;
     private Texture bulletTexture;
     private Array<Body> bodies;
     private Array<Body> bodiesToBeDestroyed;
     private ArrayList<Bullet> bullets;
-    private Body submarineBody;
+    static Body submarineBody;
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
     private Skin touchpadSkin;
@@ -167,6 +167,7 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+	    //System.out.println(submarineBody.getPosition().x + " " + submarineBody.getPosition().y);
 		batch.setProjectionMatrix(camera.combined);
 		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
 		tiledMapRenderer.render();
@@ -348,24 +349,29 @@ public class Game extends ApplicationAdapter {
     private void fireBullet() {
         Bullet bulletObj = new Bullet(
                 world,
-                desiredAngle,
-                player.getSprite().getX(),
-                player.getSprite().getY()
+                submarineBody.getAngle(),
+                submarineBody.getPosition().x,
+                submarineBody.getPosition().y
         );
 
-        System.out.println(desiredAngle);
+        Vector2 force = new Vector2((float) Math.cos(bulletObj.getBody().getAngle())
+                * 10 * Gdx.graphics.getDeltaTime(),
+                (float) Math.sin(bulletObj.getBody().getAngle())
+                        * 10 * Gdx.graphics.getDeltaTime());
+
 
         Body bulletBody = bulletObj.getBody();
 
         bulletBody.applyLinearImpulse(
-                new Vector2(bulletObj.getSpeed(), 0),
+                force,
                 bulletBody.getWorldCenter(),
                 true
         );
+        System.out.println(bulletBody.getPosition().x + " " + bulletBody.getPosition().y);
     }
 
     private void drawBullets() {
-        System.out.println(bullet.getTexture().getWidth());
+        //System.out.println(bullet.getTexture().getWidth());
 
         for (Body body: bodies) {
             if (body.getUserData().equals("bullet")) {

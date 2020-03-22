@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -55,8 +57,11 @@ public class Bullet {
         myBodyDef = new BodyDef();
 
         myBodyDef.type = BodyDef.BodyType.DynamicBody;
-        myBodyDef.position.set(sprite.getX(),sprite.getY());
-
+        myBodyDef.position.set(Game.submarineBody.getWorldCenter());
+        myBodyDef.angle = Game.submarineBody.getAngle();
+        System.out.println(Game.player.getSprite().getX() + "a" + Game.player.getSprite().getY());
+        System.out.println(Game.submarineBody.getPosition().x + "b" + Game.submarineBody.getPosition().y);
+        System.out.println(Game.submarineBody.getWorldCenter() + "c");
         return myBodyDef;
     }
 
@@ -70,8 +75,9 @@ public class Bullet {
     private FixtureDef getFixtureDefinition() {
         playerFixtureDef = new FixtureDef();
 
+        playerFixtureDef.filter.groupIndex = -1;
         // Mass per square meter (kg^m2)
-        playerFixtureDef.density = 1;
+        playerFixtureDef.density = 1f;
         // How bouncy object? Very bouncy [0,1]
         playerFixtureDef.restitution = 0f;
         // How slipper object? [0,1]
