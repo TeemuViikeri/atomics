@@ -13,31 +13,22 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Bullet {
+    private static Texture texture = new Texture("bullet.png");
     private Body body;
     private BodyDef bodyDef;
     private FixtureDef fixtureDef;
     private Sprite sprite;
-    private static Texture texture;
     private float speed;
     private float degrees;
 
     Bullet(World world, float degrees, float x, float y) {
         // Texture area too big --> crop smaller
-        texture = new Texture("bullet.png");
-        sprite = new Sprite(texture);
         speed = 3f; // Check the right speed variable
         this.degrees = degrees;
-
-        sprite.setPosition(x, y);
-        sprite.setSize(0.2f, 0.2f);
-        sprite.setOriginCenter();
-        sprite.setRotation(degrees);
-
         createBulletBody(world);
     }
 
     Bullet(World world) {
-        texture = new Texture("bullet.png");
         createSimpleBulletBody(world);
     }
 
@@ -100,10 +91,6 @@ public class Bullet {
     // Getters and setters
     Texture getTexture() {
         return texture;
-    }
-
-    void setTexture(Texture texture) {
-        this.texture = texture;
     }
 
     float getSpeed() {

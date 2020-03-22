@@ -41,6 +41,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Game extends ApplicationAdapter {
 	// Non-initiated fields
@@ -150,7 +151,9 @@ public class Game extends ApplicationAdapter {
                 if (isBulletContactingWall(bodyA, bodyB)) {
                     if (bodyA.getUserData() instanceof Bullet) {
                         bodiesToBeDestroyed.add(bodyA);
+                        bodyA.setUserData("dead");
                     } else {
+                        bodyB.setUserData("dead");
                         bodiesToBeDestroyed.add(bodyB);
                     }
                 }
@@ -181,9 +184,6 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-        doPhysicsStep(Gdx.graphics.getDeltaTime());
-            clearBullets();
-            bodiesToBeDestroyed.clear();
 		batch.setProjectionMatrix(camera.combined);
 		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
 		tiledMapRenderer.render();
@@ -216,6 +216,9 @@ public class Game extends ApplicationAdapter {
         drawBullets();
 
 		batch.end();
+
+        doPhysicsStep(Gdx.graphics.getDeltaTime());
+        clearBullets();
 
         //joystickTable.setDebug(true);
         //speedButtonTable.setDebug(true);
@@ -400,8 +403,10 @@ public class Game extends ApplicationAdapter {
     }
 
     private void clearBullets() {
-        for (Body body: bodiesToBeDestroyed) {
-            world.destroyBody(body);
+	    for (Iterator<Body> i = bodiesToBeDestroyed.iterator(); i.hasNext();) {
+	        Body body = i.next();
+	        world.destroyBody(body);
+	        i.remove();
         }
     }
 
