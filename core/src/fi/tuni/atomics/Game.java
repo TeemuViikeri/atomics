@@ -181,6 +181,9 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+        doPhysicsStep(Gdx.graphics.getDeltaTime());
+            clearBullets();
+            bodiesToBeDestroyed.clear();
 		batch.setProjectionMatrix(camera.combined);
 		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
 		tiledMapRenderer.render();
@@ -216,8 +219,6 @@ public class Game extends ApplicationAdapter {
 
         //joystickTable.setDebug(true);
         //speedButtonTable.setDebug(true);
-        doPhysicsStep(Gdx.graphics.getDeltaTime());
-        clearBullets();
 	}
 
     // For debugging button responsivity. delete later.
