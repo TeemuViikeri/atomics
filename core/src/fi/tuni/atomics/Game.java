@@ -25,6 +25,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -131,37 +132,52 @@ public class Game extends ApplicationAdapter {
         submarineBody.createFixture(player.getFixture());
         submarineBody.setUserData("player");
         bullet = new Bullet(world);
+        bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
         transformWallsToBodies("wall-rectangles", "wall");
         createButtons();
 
 //    Use ContactListener with:
-//            - Submarine collides with phosphorus
-//            - Bullet collides with wall
-//            - Bullet collides with phosphorus
-//
-//        world.setContactListener(new ContactListener() {
-//            @Override
-//            public void beginContact(Contact contact) {
-//
-//            }
-//
-//            @Override
-//            public void endContact(Contact contact) {
-//
-//            }
-//
-//            @Override
-//            public void preSolve(Contact contact, Manifold oldManifold) {
-//
-//            }
-//
-//            @Override
-//            public void postSolve(Contact contact, ContactImpulse impulse) {
-//
-//            }
-//        });
+//    - Submarine collides with phosphorus
+//    - Bullet collides with wall
+//    - Bullet collides with phosphorus
+        world.setContactListener(new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+                Body bodyA = contact.getFixtureA().getBody();
+                Body bodyB = contact.getFixtureB().getBody();
+
+                if (isBulletContactingWall(bodyA, bodyB)) {
+                    if (bodyA.getUserData() instanceof Bullet) {
+                        bodiesToBeDestroyed.add(bodyA);
+                    } else {
+                        bodiesToBeDestroyed.add(bodyB);
+                    }
+                }
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+
+            }
+        });
 	}
+
+    private boolean isBulletContactingWall(Body a, Body b) {
+        if (a.getUserData() instanceof Bullet && b.getUserData().equals("wall")) {
+            return true;
+        } else return a.getUserData().equals("wall") && b.getUserData() instanceof Bullet;
+    }
 
 	@Override
 	public void render () {
@@ -172,7 +188,6 @@ public class Game extends ApplicationAdapter {
         debugRenderer.render(world, camera.combined);
 		moveCamera(camera);
 		checkIfChangeRoom(submarineBody.getPosition().x);
-		bodies = new Array<Body>(world.getBodyCount());
 		world.getBodies(bodies);
 
         if (touchpad.isTouched()) {
@@ -195,14 +210,14 @@ public class Game extends ApplicationAdapter {
 		batch.begin();
 
         player.draw(batch, submarineBody);
-        drawBullets(); // Use drawBullets() method to draw from Array<Body> bullets
+        drawBullets();
 
 		batch.end();
 
-        //joysticTable.setDebug(true);
+        //joystickTable.setDebug(true);
         //speedButtonTable.setDebug(true);
-        clearBullets(); // use Array<Body> bodiesToBeDestroyed
         doPhysicsStep(Gdx.graphics.getDeltaTime());
+        clearBullets();
 	}
 
     // For debugging button responsivity. delete later.
@@ -219,8 +234,8 @@ public class Game extends ApplicationAdapter {
         speedButtonTable.setFillParent(true);
         Gdx.input.setInputProcessor(stage);
         touchpad = new Touchpad(10, getTouchpadStyle());
-        joysticTable.add(touchpad).width(Gdx.graphics.getWidth() / 8)
-                .height(Gdx.graphics.getWidth() / 8)
+        joysticTable.add(touchpad).width(Gdx.graphics.getWidth() / 8.0f)
+                .height(Gdx.graphics.getWidth() / 8.0f)
                 .left()
                 .bottom()
                 .padLeft(-Gdx.graphics.getWidth() / 3f)
@@ -228,11 +243,11 @@ public class Game extends ApplicationAdapter {
                 .padTop(Gdx.graphics.getHeight() / 3.5f)
                 .padRight(Gdx.graphics.getWidth() / 3f)
                 .fill();
-        touchpadStyle.knob.setMinWidth(Gdx.graphics.getWidth() / 16);
-        touchpadStyle.knob.setMinHeight(Gdx.graphics.getWidth() / 16);
+        touchpadStyle.knob.setMinWidth(Gdx.graphics.getWidth() / 16.0f);
+        touchpadStyle.knob.setMinHeight(Gdx.graphics.getWidth() / 16.0f);
         speedButton = new Button(getButtonStyle());
-        speedButtonTable.add(speedButton).width(Gdx.graphics.getWidth() / 8)
-                .height(Gdx.graphics.getWidth() / 8)
+        speedButtonTable.add(speedButton).width(Gdx.graphics.getWidth() / 8.0f)
+                .height(Gdx.graphics.getWidth() / 8.0f)
                 .right()
                 .bottom()
                 .padLeft(+Gdx.graphics.getWidth() / 3f)
@@ -384,9 +399,12 @@ public class Game extends ApplicationAdapter {
     }
 
     private void clearBullets() {
+        for (Body body: bodiesToBeDestroyed) {
+            world.destroyBody(body);
+        }
     }
 
-	// Fixed time step
+    // Fixed time step
     private void doPhysicsStep(float deltaTime) {
 
         float frameTime = deltaTime;
