@@ -41,8 +41,8 @@ public class Player {
         playerFixtureDef = new FixtureDef();
 
         playerFixtureDef.filter.groupIndex = -1;
-        //playerFixtureDef.density     = 1f;
-        //playerFixtureDef.restitution = 0;
+        //playerFixtureDef.density     = 2f;
+        //playerFixtureDef.restitution = 1f;
         //playerFixtureDef.friction    = 0;
 
         PolygonShape polygon = new PolygonShape();

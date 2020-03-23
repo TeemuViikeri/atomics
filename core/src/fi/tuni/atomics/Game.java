@@ -3,10 +3,12 @@ package fi.tuni.atomics;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -26,16 +28,19 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
@@ -64,6 +69,7 @@ public class Game extends ApplicationAdapter {
     private Drawable touchBackground;
     private Drawable touchKnob;
     private Button speedButton;
+    private Button shootButton;
     private Button.ButtonStyle speedButtonStyle;
     private Skin buttonSkin;
     private Drawable up;
@@ -71,9 +77,11 @@ public class Game extends ApplicationAdapter {
     private Stage stage;
     private Table joysticTable;
     private Table speedButtonTable;
+    private Table shootButtonTable;
     private float desiredAngle;
     private float deltaX;
     private float deltaY;
+    private Phosphorus phosphorus;
 
 	// Initiated fields
     static float TILE_LENGTH_PIXELS = 32;
@@ -135,6 +143,9 @@ public class Game extends ApplicationAdapter {
         bullet = new Bullet(world);
         bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
+        phosphorus = new Phosphorus(world, 13, 6.4f);
+        phosphorus.getBody().applyLinearImpulse(new Vector2(3, -3),
+                phosphorus.getBody().getWorldCenter(),  true);
         transformWallsToBodies("wall-rectangles", "wall");
         createButtons();
 
@@ -205,16 +216,18 @@ public class Game extends ApplicationAdapter {
         }
 
         submarineMove();
-        submarineShoot();
+        Vector2 v = new Vector2(1,1);
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
 		batch.begin();
-
-        player.draw(batch, submarineBody);
         drawBullets();
-
+        player.draw(batch, submarineBody);
+        batch.draw(phosphorus.getAnimation().getKeyFrame
+                        (phosphorus.setStateTime(), true),
+                phosphorus.getBody().getPosition().x - 0.25f,
+                phosphorus.getBody().getPosition().y - 0.25f,0.5f, 0.5f);
 		batch.end();
 
         doPhysicsStep(Gdx.graphics.getDeltaTime());
@@ -232,16 +245,17 @@ public class Game extends ApplicationAdapter {
 
 	private void createButtons() {
         stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
         joysticTable = new Table();
         speedButtonTable = new Table();
+        shootButtonTable = new Table();
         joysticTable.setFillParent(true);
         speedButtonTable.setFillParent(true);
-        Gdx.input.setInputProcessor(stage);
+        shootButtonTable.setFillParent(true);
         touchpad = new Touchpad(10, getTouchpadStyle());
-        joysticTable.add(touchpad).width(Gdx.graphics.getWidth() / 8.0f)
-                .height(Gdx.graphics.getWidth() / 8.0f)
-                .left()
-                .bottom()
+
+        joysticTable.add(touchpad).width(Gdx.graphics.getHeight() / 6.0f)
+                .height(Gdx.graphics.getHeight() / 6.0f)
                 .padLeft(-Gdx.graphics.getWidth() / 3f)
                 .padBottom(-Gdx.graphics.getHeight() / 3.5f)
                 .padTop(Gdx.graphics.getHeight() / 3.5f)
@@ -249,25 +263,45 @@ public class Game extends ApplicationAdapter {
                 .fill();
         touchpadStyle.knob.setMinWidth(Gdx.graphics.getWidth() / 16.0f);
         touchpadStyle.knob.setMinHeight(Gdx.graphics.getWidth() / 16.0f);
+
         speedButton = new Button(getButtonStyle());
-        speedButtonTable.add(speedButton).width(Gdx.graphics.getWidth() / 8.0f)
-                .height(Gdx.graphics.getWidth() / 8.0f)
-                .right()
-                .bottom()
+        speedButtonTable.add(speedButton).width(Gdx.graphics.getHeight() / 6.0f)
+                .height(Gdx.graphics.getHeight() / 6.0f)
                 .padLeft(+Gdx.graphics.getWidth() / 3f)
                 .padBottom(-Gdx.graphics.getHeight() / 3.5f)
                 .padTop(+Gdx.graphics.getHeight() / 3.5f)
                 .padRight(-Gdx.graphics.getWidth() / 3f)
                 .fill();
+
+        shootButton = new Button(getButtonStyle());
+        shootButtonTable.add(shootButton).width((float) Gdx.graphics.getHeight() / 6.0f)
+                .height((float) Gdx.graphics.getHeight() / 6.0f)
+                .padLeft((float) Gdx.graphics.getWidth() / 3f)
+                .padBottom((float) -Gdx.graphics.getHeight() / 3.5f)
+                .padTop((float) Gdx.graphics.getHeight() / 3.5f)
+                .padRight((float) -Gdx.graphics.getWidth() / 40f)
+                .fill();
+
         stage.addActor(joysticTable);
         stage.addActor(speedButtonTable);
+        stage.addActor(shootButtonTable);
+
         touchpad.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                deltaX = ((Touchpad) actor).getKnobPercentX();
-                deltaY = ((Touchpad) actor).getKnobPercentY();
+                    deltaX = ((Touchpad) actor).getKnobPercentX();
+                    deltaY = ((Touchpad) actor).getKnobPercentY();
             }
         });
+
+        shootButton.addListener(new ActorGestureListener() {
+            @Override
+            public void tap(InputEvent event, float x, float y, int count, int button) {
+
+                fireBullet();
+            }
+        });
+
     }
 
     private Button.ButtonStyle getButtonStyle() {
@@ -346,12 +380,6 @@ public class Game extends ApplicationAdapter {
                 + Math.min(maxRotation, Math.max(-maxRotation, totalRotation));
         submarineBody.setTransform(submarineBody.getPosition(), newAngle);
 	}
-
-    private void submarineShoot() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            fireBullet();
-        }
-    }
 
     private void fireBullet() {
         Bullet bulletObj = new Bullet(
@@ -523,12 +551,16 @@ public class Game extends ApplicationAdapter {
 
         myBodyDef.position.set(centerX, centerY);
         Body wall = world.createBody(myBodyDef);
-
         wall.setUserData(userData);
 
         PolygonShape groundBox = new PolygonShape();
         groundBox.setAsBox(width / 2, height / 2);
-        wall.createFixture(groundBox, 0f);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = groundBox;
+
+        fixtureDef.filter.groupIndex = -2;
+        wall.createFixture(fixtureDef);
     }
 
 	private void clearScreen(float r, float g, float b) {
