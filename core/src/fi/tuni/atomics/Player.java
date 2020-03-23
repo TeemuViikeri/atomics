@@ -5,10 +5,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class Player {
     static Sprite sprite;
@@ -19,7 +21,7 @@ public class Player {
     private BodyDef subBodyDef;
     private FixtureDef playerFixtureDef;
 
-    Player(float x, float y) {
+    Player(World world, float x, float y) {
         texture = new Texture("cropped-subbi.png");
         sprite = new Sprite(texture);
 
@@ -28,16 +30,45 @@ public class Player {
         sprite.setPosition(x, y);
         sprite.setSize(0.50f, 0.25f);
         sprite.setOriginCenter();
-        createSubmarine();
+        createSubmarineBody(world);
     }
 
-    public void createSubmarine() {
+//    public void createSubmarine() {
+//        subBodyDef = new BodyDef();
+//        subBodyDef.type = BodyDef.BodyType.DynamicBody;
+//
+//        subBodyDef.position.set(Game.WORLD_WIDTH_PIXELS / 2 * Game.scale,
+//                Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale);
+//
+//        playerFixtureDef = new FixtureDef();
+//
+//        playerFixtureDef.filter.groupIndex = -1;
+//        //playerFixtureDef.density     = 2f;
+//        //playerFixtureDef.restitution = 1f;
+//        //playerFixtureDef.friction    = 0;
+//
+//        PolygonShape polygon = new PolygonShape();
+//        polygon.setAsBox(0.25f, 0.125f);
+//        playerFixtureDef.shape = polygon;
+//    }
+
+    public void createSubmarineBody(World world) {
+        body = world.createBody(getSubmarineBodyDef());
+        body.createFixture(getSubmarineFixtureDef());
+        body.setUserData(this);
+    }
+
+    private BodyDef getSubmarineBodyDef() {
         subBodyDef = new BodyDef();
         subBodyDef.type = BodyDef.BodyType.DynamicBody;
 
         subBodyDef.position.set(Game.WORLD_WIDTH_PIXELS / 2 * Game.scale,
                 Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale);
 
+        return subBodyDef;
+    }
+
+    private FixtureDef getSubmarineFixtureDef() {
         playerFixtureDef = new FixtureDef();
 
         playerFixtureDef.filter.groupIndex = -1;
@@ -48,6 +79,8 @@ public class Player {
         PolygonShape polygon = new PolygonShape();
         polygon.setAsBox(0.25f, 0.125f);
         playerFixtureDef.shape = polygon;
+
+        return playerFixtureDef;
     }
 
     void draw(SpriteBatch batch, Body body) {

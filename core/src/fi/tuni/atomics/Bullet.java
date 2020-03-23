@@ -13,27 +13,28 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Bullet {
-    private static Texture texture = new Texture("bullet.png");
     private Body body;
     private BodyDef bodyDef;
     private FixtureDef fixtureDef;
     private Sprite sprite;
+    private static Texture texture = new Texture("bullet.png");
     private float speed;
     private float degrees;
 
-    Bullet(World world, float degrees, float x, float y) {
-        // Texture area too big --> crop smaller
+    Bullet(World world, Body playerBody, float degrees, float x, float y) {
+        texture = new Texture("bullet.png");
+        sprite = new Sprite(texture);
         speed = 3f; // Check the right speed variable
         this.degrees = degrees;
-        createBulletBody(world);
+        createBulletBody(world, playerBody);
     }
 
     Bullet(World world) {
         createSimpleBulletBody(world);
     }
 
-    private void createBulletBody(World world) {
-        body = world.createBody(getDefinitionOfBody());
+    private void createBulletBody(World world, Body playerBody) {
+        body = world.createBody(getDefinitionOfBody(playerBody));
         body.createFixture(getFixtureDefinition());
         body.setUserData(this);
     }
@@ -44,12 +45,12 @@ public class Bullet {
         body.setUserData("simple bullet");
     }
 
-    private BodyDef getDefinitionOfBody() {
+    private BodyDef getDefinitionOfBody(Body playerBody) {
         bodyDef = new BodyDef();
 
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(Game.submarineBody.getWorldCenter());
-        bodyDef.angle = Game.submarineBody.getAngle();
+        bodyDef.position.set(playerBody.getWorldCenter());
+        bodyDef.angle = playerBody.getAngle();
 
         return bodyDef;
     }

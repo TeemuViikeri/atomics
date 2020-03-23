@@ -45,7 +45,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Game extends ApplicationAdapter {
@@ -56,13 +55,10 @@ public class Game extends ApplicationAdapter {
 	private TiledMapRenderer tiledMapRenderer;
     private World world;
     private Box2DDebugRenderer debugRenderer;
-    static Player player;
+    private Player player;
     private Bullet bullet;
-    private Texture bulletTexture;
     private Array<Body> bodies;
     private Array<Body> bodiesToBeDestroyed;
-    private Array<Body> bullets;
-    static Body submarineBody;
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
     private Skin touchpadSkin;
@@ -96,7 +92,6 @@ public class Game extends ApplicationAdapter {
 	private float PIPE_HORIZONTAL_TILES_AMOUNT = 8;
 	private float PIPE_VERTICAL_TILES_AMOUNT = 2;
 	private float PIPE_HORIZONTAL_PIXELS = PIPE_HORIZONTAL_TILES_AMOUNT * TILE_LENGTH_PIXELS;
-	private float PIPE_VERTICAL_PIXELS = PIPE_VERTICAL_TILES_AMOUNT * TILE_LENGTH_PIXELS;
 	private float FIRST_SCREEN_RIGHT_SIDE = 31 * TILE_LENGTH_PIXELS * scale;
     private float SECOND_SCREEN_LEFT_SIDE = 37 * TILE_LENGTH_PIXELS * scale;
     private float SECOND_SCREEN_RIGHT_SIDE = 69 * TILE_LENGTH_PIXELS * scale;
@@ -110,7 +105,6 @@ public class Game extends ApplicationAdapter {
     private double accumulator = 0;
     private float TIME_STEP = 1 / 60f;
     private int room = 2;
-    private float magnitude = 2.5f;
 	private boolean moving = false;
 	private float speedDecrement = 3f;
 	private float maxSpeed = 150f;
@@ -135,11 +129,9 @@ public class Game extends ApplicationAdapter {
 
 		// Game objects
         player = new Player(
+                world,
                 WORLD_WIDTH_PIXELS / 2 * scale,
                 WORLD_HEIGHT_PIXELS / 2 * scale);
-        submarineBody = world.createBody(player.getBodyDef());
-        submarineBody.createFixture(player.getFixture());
-        submarineBody.setUserData("player");
         bullet = new Bullet(world);
         bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
@@ -153,6 +145,7 @@ public class Game extends ApplicationAdapter {
 //    - Submarine collides with phosphorus
 //    - Bullet collides with wall
 //    - Bullet collides with phosphorus
+
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
@@ -201,11 +194,12 @@ public class Game extends ApplicationAdapter {
 		tiledMapRenderer.setView(camera);
         debugRenderer.render(world, camera.combined);
 		moveCamera(camera);
-		checkIfChangeRoom(submarineBody.getPosition().x);
+		checkIfChangeRoom(player.getBody().getPosition().x);
 		world.getBodies(bodies);
 
         if (touchpad.isTouched()) {
             submarineRotation();
+            // submarineRotation(desiredAngle, deltaX, deltaY);
         }
 
         if (speedButton.isPressed()) {
@@ -215,15 +209,15 @@ public class Game extends ApplicationAdapter {
             moving = false;
         }
 
+        //player.submarineMove();
         submarineMove();
-        Vector2 v = new Vector2(1,1);
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
 		batch.begin();
         drawBullets();
-        player.draw(batch, submarineBody);
+        player.draw(batch, player.getBody());
         batch.draw(phosphorus.getAnimation().getKeyFrame
                         (phosphorus.setStateTime(), true),
                 phosphorus.getBody().getPosition().x - 0.25f,
@@ -294,10 +288,11 @@ public class Game extends ApplicationAdapter {
             }
         });
 
+        System.out.println("here");
+
         shootButton.addListener(new ActorGestureListener() {
             @Override
             public void tap(InputEvent event, float x, float y, int count, int button) {
-
                 fireBullet();
             }
         });
@@ -339,36 +334,36 @@ public class Game extends ApplicationAdapter {
 
     private void submarineMove() {
         if (moving) {
-            Vector2 force = new Vector2((float) Math.cos(submarineBody.getAngle())
+            Vector2 force = new Vector2((float) Math.cos(player.getBody().getAngle())
                     * player.getSpeed() * Gdx.graphics.getDeltaTime(),
-                    (float) Math.sin(submarineBody.getAngle())
+                    (float) Math.sin(player.getBody().getAngle())
                             * player.getSpeed() * Gdx.graphics.getDeltaTime());
 
-            submarineBody.setLinearVelocity(force);
+            player.getBody().setLinearVelocity(force);
         }
 
         if (!moving && player.getSpeed() >= speedDecrement) {
             player.setSpeed(player.getSpeed() - speedDecrement);
-            Vector2 force = new Vector2((float) Math.cos(submarineBody.getAngle())
+            Vector2 force = new Vector2((float) Math.cos(player.getBody().getAngle())
                     * player.getSpeed() * Gdx.graphics.getDeltaTime(),
-                    (float) Math.sin(submarineBody.getAngle())
+                    (float) Math.sin(player.getBody().getAngle())
                             * player.getSpeed() * Gdx.graphics.getDeltaTime());
 
-            submarineBody.setLinearVelocity(force);
+            player.getBody().setLinearVelocity(force);
         } else if (player.getSpeed() < speedDecrement) {
             player.setSpeed(0);
-            Vector2 force = new Vector2((float) Math.cos(submarineBody.getAngle())
+            Vector2 force = new Vector2((float) Math.cos(player.getBody().getAngle())
                     * player.getSpeed() * Gdx.graphics.getDeltaTime(),
-                    (float) Math.sin(submarineBody.getAngle())
+                    (float) Math.sin(player.getBody().getAngle())
                             * player.getSpeed() * Gdx.graphics.getDeltaTime());
 
-            submarineBody.setLinearVelocity(force);
+            player.getBody().setLinearVelocity(force);
         }
     }
 
 	private void submarineRotation() {
         desiredAngle = (float) Math.atan2( -deltaX, deltaY) + (float) Math.toRadians(90);
-        float totalRotation = desiredAngle - submarineBody.getAngle();
+        float totalRotation = desiredAngle - player.getBody().getAngle();
         // Finds the shortest route
         while (totalRotation < -180 * MathUtils.degreesToRadians)
             totalRotation += 360 * MathUtils.degreesToRadians;
@@ -376,17 +371,18 @@ public class Game extends ApplicationAdapter {
             totalRotation -= 360 * MathUtils.degreesToRadians;
         // maximum rotation per render
         float maxRotation = 1000 * MathUtils.degreesToRadians * Gdx.graphics.getDeltaTime();
-        float newAngle = submarineBody.getAngle()
+        float newAngle = player.getBody().getAngle()
                 + Math.min(maxRotation, Math.max(-maxRotation, totalRotation));
-        submarineBody.setTransform(submarineBody.getPosition(), newAngle);
+        player.getBody().setTransform(player.getBody().getPosition(), newAngle);
 	}
 
     private void fireBullet() {
         Bullet bulletObj = new Bullet(
                 world,
-                submarineBody.getAngle(),
-                submarineBody.getPosition().x,
-                submarineBody.getPosition().y
+                player.getBody(),
+                player.getBody().getAngle(),
+                player.getBody().getPosition().x,
+                player.getBody().getPosition().y
         );
 
         Vector2 force = new Vector2((float) Math.cos(bulletObj.getBody().getAngle())
@@ -418,7 +414,7 @@ public class Game extends ApplicationAdapter {
                     bullet.getFixture().shape.getRadius() * 2,
                     1.0f,
                     1.0f,
-                    submarineBody.getAngle() * MathUtils.radiansToDegrees,
+                    player.getBody().getAngle() * MathUtils.radiansToDegrees,
                     0,
                     0,
                     bullet.getTexture().getWidth(),
@@ -459,27 +455,27 @@ public class Game extends ApplicationAdapter {
 		checkInWhatRoom(position);
 
 		if (position >= FIRST_SCREEN_RIGHT_SIDE && room == 1) {
-			submarineBody.setTransform(
+			player.getBody().setTransform(
 				SECOND_SCREEN_LEFT_SPAWN_POINT,
-				submarineBody.getPosition().y,
+				player.getBody().getPosition().y,
 				desiredAngle
 			);
 		} else if (position <= SECOND_SCREEN_LEFT_SIDE && room == 2) {
-			submarineBody.setTransform(
+			player.getBody().setTransform(
 				FIRST_SCREEN_SPAWN_POINT,
-				submarineBody.getPosition().y,
+				player.getBody().getPosition().y,
 				desiredAngle
 			);
 		} else if (position >= SECOND_SCREEN_RIGHT_SIDE && room == 2) {
-			submarineBody.setTransform(
+			player.getBody().setTransform(
 				THIRD_SCREEN_SPAWN_POINT,
-				submarineBody.getPosition().y,
+				player.getBody().getPosition().y,
 				desiredAngle
 			);
 		} else if (position <= THIRD_SCREEN_LEFT_SIDE && room == 3) {
-			submarineBody.setTransform(
+			player.getBody().setTransform(
 				SECOND_SCREEN_RIGHT_SPAWN_POINT,
-				submarineBody.getPosition().y,
+				player.getBody().getPosition().y,
 				desiredAngle
 			);
 		}

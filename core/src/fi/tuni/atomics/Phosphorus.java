@@ -98,9 +98,7 @@ public class Phosphorus {
         return fixtureDef;
     }
 
-    public void draw(SpriteBatch batch) {
-        sprite.draw(batch);
-    }
+    public void draw(SpriteBatch batch) { sprite.draw(batch); }
 
     float getSpeed() {
         return speed;
