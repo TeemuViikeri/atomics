@@ -108,6 +108,14 @@ public class Game extends ApplicationAdapter {
 	private boolean moving = false;
 	private float speedDecrement = 3f;
 	private float maxSpeed = 150f;
+    private State state = State.RUN;
+
+    public enum State {
+        PAUSE,
+        RUN,
+        RESUME,
+        STOPPED
+    }
 
 	@Override
 	public void create () {
@@ -126,6 +134,7 @@ public class Game extends ApplicationAdapter {
 		// Box2D
         world = new World(new Vector2(0, 0), true);
         debugRenderer = new Box2DDebugRenderer();
+        world.setContactListener(new GameContactListener());
 
 		// Game objects
         player = new Player(
@@ -136,58 +145,27 @@ public class Game extends ApplicationAdapter {
         bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
         phosphorus = new Phosphorus(world, 13, 6.4f);
-        phosphorus.getBody().applyLinearImpulse(new Vector2(3, -3),
-                phosphorus.getBody().getWorldCenter(),  true);
         transformWallsToBodies("wall-rectangles", "wall");
         createButtons();
-
-//    Use ContactListener with:
-//    - Submarine collides with phosphorus
-//    - Bullet collides with wall
-//    - Bullet collides with phosphorus
-
-        world.setContactListener(new ContactListener() {
-            @Override
-            public void beginContact(Contact contact) {
-                Body bodyA = contact.getFixtureA().getBody();
-                Body bodyB = contact.getFixtureB().getBody();
-
-                if (isBulletContactingWall(bodyA, bodyB)) {
-                    if (bodyA.getUserData() instanceof Bullet) {
-                        bodiesToBeDestroyed.add(bodyA);
-                        bodyA.setUserData("dead");
-                    } else {
-                        bodyB.setUserData("dead");
-                        bodiesToBeDestroyed.add(bodyB);
-                    }
-                }
-            }
-
-            @Override
-            public void endContact(Contact contact) {
-
-            }
-
-            @Override
-            public void preSolve(Contact contact, Manifold oldManifold) {
-
-            }
-
-            @Override
-            public void postSolve(Contact contact, ContactImpulse impulse) {
-
-            }
-        });
 	}
-
-    private boolean isBulletContactingWall(Body a, Body b) {
-        if (a.getUserData() instanceof Bullet && b.getUserData().equals("wall")) {
-            return true;
-        } else return a.getUserData().equals("wall") && b.getUserData() instanceof Bullet;
-    }
 
 	@Override
 	public void render () {
+        // switch (state) {
+        //     case RUN:
+        //
+        //         break;
+        //     case PAUSE:
+        //
+        //         break;
+        //     case RESUME:
+        //
+        //         break;
+        //     default:
+        //
+        //         break;
+        // }
+
 		batch.setProjectionMatrix(camera.combined);
 		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
 		tiledMapRenderer.render();
@@ -199,7 +177,6 @@ public class Game extends ApplicationAdapter {
 
         if (touchpad.isTouched()) {
             submarineRotation();
-            // submarineRotation(desiredAngle, deltaX, deltaY);
         }
 
         if (speedButton.isPressed()) {
@@ -209,8 +186,8 @@ public class Game extends ApplicationAdapter {
             moving = false;
         }
 
-        //player.submarineMove();
         submarineMove();
+        sendBodiesToBeDestroyed();
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
@@ -230,6 +207,14 @@ public class Game extends ApplicationAdapter {
         //joystickTable.setDebug(true);
         //speedButtonTable.setDebug(true);
 	}
+
+    public void sendBodiesToBeDestroyed() {
+        for (Body body: bodies) {
+            if (body.getUserData().equals("dead")) {
+                bodiesToBeDestroyed.add(body);
+            }
+        }
+    }
 
     // For debugging button responsivity. delete later.
     public void resize(int width, int height) {
@@ -569,4 +554,14 @@ public class Game extends ApplicationAdapter {
 		batch.dispose();
 		world.dispose();
 	}
+
+	@Override
+	public void pause() {
+
+	}
+
+    @Override
+    public void resume() {
+
+    }
 }
