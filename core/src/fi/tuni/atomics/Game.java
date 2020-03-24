@@ -106,7 +106,6 @@ public class Game extends ApplicationAdapter {
     private float TIME_STEP = 1 / 60f;
     private int room = 2;
 	private boolean moving = false;
-	private float speedDecrement = 3f;
 	private float maxSpeed = 150f;
     private State state = State.RUN;
 
@@ -147,6 +146,9 @@ public class Game extends ApplicationAdapter {
         phosphorus = new Phosphorus(world, 13, 6.4f);
         transformWallsToBodies("wall-rectangles", "wall");
         createButtons();
+//      multiplexer = new InputMultiplexer(stage);
+//      Gdx.input.setInputProcessor(multiplexer);
+
 	}
 
 	@Override
@@ -166,17 +168,22 @@ public class Game extends ApplicationAdapter {
         //         break;
         // }
 
+		clearScreen(97/255f, 134/255f, 106/255f);
+
 		batch.setProjectionMatrix(camera.combined);
-		clearScreen(97/255f, 134/255f, 106/255f); // color: teal
+		moveCamera(camera);
+
 		tiledMapRenderer.render();
 		tiledMapRenderer.setView(camera);
         debugRenderer.render(world, camera.combined);
-		moveCamera(camera);
+
 		checkIfChangeRoom(player.getBody().getPosition().x);
+
 		world.getBodies(bodies);
+        sendBodiesToBeDestroyed();
 
         if (touchpad.isTouched()) {
-            submarineRotation();
+            player.submarineRotation(desiredAngle, deltaX, deltaY);
         }
 
         if (speedButton.isPressed()) {
@@ -186,8 +193,7 @@ public class Game extends ApplicationAdapter {
             moving = false;
         }
 
-        submarineMove();
-        sendBodiesToBeDestroyed();
+        player.submarineMove(moving);
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
@@ -224,14 +230,13 @@ public class Game extends ApplicationAdapter {
 
 	private void createButtons() {
         stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-        joysticTable = new Table();
-        speedButtonTable = new Table();
-        shootButtonTable = new Table();
-        joysticTable.setFillParent(true);
-        speedButtonTable.setFillParent(true);
-        shootButtonTable.setFillParent(true);
         touchpad = new Touchpad(10, getTouchpadStyle());
+        joysticTable = new Table();
+        joysticTable.setFillParent(true);
+        speedButtonTable = new Table();
+        speedButtonTable.setFillParent(true);
+        shootButtonTable = new Table();
+        shootButtonTable.setFillParent(true);
 
         joysticTable.add(touchpad).width(Gdx.graphics.getHeight() / 6.0f)
                 .height(Gdx.graphics.getHeight() / 6.0f)
@@ -265,6 +270,8 @@ public class Game extends ApplicationAdapter {
         stage.addActor(speedButtonTable);
         stage.addActor(shootButtonTable);
 
+        Gdx.input.setInputProcessor(stage);
+
         touchpad.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -272,8 +279,6 @@ public class Game extends ApplicationAdapter {
                     deltaY = ((Touchpad) actor).getKnobPercentY();
             }
         });
-
-        System.out.println("here");
 
         shootButton.addListener(new ActorGestureListener() {
             @Override
@@ -316,50 +321,6 @@ public class Game extends ApplicationAdapter {
 
 	    return touchpadStyle;
     }
-
-    private void submarineMove() {
-        if (moving) {
-            Vector2 force = new Vector2((float) Math.cos(player.getBody().getAngle())
-                    * player.getSpeed() * Gdx.graphics.getDeltaTime(),
-                    (float) Math.sin(player.getBody().getAngle())
-                            * player.getSpeed() * Gdx.graphics.getDeltaTime());
-
-            player.getBody().setLinearVelocity(force);
-        }
-
-        if (!moving && player.getSpeed() >= speedDecrement) {
-            player.setSpeed(player.getSpeed() - speedDecrement);
-            Vector2 force = new Vector2((float) Math.cos(player.getBody().getAngle())
-                    * player.getSpeed() * Gdx.graphics.getDeltaTime(),
-                    (float) Math.sin(player.getBody().getAngle())
-                            * player.getSpeed() * Gdx.graphics.getDeltaTime());
-
-            player.getBody().setLinearVelocity(force);
-        } else if (player.getSpeed() < speedDecrement) {
-            player.setSpeed(0);
-            Vector2 force = new Vector2((float) Math.cos(player.getBody().getAngle())
-                    * player.getSpeed() * Gdx.graphics.getDeltaTime(),
-                    (float) Math.sin(player.getBody().getAngle())
-                            * player.getSpeed() * Gdx.graphics.getDeltaTime());
-
-            player.getBody().setLinearVelocity(force);
-        }
-    }
-
-	private void submarineRotation() {
-        desiredAngle = (float) Math.atan2( -deltaX, deltaY) + (float) Math.toRadians(90);
-        float totalRotation = desiredAngle - player.getBody().getAngle();
-        // Finds the shortest route
-        while (totalRotation < -180 * MathUtils.degreesToRadians)
-            totalRotation += 360 * MathUtils.degreesToRadians;
-        while (totalRotation > 180 * MathUtils.degreesToRadians)
-            totalRotation -= 360 * MathUtils.degreesToRadians;
-        // maximum rotation per render
-        float maxRotation = 1000 * MathUtils.degreesToRadians * Gdx.graphics.getDeltaTime();
-        float newAngle = player.getBody().getAngle()
-                + Math.min(maxRotation, Math.max(-maxRotation, totalRotation));
-        player.getBody().setTransform(player.getBody().getPosition(), newAngle);
-	}
 
     private void fireBullet() {
         Bullet bulletObj = new Bullet(
@@ -557,11 +518,11 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void pause() {
-
+        this.state = State.PAUSE;
 	}
 
     @Override
     public void resume() {
-
+        this.state = State.RESUME;
     }
 }
