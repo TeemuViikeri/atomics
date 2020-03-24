@@ -20,7 +20,7 @@ public class Player {
     private FixtureDef playerFixtureDef;
     private float speed;
     private float speedDecrement = 3f;
-    private float degrees = 0;
+    private float desiredAngle;
 
     Player(World world, float x, float y) {
         texture = new Texture("cropped-subbi.png");
@@ -94,7 +94,7 @@ public class Player {
         }
     }
 
-    void submarineRotation(float desiredAngle, float deltaX, float deltaY) {
+    void submarineRotation(float deltaX, float deltaY) {
         desiredAngle = (float) Math.atan2( -deltaX, deltaY) + (float) Math.toRadians(90);
         float totalRotation = desiredAngle - body.getAngle();
         // Finds the shortest route
@@ -116,16 +116,8 @@ public class Player {
     }
 
     // Getters and setters
-    public float getDegrees() {
-        return degrees;
-    }
-
     public Body getBody() {
         return body;
-    }
-
-    void setDegrees(float degrees) {
-        this.degrees = degrees;
     }
 
     Texture getTexture() {
@@ -158,5 +150,13 @@ public class Player {
 
     public BodyDef getBodyDef() {
         return subBodyDef;
+    }
+
+    public float getDesiredAngle() {
+        return desiredAngle;
+    }
+
+    public void setDesiredAngle(float desiredAngle) {
+        this.desiredAngle = desiredAngle;
     }
 }

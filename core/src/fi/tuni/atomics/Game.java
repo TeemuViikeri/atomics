@@ -59,6 +59,7 @@ public class Game extends ApplicationAdapter {
     private Bullet bullet;
     private Array<Body> bodies;
     private Array<Body> bodiesToBeDestroyed;
+    private Wall wall;
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
     private Skin touchpadSkin;
@@ -144,7 +145,7 @@ public class Game extends ApplicationAdapter {
         bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
         phosphorus = new Phosphorus(world, 13, 6.4f);
-        transformWallsToBodies("wall-rectangles", "wall");
+        wall = new Wall(tiledMap, world, "wall-rectangles", "wall");
         createButtons();
 //      multiplexer = new InputMultiplexer(stage);
 //      Gdx.input.setInputProcessor(multiplexer);
@@ -183,7 +184,7 @@ public class Game extends ApplicationAdapter {
         sendBodiesToBeDestroyed();
 
         if (touchpad.isTouched()) {
-            player.submarineRotation(desiredAngle, deltaX, deltaY);
+            player.submarineRotation(deltaX, deltaY);
         }
 
         if (speedButton.isPressed()) {
@@ -404,25 +405,25 @@ public class Game extends ApplicationAdapter {
 			player.getBody().setTransform(
 				SECOND_SCREEN_LEFT_SPAWN_POINT,
 				player.getBody().getPosition().y,
-				desiredAngle
+				player.getDesiredAngle()
 			);
 		} else if (position <= SECOND_SCREEN_LEFT_SIDE && room == 2) {
 			player.getBody().setTransform(
 				FIRST_SCREEN_SPAWN_POINT,
 				player.getBody().getPosition().y,
-				desiredAngle
+				player.getDesiredAngle()
 			);
 		} else if (position >= SECOND_SCREEN_RIGHT_SIDE && room == 2) {
 			player.getBody().setTransform(
 				THIRD_SCREEN_SPAWN_POINT,
 				player.getBody().getPosition().y,
-				desiredAngle
+				player.getDesiredAngle()
 			);
 		} else if (position <= THIRD_SCREEN_LEFT_SIDE && room == 3) {
 			player.getBody().setTransform(
 				SECOND_SCREEN_RIGHT_SPAWN_POINT,
 				player.getBody().getPosition().y,
-				desiredAngle
+				player.getDesiredAngle()
 			);
 		}
 	}
@@ -458,52 +459,6 @@ public class Game extends ApplicationAdapter {
 
 		camera.update();
 	}
-
-    private void transformWallsToBodies(String layer, String userData) {
-        MapLayer collisionObjectLayer = tiledMap.getLayers().get(layer);
-        MapObjects mapObjects = collisionObjectLayer.getObjects();
-        Array<RectangleMapObject> rectangleObjects = mapObjects.getByType(RectangleMapObject.class);
-        for (RectangleMapObject rectangleObject : rectangleObjects) {
-            Rectangle tmp = rectangleObject.getRectangle();
-            Rectangle rectangle = scaleRect(tmp, 1 / 100f);
-            createStaticBody(rectangle, userData);
-        }
-    }
-
-    private Rectangle scaleRect(Rectangle r, float scale) {
-        Rectangle rectangle = new Rectangle();
-        rectangle.x = r.x * scale;
-        rectangle.y = r.y * scale;
-        rectangle.width = r.width * scale;
-        rectangle.height = r.height * scale;
-        return rectangle;
-    }
-
-    private void createStaticBody(Rectangle rect, String userData) {
-        BodyDef myBodyDef = new BodyDef();
-        myBodyDef.type = BodyDef.BodyType.StaticBody;
-
-        float x = rect.getX();
-        float y = rect.getY();
-        float width = rect.width;
-        float height = rect.height;
-
-        float centerX = width / 2 + x;
-        float centerY = height / 2 + y;
-
-        myBodyDef.position.set(centerX, centerY);
-        Body wall = world.createBody(myBodyDef);
-        wall.setUserData(userData);
-
-        PolygonShape groundBox = new PolygonShape();
-        groundBox.setAsBox(width / 2, height / 2);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = groundBox;
-
-        fixtureDef.filter.groupIndex = -2;
-        wall.createFixture(fixtureDef);
-    }
 
 	private void clearScreen(float r, float g, float b) {
 		Gdx.gl.glClearColor(r, g, b, 0);
