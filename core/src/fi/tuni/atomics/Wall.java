@@ -14,11 +14,11 @@ import com.badlogic.gdx.utils.Array;
 
 class Wall {
 
-    Wall(TiledMap tiledMap, World world, String layer, String userData) {
-        transformWallsToBodies(tiledMap, world, layer, userData);
+    Wall(TiledMap tiledMap,String layer, String userData) {
+        transformWallsToBodies(tiledMap, layer, userData);
     }
 
-    private void createStaticBody(World world, Rectangle rect, String userData) {
+    private void createStaticBody(Rectangle rect, String userData) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
@@ -31,7 +31,7 @@ class Wall {
         float centerY = height / 2 + y;
 
         bodyDef.position.set(centerX, centerY);
-        Body body = world.createBody(bodyDef);
+        Body body = Game.world.createBody(bodyDef);
         body.setUserData(userData);
 
         PolygonShape groundBox = new PolygonShape();
@@ -53,14 +53,14 @@ class Wall {
         return rectangle;
     }
 
-    private void transformWallsToBodies(TiledMap tiledMap, World world, String layer, String userData) {
+    private void transformWallsToBodies(TiledMap tiledMap, String layer, String userData) {
         MapLayer collisionObjectLayer = tiledMap.getLayers().get(layer);
         MapObjects mapObjects = collisionObjectLayer.getObjects();
         Array<RectangleMapObject> rectangleObjects = mapObjects.getByType(RectangleMapObject.class);
         for (RectangleMapObject rectangleObject : rectangleObjects) {
             Rectangle tmp = rectangleObject.getRectangle();
             Rectangle rectangle = scaleRect(tmp);
-            createStaticBody(world, rectangle, userData);
+            createStaticBody(rectangle, userData);
         }
     }
 }

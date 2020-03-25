@@ -10,7 +10,7 @@ class GameUtil {
     private double accumulator = 0;
     private int room = 2;
 
-    void doPhysicsStep(World world, float deltaTime) {
+    void doPhysicsStep(float deltaTime) {
         float frameTime = deltaTime;
 
         if (deltaTime > 1 / 4f) {
@@ -21,7 +21,7 @@ class GameUtil {
 
         float TIME_STEP = 1 / 60f;
         while (accumulator >= TIME_STEP) {
-            world.step(TIME_STEP, 8, 3);
+            Game.world.step(TIME_STEP, 8, 3);
             accumulator -= TIME_STEP;
         }
     }

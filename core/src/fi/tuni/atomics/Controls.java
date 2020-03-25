@@ -19,8 +19,9 @@ class Controls {
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
     private Button speedButton;
+    private Button shootButton;
 
-    void createButtons(final World world, final Player player) {
+    void createButtons(final Player player) {
         stage = new Stage();
         touchpad = new Touchpad(10, getTouchpadStyle());
         Table joystickTable = new Table();
@@ -49,7 +50,7 @@ class Controls {
                 .padRight(-Gdx.graphics.getWidth() / 3f)
                 .fill();
 
-        Button shootButton = new Button(getButtonStyle());
+        shootButton = new Button(getButtonStyle());
         shootButtonTable.add(shootButton).width((float) Gdx.graphics.getHeight() / 6.0f)
                 .height((float) Gdx.graphics.getHeight() / 6.0f)
                 .padLeft((float) Gdx.graphics.getWidth() / 3f)
@@ -58,7 +59,7 @@ class Controls {
                 .padRight((float) -Gdx.graphics.getWidth() / 40f)
                 .fill();
 
-        stage.addActor(joystickTable)   ;
+        stage.addActor(joystickTable);
         stage.addActor(speedButtonTable);
         stage.addActor(shootButtonTable);
 
@@ -69,13 +70,6 @@ class Controls {
             public void changed(ChangeEvent event, Actor actor) {
                 player.setDeltaX(((Touchpad) actor).getKnobPercentX());
                 player.setDeltaY(((Touchpad) actor).getKnobPercentY());
-            }
-        });
-
-        shootButton.addListener(new ActorGestureListener() {
-            @Override
-            public void tap(InputEvent event, float x, float y, int count, int button) {
-                player.fireBullet(world);
             }
         });
 
@@ -124,6 +118,10 @@ class Controls {
 
     Button getSpeedButton() {
         return speedButton;
+    }
+
+    Button getShootButton() {
+        return shootButton;
     }
 
 //    Table getJoystickTable() {

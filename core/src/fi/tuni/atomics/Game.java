@@ -19,7 +19,7 @@ public class Game extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
-    private World world;
+    static World world;
     private Box2DDebugRenderer debugRenderer;
     private Player player;
     private Bullet bullet;
@@ -83,14 +83,13 @@ public class Game extends ApplicationAdapter {
 
 		// Game objects
         player = new Player(
-                world,
                 WORLD_WIDTH_PIXELS / 2 * scale,
                 WORLD_HEIGHT_PIXELS / 2 * scale);
-        bullet = new Bullet(world);
+        bullet = new Bullet();
         bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
-        phosphorus = new Phosphorus(world, 13, 6.4f);
-        new Wall(tiledMap, world, "wall-rectangles", "wall");
+        phosphorus = new Phosphorus(13, 6.4f);
+        new Wall(tiledMap, "wall-rectangles", "wall");
 	}
 
 	@Override
@@ -136,14 +135,14 @@ public class Game extends ApplicationAdapter {
 
         // Draw
 		batch.begin();
-        player.draw(batch, player.getBody());
         player.drawBullets(bodies, batch, bullet);
+        player.draw(batch, player.getBody());
         phosphorus.draw(batch);
 		batch.end();
 
         // Fixed step and destroy bodies
-        gameUtil.doPhysicsStep(world, Gdx.graphics.getDeltaTime());
-        collisionHandler.clearBullets(bodiesToBeDestroyed, world);
+        gameUtil.doPhysicsStep(Gdx.graphics.getDeltaTime());
+        collisionHandler.clearBullets(bodiesToBeDestroyed);
 
         // player.getControls().getJoystickTable().setDebug(true);
         // player.getControls().getSpeedButtonTable().setDebug(true);
@@ -151,7 +150,7 @@ public class Game extends ApplicationAdapter {
 
 	public void resize(int width, int height) {
         player.getControls().getStage().getViewport().update(width, height, true);
-        player.getControls().createButtons(world, player);
+        player.getControls().createButtons(player);
     }
 
 	@Override

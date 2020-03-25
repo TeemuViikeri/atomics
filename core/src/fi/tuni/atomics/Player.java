@@ -22,8 +22,9 @@ class Player {
     private float deltaX;
     private float deltaY;
     private boolean moving;
+    private int shootingTimer = 0;
 
-    Player(World world, float x, float y) {
+    Player(float x, float y) {
         Texture texture = new Texture("cropped-subbi.png");
         sprite = new Sprite(texture);
         controls = new Controls();
@@ -33,13 +34,13 @@ class Player {
         sprite.setPosition(x, y);
         sprite.setSize(0.50f, 0.25f);
         sprite.setOriginCenter();
-        createSubmarineBody(world);
-        controls.createButtons(world, this);
+        createSubmarineBody();
+        controls.createButtons(this);
     }
 
     // Body creation
-    private void createSubmarineBody(World world) {
-        body = world.createBody(getSubmarineBodyDef());
+    private void createSubmarineBody() {
+        body = Game.world.createBody(getSubmarineBodyDef());
         body.createFixture(getSubmarineFixtureDef());
         body.setUserData(this);
     }
@@ -104,7 +105,13 @@ class Player {
     }
 
     private void checkInput() {
+        shootingTimer++;
         float maxSpeed = 150f;
+
+        if (controls.getShootButton().isPressed() && shootingTimer >= 10) {
+            fireBullet();
+            shootingTimer = 0;
+        }
 
         if (controls.getTouchpad().isTouched()) {
             submarineRotation();
@@ -133,9 +140,8 @@ class Player {
         body.setTransform(body.getPosition(), newAngle);
     }
 
-    void fireBullet(World world) {
+    void fireBullet() {
         Bullet bulletObj = new Bullet(
-                world,
                 body,
                 body.getAngle()
         );

@@ -22,7 +22,7 @@ public class Phosphorus {
     private float positionY;
     private float stateTime;
 
-    Phosphorus(World world, float x, float y) {
+    Phosphorus(float x, float y) {
         stateTime = 1f;
         positionX = x;
         positionY = y;
@@ -33,12 +33,8 @@ public class Phosphorus {
                 animationSheet.getHeight() / sheetRows);
         frames = to1d(temp);
         animation = new Animation<>(1 / 9f, frames);
-        createBulletBody(world);
+        createBulletBody();
 
-        body.applyLinearImpulse(
-            new Vector2(3, -3),
-            body.getWorldCenter(),
-            true);
     }
 
     private TextureRegion[] to1d(TextureRegion[][] temp) {
@@ -60,8 +56,8 @@ public class Phosphorus {
         return animation;
     }
 
-    private void createBulletBody(World world) {
-        body = world.createBody(getDefinitionOfBody());
+    private void createBulletBody() {
+        body = Game.world.createBody(getDefinitionOfBody());
         body.createFixture(getFixtureDefinition());
         body.setUserData(this);
     }

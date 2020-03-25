@@ -18,26 +18,26 @@ public class Bullet {
     private float speed;
     private float degrees;
 
-    Bullet(World world, Body playerBody, float degrees) {
+    Bullet(Body playerBody, float degrees) {
         texture = new Texture("bullet.png");
         sprite = new Sprite(texture);
         speed = 3f; // Check the right speed variable
         this.degrees = degrees;
-        createBulletBody(world, playerBody);
+        createBulletBody(playerBody);
     }
 
-    Bullet(World world) {
-        createSimpleBulletBody(world);
+    Bullet() {
+        createSimpleBulletBody();
     }
 
-    private void createBulletBody(World world, Body playerBody) {
-        body = world.createBody(getDefinitionOfBody(playerBody));
+    private void createBulletBody(Body playerBody) {
+        body = Game.world.createBody(getDefinitionOfBody(playerBody));
         body.createFixture(getFixtureDefinition());
         body.setUserData(this);
     }
 
-    private void createSimpleBulletBody(World world) {
-        body = world.createBody(getSimpleDefinitionOfBody());
+    private void createSimpleBulletBody() {
+        body = Game.world.createBody(getSimpleDefinitionOfBody());
         body.createFixture(getFixtureDefinition());
         body.setUserData("simple bullet");
     }
