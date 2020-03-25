@@ -13,11 +13,9 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
-class Player {
+class Player extends GameObject {
     private Sprite sprite;
-    private Body body;
     private Controls controls;
-    private float speed;
     private float desiredAngle;
     private float deltaX;
     private float deltaY;
@@ -46,28 +44,28 @@ class Player {
     }
 
     private BodyDef getSubmarineBodyDef() {
-        BodyDef subBodyDef = new BodyDef();
-        subBodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
 
-        subBodyDef.position.set(Game.WORLD_WIDTH_PIXELS / 2 * Game.scale,
+        bodyDef.position.set(Game.WORLD_WIDTH_PIXELS / 2 * Game.scale,
                 Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale);
 
-        return subBodyDef;
+        return bodyDef;
     }
 
     private FixtureDef getSubmarineFixtureDef() {
-        FixtureDef playerFixtureDef = new FixtureDef();
+        fixtureDef = new FixtureDef();
 
-        playerFixtureDef.filter.groupIndex = -1;
-        //playerFixtureDef.density     = 2f;
-        //playerFixtureDef.restitution = 1f;
-        //playerFixtureDef.friction    = 0;
+        fixtureDef.filter.groupIndex = -1;
+        //fixtureDef.density     = 2f;
+        //fixtureDef.restitution = 1f;
+        //fixtureDef.friction    = 0;
 
         PolygonShape polygon = new PolygonShape();
         polygon.setAsBox(0.25f, 0.125f);
-        playerFixtureDef.shape = polygon;
+        fixtureDef.shape = polygon;
 
-        return playerFixtureDef;
+        return fixtureDef;
     }
 
     // Inputs
@@ -78,9 +76,9 @@ class Player {
 
         if (moving) {
             Vector2 force = new Vector2((float) Math.cos(body.getAngle())
-                    * speed * Gdx.graphics.getDeltaTime(),
-                    (float) Math.sin(body.getAngle())
-                            * speed * Gdx.graphics.getDeltaTime());
+                * speed * Gdx.graphics.getDeltaTime(),
+                (float) Math.sin(body.getAngle())
+                        * speed * Gdx.graphics.getDeltaTime());
 
             body.setLinearVelocity(force);
         }
@@ -88,17 +86,17 @@ class Player {
         if (!moving && speed >= speedDecrement) {
             setSpeed(speed - speedDecrement);
             Vector2 force = new Vector2((float) Math.cos(body.getAngle())
-                    * speed * Gdx.graphics.getDeltaTime(),
-                    (float) Math.sin(body.getAngle())
-                            * speed * Gdx.graphics.getDeltaTime());
+                * speed * Gdx.graphics.getDeltaTime(),
+                (float) Math.sin(body.getAngle())
+                        * speed * Gdx.graphics.getDeltaTime());
 
             body.setLinearVelocity(force);
         } else if (speed < speedDecrement) {
             setSpeed(0);
             Vector2 force = new Vector2((float) Math.cos(body.getAngle())
-                    * speed * Gdx.graphics.getDeltaTime(),
-                    (float) Math.sin(body.getAngle())
-                            * speed * Gdx.graphics.getDeltaTime());
+                * speed * Gdx.graphics.getDeltaTime(),
+                (float) Math.sin(body.getAngle())
+                    * speed * Gdx.graphics.getDeltaTime());
 
             body.setLinearVelocity(force);
         }
@@ -142,57 +140,59 @@ class Player {
 
     void fireBullet() {
         Bullet bulletObj = new Bullet(
-                body,
-                body.getAngle()
+            body
         );
 
         Vector2 force = new Vector2((float) Math.cos(bulletObj.getBody().getAngle())
-                * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime(),
-                (float) Math.sin(bulletObj.getBody().getAngle())
-                        * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime());
+            * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime(),
+            (float) Math.sin(bulletObj.getBody().getAngle())
+                    * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime());
 
 
         Body bulletBody = bulletObj.getBody();
 
         bulletBody.applyLinearImpulse(
-                force,
-                bulletBody.getWorldCenter(),
-                true
+            force,
+            bulletBody.getWorldCenter(),
+            true
         );
     }
 
     // Draw methods
     void draw(SpriteBatch batch, Body body) {
-       sprite.setPosition(body.getPosition().x - sprite.getWidth() / 2f, body.getPosition().y - sprite.getHeight() / 2f);
-       sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-       sprite.draw(batch);
+        sprite.setPosition(
+        body.getPosition().x - sprite.getWidth() / 2f,
+        body.getPosition().y - sprite.getHeight() / 2f
+        );
+        sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+        sprite.draw(batch);
     }
 
-     void drawBullets(Array<Body> bodies, SpriteBatch batch, Bullet bullet) {
-        for (Body body: bodies) {
-            Object temp = body.getUserData();
-            if (temp instanceof Bullet) {
-                batch.draw(
-                    bullet.getTexture(),
-                    body.getPosition().x - bullet.getFixture().shape.getRadius(),
-                    body.getPosition().y - bullet.getFixture().shape.getRadius(),
-                    bullet.getFixture().shape.getRadius(),
-                    bullet.getFixture().shape.getRadius(),
-                    bullet.getFixture().shape.getRadius() * 2,
-                    bullet.getFixture().shape.getRadius() * 2,
-                    1.0f,
-                    1.0f,
-                    body.getAngle() * MathUtils.radiansToDegrees,
-                    0,
-                    0,
-                    bullet.getTexture().getWidth(),
-                    bullet.getTexture().getHeight(),
-                    false,
-                    false
-                );
-            }
-        }
-    }
+//     void drawBullets(Array<Body> bodies, SpriteBatch batch, Bullet bullet) {
+//        for (Body body: bodies) {
+//            Object temp = body.getUserData();
+//            if (temp instanceof Bullet) {
+//                batch.draw(
+//                    bullet.getTexture(),
+//                    body.getPosition().x - bullet.getFixture().shape.getRadius(),
+//                    body.getPosition().y - bullet.getFixture().shape.getRadius(),
+//                    bullet.getFixture().shape.getRadius(),
+//                    bullet.getFixture().shape.getRadius(),
+//                    bullet.getFixture().shape.getRadius() * 2,
+//                    bullet.getFixture().shape.getRadius() * 2,
+//                    1.0f,
+//                    1.0f,
+//                    body.getAngle() * MathUtils.radiansToDegrees,
+//                    0,
+//                    0,
+//                    bullet.getTexture().getWidth(),
+//                    bullet.getTexture().getHeight(),
+//                    false,
+//                    false
+//                );
+//            }
+//        }
+//    }
 
     // Getters and setters
     Body getBody() {

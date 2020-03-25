@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.Iterator;
@@ -22,6 +21,11 @@ public class CollisionHandler implements ContactListener {
             } else {
                 bodyB.setUserData("dead");
             }
+        }
+
+        if (isBulletContactingPhosphorus(bodyA, bodyB)) {
+            bodyA.setUserData("dead");
+            bodyB.setUserData("dead");
         }
     }
 
@@ -41,9 +45,20 @@ public class CollisionHandler implements ContactListener {
     }
 
     private boolean isBulletContactingWall(Body a, Body b) {
-        if (a.getUserData() instanceof Bullet && b.getUserData().equals("wall")) {
+        if (a.getUserData() instanceof Bullet && b.getUserData() instanceof Wall) {
             return true;
-        } else return a.getUserData().equals("wall") && b.getUserData() instanceof Bullet;
+        } else return a.getUserData() instanceof Wall && b.getUserData() instanceof Bullet;
+    }
+
+    private boolean isBulletContactingPhosphorus(Body a, Body b) {
+        if (
+            a.getUserData() instanceof Bullet &&
+            b.getUserData() instanceof Phosphorus
+            ) {
+            return true;
+        } else
+            return  a.getUserData() instanceof Phosphorus &&
+                    b.getUserData() instanceof Bullet;
     }
 
     void sendBodiesToBeDestroyed(Array<Body> bodies, Array<Body> bodiesToBeDestroyed) {
@@ -54,7 +69,7 @@ public class CollisionHandler implements ContactListener {
         }
     }
 
-    void clearBullets(Array<Body> bodiesToBeDestroyed) {
+    void clearBodies(Array<Body> bodiesToBeDestroyed) {
         for (Iterator<Body> i = bodiesToBeDestroyed.iterator(); i.hasNext();) {
             Body body = i.next();
             Game.world.destroyBody(body);

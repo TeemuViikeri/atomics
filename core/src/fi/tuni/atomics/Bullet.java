@@ -1,28 +1,16 @@
 package fi.tuni.atomics;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.World;
 
-public class Bullet {
-    private Body body;
-    private BodyDef bodyDef;
-    private FixtureDef fixtureDef;
-    private Sprite sprite;
-    private static Texture texture = new Texture("bullet.png");
-    private float speed;
-    private float degrees;
+class Bullet extends GameObject {
+    private Texture texture = new Texture("bullet.png");
 
-    Bullet(Body playerBody, float degrees) {
-        texture = new Texture("bullet.png");
-        sprite = new Sprite(texture);
+    Bullet(Body playerBody) {
         speed = 3f; // Check the right speed variable
-        this.degrees = degrees;
         createBulletBody(playerBody);
     }
 
@@ -39,7 +27,7 @@ public class Bullet {
     private void createSimpleBulletBody() {
         body = Game.world.createBody(getSimpleDefinitionOfBody());
         body.createFixture(getFixtureDefinition());
-        body.setUserData("simple bullet");
+        body.setUserData(this);
     }
 
     private BodyDef getDefinitionOfBody(Body playerBody) {
@@ -59,15 +47,12 @@ public class Bullet {
         return bodyDef;
     }
 
-    private FixtureDef getFixtureDefinition() {
+    FixtureDef getFixtureDefinition() {
         fixtureDef = new FixtureDef();
 
         fixtureDef.filter.groupIndex = -1;
-        // Mass per square meter (kg^m2)
         fixtureDef.density = 1f;
-        // How bouncy object? Very bouncy [0,1]
         fixtureDef.restitution = 0f;
-        // How slipper object? [0,1]
         fixtureDef.friction = 0f;
 
         CircleShape circleshape = new CircleShape();
@@ -87,9 +72,9 @@ public class Bullet {
         return speed;
     }
 
-    public Body getBody() { return body; }
+    Body getBody() { return body; }
 
-    public FixtureDef getFixture() {
+    FixtureDef getFixture() {
         return fixtureDef;
     }
 }

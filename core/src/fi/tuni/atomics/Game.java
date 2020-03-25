@@ -89,7 +89,7 @@ public class Game extends ApplicationAdapter {
         bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
         phosphorus = new Phosphorus(13, 6.4f);
-        new Wall(tiledMap, "wall-rectangles", "wall");
+        new Wall(tiledMap, "wall-rectangles");
 	}
 
 	@Override
@@ -135,14 +135,14 @@ public class Game extends ApplicationAdapter {
 
         // Draw
 		batch.begin();
-        player.drawBullets(bodies, batch, bullet);
         player.draw(batch, player.getBody());
+        gameUtil.drawBodies(bodies, batch, bullet);
         phosphorus.draw(batch);
 		batch.end();
 
         // Fixed step and destroy bodies
         gameUtil.doPhysicsStep(Gdx.graphics.getDeltaTime());
-        collisionHandler.clearBullets(bodiesToBeDestroyed);
+        collisionHandler.clearBodies(bodiesToBeDestroyed);
 
         // player.getControls().getJoystickTable().setDebug(true);
         // player.getControls().getSpeedButtonTable().setDebug(true);

@@ -3,12 +3,45 @@ package fi.tuni.atomics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.utils.Array;
 
 class GameUtil {
     private double accumulator = 0;
     private int room = 2;
+
+    void drawBodies(Array<Body> bodies, SpriteBatch batch, Bullet bullet) {
+        for (Body body: bodies) {
+            if (body.getUserData().equals("dead")) {
+                continue;
+            }
+            GameObject temp = (GameObject) body.getUserData();
+            Shape.Type tempShape = temp.getFixtureDef().shape.getType();
+            if (tempShape == Shape.Type.Circle) {
+                batch.draw(
+                    bullet.getTexture(),
+                    body.getPosition().x - bullet.getFixture().shape.getRadius(),
+                    body.getPosition().y - bullet.getFixture().shape.getRadius(),
+                    bullet.getFixture().shape.getRadius(),
+                    bullet.getFixture().shape.getRadius(),
+                    bullet.getFixture().shape.getRadius() * 2,
+                    bullet.getFixture().shape.getRadius() * 2,
+                    1.0f,
+                    1.0f,
+                    body.getAngle() * MathUtils.radiansToDegrees,
+                    0,
+                    0,
+                    bullet.getTexture().getWidth(),
+                    bullet.getTexture().getHeight(),
+                    false,
+                    false
+                );
+            }
+        }
+    }
 
     void doPhysicsStep(float deltaTime) {
         float frameTime = deltaTime;

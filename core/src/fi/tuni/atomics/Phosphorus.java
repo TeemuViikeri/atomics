@@ -10,14 +10,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
 
-public class Phosphorus {
+public class Phosphorus extends GameObject{
     private final int sheetRows = 2;
     private final int sheetCols = 5;
     static private Texture animationSheet = new Texture("phosphorus.png");
     private Animation<TextureRegion> animation;
-    private Body body;
     private float positionX;
     private float positionY;
     private float stateTime;
@@ -33,8 +31,12 @@ public class Phosphorus {
                 animationSheet.getHeight() / sheetRows);
         frames = to1d(temp);
         animation = new Animation<>(1 / 9f, frames);
-        createBulletBody();
+        createBody();
 
+        body.applyLinearImpulse(
+            new Vector2(3, -3),
+            body.getWorldCenter(),
+            true);
     }
 
     private TextureRegion[] to1d(TextureRegion[][] temp) {
@@ -56,14 +58,14 @@ public class Phosphorus {
         return animation;
     }
 
-    private void createBulletBody() {
+    private void createBody() {
         body = Game.world.createBody(getDefinitionOfBody());
         body.createFixture(getFixtureDefinition());
         body.setUserData(this);
     }
 
     private BodyDef getDefinitionOfBody() {
-        BodyDef bodyDef = new BodyDef();
+        bodyDef = new BodyDef();
 
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(positionX, positionY);
@@ -72,14 +74,11 @@ public class Phosphorus {
     }
 
     private FixtureDef getFixtureDefinition() {
-        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef = new FixtureDef();
 
         fixtureDef.filter.groupIndex = -2;
-        // Mass per square meter (kg^m2)
         fixtureDef.density = 10f;
-        // How bouncy object? Very bouncy [0,1]
         fixtureDef.restitution = 0f;
-        // How slipper object? [0,1]
         fixtureDef.friction = 0f;
 
         PolygonShape polygon = new PolygonShape();
@@ -98,6 +97,4 @@ public class Phosphorus {
             body.getPosition().y - 0.25f,0.5f, 0.5f
         );
     }
-
-    public Body getBody() { return body; }
 }

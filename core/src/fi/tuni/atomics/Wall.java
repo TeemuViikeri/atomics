@@ -5,21 +5,18 @@ import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
-class Wall {
-
-    Wall(TiledMap tiledMap,String layer, String userData) {
-        transformWallsToBodies(tiledMap, layer, userData);
+class Wall extends GameObject {
+    Wall(TiledMap tiledMap, String layer) {
+        transformWallsToBodies(tiledMap, layer);
     }
 
-    private void createStaticBody(Rectangle rect, String userData) {
-        BodyDef bodyDef = new BodyDef();
+    private void createStaticBody(Rectangle rect) {
+        bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
         float x = rect.getX();
@@ -31,13 +28,13 @@ class Wall {
         float centerY = height / 2 + y;
 
         bodyDef.position.set(centerX, centerY);
-        Body body = Game.world.createBody(bodyDef);
-        body.setUserData(userData);
+        body = Game.world.createBody(bodyDef);
+        body.setUserData(this);
 
         PolygonShape groundBox = new PolygonShape();
         groundBox.setAsBox(width / 2, height / 2);
 
-        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef = new FixtureDef();
         fixtureDef.shape = groundBox;
 
         fixtureDef.filter.groupIndex = -2;
@@ -53,14 +50,14 @@ class Wall {
         return rectangle;
     }
 
-    private void transformWallsToBodies(TiledMap tiledMap, String layer, String userData) {
+    private void transformWallsToBodies(TiledMap tiledMap, String layer) {
         MapLayer collisionObjectLayer = tiledMap.getLayers().get(layer);
         MapObjects mapObjects = collisionObjectLayer.getObjects();
         Array<RectangleMapObject> rectangleObjects = mapObjects.getByType(RectangleMapObject.class);
         for (RectangleMapObject rectangleObject : rectangleObjects) {
             Rectangle tmp = rectangleObject.getRectangle();
             Rectangle rectangle = scaleRect(tmp);
-            createStaticBody(rectangle, userData);
+            createStaticBody(rectangle);
         }
     }
 }
