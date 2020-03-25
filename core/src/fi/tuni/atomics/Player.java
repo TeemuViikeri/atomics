@@ -11,20 +11,22 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
-public class Player {
-    static Sprite sprite;
-    private Texture texture;
+class Player {
+    private Sprite sprite;
     private Body body;
-    private BodyDef subBodyDef;
-    private FixtureDef playerFixtureDef;
+    private Controls controls;
     private float speed;
-    private float speedDecrement = 3f;
     private float desiredAngle;
+    private float deltaX;
+    private float deltaY;
+    private boolean moving;
 
     Player(World world, float x, float y) {
-        texture = new Texture("cropped-subbi.png");
+        Texture texture = new Texture("cropped-subbi.png");
         sprite = new Sprite(texture);
+        controls = new Controls();
 
         setSpeed(0); // Check the right speed variable
 
@@ -32,16 +34,18 @@ public class Player {
         sprite.setSize(0.50f, 0.25f);
         sprite.setOriginCenter();
         createSubmarineBody(world);
+        controls.createButtons(world, this);
     }
 
-    public void createSubmarineBody(World world) {
+    // Body creation
+    private void createSubmarineBody(World world) {
         body = world.createBody(getSubmarineBodyDef());
         body.createFixture(getSubmarineFixtureDef());
         body.setUserData(this);
     }
 
     private BodyDef getSubmarineBodyDef() {
-        subBodyDef = new BodyDef();
+        BodyDef subBodyDef = new BodyDef();
         subBodyDef.type = BodyDef.BodyType.DynamicBody;
 
         subBodyDef.position.set(Game.WORLD_WIDTH_PIXELS / 2 * Game.scale,
@@ -51,7 +55,7 @@ public class Player {
     }
 
     private FixtureDef getSubmarineFixtureDef() {
-        playerFixtureDef = new FixtureDef();
+        FixtureDef playerFixtureDef = new FixtureDef();
 
         playerFixtureDef.filter.groupIndex = -1;
         //playerFixtureDef.density     = 2f;
@@ -65,7 +69,12 @@ public class Player {
         return playerFixtureDef;
     }
 
-    void submarineMove(boolean moving) {
+    // Inputs
+    void submarineMove() {
+        float speedDecrement = 3f;
+
+        checkInput();
+
         if (moving) {
             Vector2 force = new Vector2((float) Math.cos(body.getAngle())
                     * speed * Gdx.graphics.getDeltaTime(),
@@ -94,13 +103,30 @@ public class Player {
         }
     }
 
-    void submarineRotation(float deltaX, float deltaY) {
+    private void checkInput() {
+        float maxSpeed = 150f;
+
+        if (controls.getTouchpad().isTouched()) {
+            submarineRotation();
+        }
+
+        if (controls.getSpeedButton().isPressed()) {
+            moving = true;
+            setSpeed(maxSpeed);
+        } else {
+            moving = false;
+        }
+    }
+
+    private void submarineRotation() {
+        System.out.println("deltaX: " + deltaX + ", deltaY: " + deltaY);
+
         desiredAngle = (float) Math.atan2( -deltaX, deltaY) + (float) Math.toRadians(90);
         float totalRotation = desiredAngle - body.getAngle();
         // Finds the shortest route
         while (totalRotation < -180 * MathUtils.degreesToRadians)
             totalRotation += 360 * MathUtils.degreesToRadians;
-        while (totalRotation > 180 * MathUtils.degreesToRadians)
+        while (totalRotation > 90 * MathUtils.degreesToRadians)
             totalRotation -= 360 * MathUtils.degreesToRadians;
         // maximum rotation per render
         float maxRotation = 1000 * MathUtils.degreesToRadians * Gdx.graphics.getDeltaTime();
@@ -109,54 +135,85 @@ public class Player {
         body.setTransform(body.getPosition(), newAngle);
     }
 
+    void fireBullet(World world) {
+        Bullet bulletObj = new Bullet(
+                world,
+                body,
+                body.getAngle(),
+                body.getPosition().x,
+                body.getPosition().y
+        );
+
+        Vector2 force = new Vector2((float) Math.cos(bulletObj.getBody().getAngle())
+                * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime(),
+                (float) Math.sin(bulletObj.getBody().getAngle())
+                        * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime());
+
+
+        Body bulletBody = bulletObj.getBody();
+
+        bulletBody.applyLinearImpulse(
+                force,
+                bulletBody.getWorldCenter(),
+                true
+        );
+    }
+
+    // Draw methods
     void draw(SpriteBatch batch, Body body) {
        sprite.setPosition(body.getPosition().x - sprite.getWidth() / 2f, body.getPosition().y - sprite.getHeight() / 2f);
        sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
        sprite.draw(batch);
     }
 
+     void drawBullets(Array<Body> bodies, SpriteBatch batch, Bullet bullet) {
+        for (Body body: bodies) {
+            Object temp = body.getUserData();
+            if (temp instanceof Bullet) {
+                batch.draw(
+                    bullet.getTexture(),
+                    body.getPosition().x - bullet.getFixture().shape.getRadius(),
+                    body.getPosition().y - bullet.getFixture().shape.getRadius(),
+                    bullet.getFixture().shape.getRadius(),
+                    bullet.getFixture().shape.getRadius(),
+                    bullet.getFixture().shape.getRadius() * 2,
+                    bullet.getFixture().shape.getRadius() * 2,
+                    1.0f,
+                    1.0f,
+                    body.getAngle() * MathUtils.radiansToDegrees,
+                    0,
+                    0,
+                    bullet.getTexture().getWidth(),
+                    bullet.getTexture().getHeight(),
+                    false,
+                    false
+                );
+            }
+        }
+    }
+
     // Getters and setters
-    public Body getBody() {
+    Body getBody() {
         return body;
     }
 
-    Texture getTexture() {
-        return texture;
-    }
-
-    void setTexture(Texture texture) {
-        this.texture = texture;
-    }
-
-    float getSpeed() {
-        return speed;
-    }
-
-    void setSpeed(float speed) {
+    private void setSpeed(float speed) {
         this.speed = speed;
     }
 
-    public Sprite getSprite() {
-        return sprite;
-    }
-
-    public void setSprite(Sprite sprite) {
-        this.sprite = sprite;
-    }
-
-    public FixtureDef getFixture() {
-        return playerFixtureDef;
-    }
-
-    public BodyDef getBodyDef() {
-        return subBodyDef;
-    }
-
-    public float getDesiredAngle() {
+    float getDesiredAngle() {
         return desiredAngle;
     }
 
-    public void setDesiredAngle(float desiredAngle) {
-        this.desiredAngle = desiredAngle;
+    Controls getControls() {
+        return controls;
+    }
+
+    void setDeltaX(float deltaX) {
+        this.deltaX = deltaX;
+    }
+
+    void setDeltaY(float deltaY) {
+        this.deltaY = deltaY;
     }
 }

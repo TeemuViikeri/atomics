@@ -60,6 +60,8 @@ public class Game extends ApplicationAdapter {
     private Array<Body> bodies;
     private Array<Body> bodiesToBeDestroyed;
     private Wall wall;
+    private CollisionHandler collisionHandler;
+    private GameUtil gameUtil;
 
     private Stage stage;
     private Skin buttonSkin;
@@ -80,19 +82,10 @@ public class Game extends ApplicationAdapter {
     private Button speedButton;
     private Table speedButtonTable;
 
-    private float desiredAngle;
-    private float deltaX;
-    private float deltaY;
     private Phosphorus phosphorus;
 
 	// Initiated fields
     static float scale = 1/100f;
-    private double accumulator = 0;
-    private float TIME_STEP = 1 / 60f;
-    private int room = 2;
-	private boolean moving = false;
-	private float maxSpeed = 150f;
-
     static float TILE_LENGTH_PIXELS = 32;
     static float TILES_AMOUNT_WIDTH = 106;
     static float TILES_AMOUNT_HEIGHT = 20;
@@ -139,7 +132,9 @@ public class Game extends ApplicationAdapter {
 		// Box2D
         world = new World(new Vector2(0, 0), true);
         debugRenderer = new Box2DDebugRenderer();
-        world.setContactListener(new GameContactListener());
+        world.setContactListener(new CollisionHandler());
+        collisionHandler = new CollisionHandler();
+        gameUtil = new GameUtil();
 
 		// Game objects
         player = new Player(
@@ -151,7 +146,7 @@ public class Game extends ApplicationAdapter {
         bodiesToBeDestroyed = new Array<>();
         phosphorus = new Phosphorus(world, 13, 6.4f);
         wall = new Wall(tiledMap, world, "wall-rectangles", "wall");
-        createButtons();
+//      createButtons();
 //      multiplexer = new InputMultiplexer(stage);
 //      Gdx.input.setInputProcessor(multiplexer);
 
@@ -190,196 +185,44 @@ public class Game extends ApplicationAdapter {
 		);
 
 		world.getBodies(bodies);
-        GameContactListener.sendBodiesToBeDestroyed(bodies, bodiesToBeDestroyed);
+        CollisionHandler.sendBodiesToBeDestroyed(bodies, bodiesToBeDestroyed);
 
-        if (touchpad.isTouched()) {
-            player.submarineRotation(deltaX, deltaY);
-        }
+//        if (touchpad.isTouched()) {
+//            player.submarineRotation();
+//        }
+//
+//        if (speedButton.isPressed()) {
+//            moving = true;
+//            player.setSpeed(maxSpeed);
+//        } else {
+//            moving = false;
+//        }
 
-        if (speedButton.isPressed()) {
-            moving = true;
-            player.setSpeed(maxSpeed);
-        } else {
-            moving = false;
-        }
+        player.submarineMove();
 
-        player.submarineMove(moving);
-
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
+        player.getControls().getStage().act(Gdx.graphics.getDeltaTime());
+        player.getControls().getStage().draw();
 
 		batch.begin();
-        drawBullets();
+        player.drawBullets(bodies, batch, bullet);
         player.draw(batch, player.getBody());
-        batch.draw(phosphorus.getAnimation().getKeyFrame
-                        (phosphorus.setStateTime(), true),
+        batch.draw(phosphorus.getAnimation().getKeyFrame(
+                    phosphorus.setStateTime(), true),
                 phosphorus.getBody().getPosition().x - 0.25f,
                 phosphorus.getBody().getPosition().y - 0.25f,0.5f, 0.5f);
 		batch.end();
 
         GameUtil.doPhysicsStep(world, Gdx.graphics.getDeltaTime());
-        clearBullets();
+        collisionHandler.clearBullets(bodiesToBeDestroyed, world);
 
         //joystickTable.setDebug(true);
         //speedButtonTable.setDebug(true);
 	}
 
-    // For debugging button responsivity. delete later.
+    @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width,height,true);
-        createButtons();
-    }
-
-	private void createButtons() {
-        stage = new Stage();
-        touchpad = new Touchpad(10, getTouchpadStyle());
-        joysticTable = new Table();
-        joysticTable.setFillParent(true);
-        speedButtonTable = new Table();
-        speedButtonTable.setFillParent(true);
-        shootButtonTable = new Table();
-        shootButtonTable.setFillParent(true);
-
-        joysticTable.add(touchpad).width(Gdx.graphics.getHeight() / 6.0f)
-                .height(Gdx.graphics.getHeight() / 6.0f)
-                .padLeft(-Gdx.graphics.getWidth() / 3f)
-                .padBottom(-Gdx.graphics.getHeight() / 3.5f)
-                .padTop(Gdx.graphics.getHeight() / 3.5f)
-                .padRight(Gdx.graphics.getWidth() / 3f)
-                .fill();
-        touchpadStyle.knob.setMinWidth(Gdx.graphics.getWidth() / 16.0f);
-        touchpadStyle.knob.setMinHeight(Gdx.graphics.getWidth() / 16.0f);
-
-        speedButton = new Button(getButtonStyle());
-        speedButtonTable.add(speedButton).width(Gdx.graphics.getHeight() / 6.0f)
-                .height(Gdx.graphics.getHeight() / 6.0f)
-                .padLeft(+Gdx.graphics.getWidth() / 3f)
-                .padBottom(-Gdx.graphics.getHeight() / 3.5f)
-                .padTop(+Gdx.graphics.getHeight() / 3.5f)
-                .padRight(-Gdx.graphics.getWidth() / 3f)
-                .fill();
-
-        shootButton = new Button(getButtonStyle());
-        shootButtonTable.add(shootButton).width((float) Gdx.graphics.getHeight() / 6.0f)
-                .height((float) Gdx.graphics.getHeight() / 6.0f)
-                .padLeft((float) Gdx.graphics.getWidth() / 3f)
-                .padBottom((float) -Gdx.graphics.getHeight() / 3.5f)
-                .padTop((float) Gdx.graphics.getHeight() / 3.5f)
-                .padRight((float) -Gdx.graphics.getWidth() / 40f)
-                .fill();
-
-        stage.addActor(joysticTable);
-        stage.addActor(speedButtonTable);
-        stage.addActor(shootButtonTable);
-
-        Gdx.input.setInputProcessor(stage);
-
-        touchpad.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                deltaX = ((Touchpad) actor).getKnobPercentX();
-                deltaY = ((Touchpad) actor).getKnobPercentY();
-            }
-        });
-
-        shootButton.addListener(new ActorGestureListener() {
-            @Override
-            public void tap(InputEvent event, float x, float y, int count, int button) {
-                fireBullet();
-            }
-        });
-
-    }
-
-    private Button.ButtonStyle getButtonStyle() {
-        buttonSkin = new Skin();
-        speedButtonStyle = new Button.ButtonStyle();
-
-        buttonSkin.add("down", new Texture("down.png"));
-        buttonSkin.add("up", new Texture("up.png"));
-
-        up = buttonSkin.getDrawable("up");
-        down = buttonSkin.getDrawable("down");
-
-        speedButtonStyle.up = up;
-        speedButtonStyle.down = down;
-
-        return speedButtonStyle;
-    }
-
-	private Touchpad.TouchpadStyle getTouchpadStyle() {
-	    touchpadSkin = new Skin();
-	    touchpadSkin.add("touchBackground", new Texture("touchpadbg.png"));
-
-	    touchpadSkin.add("touchKnob", new Texture("touchpadknob.png"));
-
-	    touchpadStyle = new Touchpad.TouchpadStyle();
-
-	    touchBackground = touchpadSkin.getDrawable("touchBackground");
-	    touchKnob = touchpadSkin.getDrawable("touchKnob");
-
-	    touchpadStyle.background = touchBackground;
-	    touchpadStyle.knob = touchKnob;
-
-	    return touchpadStyle;
-    }
-
-    private void fireBullet() {
-        Bullet bulletObj = new Bullet(
-                world,
-                player.getBody(),
-                player.getBody().getAngle(),
-                player.getBody().getPosition().x,
-                player.getBody().getPosition().y
-        );
-
-        Vector2 force = new Vector2((float) Math.cos(bulletObj.getBody().getAngle())
-                * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime(),
-                (float) Math.sin(bulletObj.getBody().getAngle())
-                        * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime());
-
-
-        Body bulletBody = bulletObj.getBody();
-
-        bulletBody.applyLinearImpulse(
-                force,
-                bulletBody.getWorldCenter(),
-                true
-        );
-    }
-
-    private void drawBullets() {
-        for (Body body: bodies) {
-            Object temp = body.getUserData();
-            if (temp instanceof Bullet) {
-                batch.draw(
-                    bullet.getTexture(),
-                    body.getPosition().x - bullet.getFixture().shape.getRadius(),
-                    body.getPosition().y - bullet.getFixture().shape.getRadius(),
-                    bullet.getFixture().shape.getRadius(),
-                    bullet.getFixture().shape.getRadius(),
-                    bullet.getFixture().shape.getRadius() * 2,
-                    bullet.getFixture().shape.getRadius() * 2,
-                    1.0f,
-                    1.0f,
-                    player.getBody().getAngle() * MathUtils.radiansToDegrees,
-                    0,
-                    0,
-                    bullet.getTexture().getWidth(),
-                    bullet.getTexture().getHeight(),
-                    false,
-                    false
-                );
-            }
-        }
-    }
-
-    private void clearBullets() {
-	    for (Iterator<Body> i = bodiesToBeDestroyed.iterator(); i.hasNext();) {
-	        Body body = i.next();
-	        world.destroyBody(body);
-	        i.remove();
-        }
+        player.getControls().getStage().getViewport().update(width, height, true);
+        player.getControls().createButtons(world, player);
     }
 
 	@Override

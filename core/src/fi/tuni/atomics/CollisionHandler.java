@@ -5,9 +5,12 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
-public class GameContactListener implements ContactListener {
+import java.util.Iterator;
+
+public class CollisionHandler implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
         Body bodyA = contact.getFixtureA().getBody();
@@ -43,11 +46,19 @@ public class GameContactListener implements ContactListener {
         } else return a.getUserData().equals("wall") && b.getUserData() instanceof Bullet;
     }
 
-    public static void sendBodiesToBeDestroyed(Array<Body> bodies, Array bodiesToBeDestroyed) {
+    static void sendBodiesToBeDestroyed(Array<Body> bodies, Array<Body> bodiesToBeDestroyed) {
         for (Body body: bodies) {
             if (body.getUserData().equals("dead")) {
                 bodiesToBeDestroyed.add(body);
             }
+        }
+    }
+
+    void clearBullets(Array<Body> bodiesToBeDestroyed, World world) {
+        for (Iterator<Body> i = bodiesToBeDestroyed.iterator(); i.hasNext();) {
+            Body body = i.next();
+            world.destroyBody(body);
+            i.remove();
         }
     }
 }
