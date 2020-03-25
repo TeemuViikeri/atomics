@@ -19,15 +19,15 @@ class Controls {
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
     private Button speedButton;
+    private Table joystickTable = new Table();
+    private Table speedButtonTable = new Table();
+    private Table shootButtonTable = new Table();
 
     void createButtons(final World world, final Player player) {
         stage = new Stage();
         touchpad = new Touchpad(10, getTouchpadStyle());
-        Table joystickTable = new Table();
         joystickTable.setFillParent(true);
-        Table speedButtonTable = new Table();
         speedButtonTable.setFillParent(true);
-        Table shootButtonTable = new Table();
         shootButtonTable.setFillParent(true);
 
         joystickTable.add(touchpad).width(Gdx.graphics.getHeight() / 6.0f)
@@ -101,7 +101,6 @@ class Controls {
     private Touchpad.TouchpadStyle getTouchpadStyle() {
         Skin touchpadSkin = new Skin();
         touchpadSkin.add("touchBackground", new Texture("touchpadbg.png"));
-
         touchpadSkin.add("touchKnob", new Texture("touchpadknob.png"));
 
         touchpadStyle = new Touchpad.TouchpadStyle();
@@ -125,5 +124,17 @@ class Controls {
 
     Button getSpeedButton() {
         return speedButton;
+    }
+
+    Table getJoystickTable() {
+        return joystickTable;
+    }
+
+    Table getSpeedButtonTable() {
+        return speedButtonTable;
+    }
+
+    Table getShootButtonTable() {
+        return shootButtonTable;
     }
 }

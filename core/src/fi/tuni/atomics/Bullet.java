@@ -1,11 +1,8 @@
 package fi.tuni.atomics;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -21,7 +18,7 @@ public class Bullet {
     private float speed;
     private float degrees;
 
-    Bullet(World world, Body playerBody, float degrees, float x, float y) {
+    Bullet(World world, Body playerBody, float degrees) {
         texture = new Texture("bullet.png");
         sprite = new Sprite(texture);
         speed = 3f; // Check the right speed variable
@@ -81,14 +78,6 @@ public class Bullet {
         return fixtureDef;
     }
 
-    public void draw(SpriteBatch batch) {
-        sprite.draw(batch);
-    }
-
-    public float getDegrees() {
-        return degrees;
-    }
-
     // Getters and setters
     Texture getTexture() {
         return texture;
@@ -98,23 +87,7 @@ public class Bullet {
         return speed;
     }
 
-    void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public Sprite getSprite() {
-        return sprite;
-    }
-
-    public void setSprite(Sprite sprite) {
-        this.sprite = sprite;
-    }
-
     public Body getBody() { return body; }
-
-    public BodyDef getBodyDef() {
-        return bodyDef;
-    }
 
     public FixtureDef getFixture() {
         return fixtureDef;

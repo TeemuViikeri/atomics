@@ -119,14 +119,12 @@ class Player {
     }
 
     private void submarineRotation() {
-        System.out.println("deltaX: " + deltaX + ", deltaY: " + deltaY);
-
         desiredAngle = (float) Math.atan2( -deltaX, deltaY) + (float) Math.toRadians(90);
         float totalRotation = desiredAngle - body.getAngle();
         // Finds the shortest route
         while (totalRotation < -180 * MathUtils.degreesToRadians)
             totalRotation += 360 * MathUtils.degreesToRadians;
-        while (totalRotation > 90 * MathUtils.degreesToRadians)
+        while (totalRotation > 180 * MathUtils.degreesToRadians)
             totalRotation -= 360 * MathUtils.degreesToRadians;
         // maximum rotation per render
         float maxRotation = 1000 * MathUtils.degreesToRadians * Gdx.graphics.getDeltaTime();
@@ -139,9 +137,7 @@ class Player {
         Bullet bulletObj = new Bullet(
                 world,
                 body,
-                body.getAngle(),
-                body.getPosition().x,
-                body.getPosition().y
+                body.getAngle()
         );
 
         Vector2 force = new Vector2((float) Math.cos(bulletObj.getBody().getAngle())
@@ -215,5 +211,13 @@ class Player {
 
     void setDeltaY(float deltaY) {
         this.deltaY = deltaY;
+    }
+
+    float getDeltaX() {
+        return deltaX;
+    }
+
+    float getDeltaY() {
+        return deltaY;
     }
 }

@@ -46,7 +46,7 @@ public class CollisionHandler implements ContactListener {
         } else return a.getUserData().equals("wall") && b.getUserData() instanceof Bullet;
     }
 
-    static void sendBodiesToBeDestroyed(Array<Body> bodies, Array<Body> bodiesToBeDestroyed) {
+    void sendBodiesToBeDestroyed(Array<Body> bodies, Array<Body> bodiesToBeDestroyed) {
         for (Body body: bodies) {
             if (body.getUserData().equals("dead")) {
                 bodiesToBeDestroyed.add(body);

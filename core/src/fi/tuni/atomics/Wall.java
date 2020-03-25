@@ -12,17 +12,14 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
-public class Wall {
-    private Body body;
-    private BodyDef bodyDef;
-    private FixtureDef fixtureDef;
+class Wall {
 
-    public Wall(TiledMap tiledMap, World world, String layer, String userData) {
+    Wall(TiledMap tiledMap, World world, String layer, String userData) {
         transformWallsToBodies(tiledMap, world, layer, userData);
     }
 
     private void createStaticBody(World world, Rectangle rect, String userData) {
-        bodyDef = new BodyDef();
+        BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
         float x = rect.getX();
@@ -34,25 +31,25 @@ public class Wall {
         float centerY = height / 2 + y;
 
         bodyDef.position.set(centerX, centerY);
-        body = world.createBody(bodyDef);
+        Body body = world.createBody(bodyDef);
         body.setUserData(userData);
 
         PolygonShape groundBox = new PolygonShape();
         groundBox.setAsBox(width / 2, height / 2);
 
-        fixtureDef = new FixtureDef();
+        FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = groundBox;
 
         fixtureDef.filter.groupIndex = -2;
         body.createFixture(fixtureDef);
     }
 
-    private Rectangle scaleRect(Rectangle r, float scale) {
+    private Rectangle scaleRect(Rectangle r) {
         Rectangle rectangle = new Rectangle();
-        rectangle.x = r.x * scale;
-        rectangle.y = r.y * scale;
-        rectangle.width = r.width * scale;
-        rectangle.height = r.height * scale;
+        rectangle.x = r.x * (float) 0.01;
+        rectangle.y = r.y * (float) 0.01;
+        rectangle.width = r.width * (float) 0.01;
+        rectangle.height = r.height * (float) 0.01;
         return rectangle;
     }
 
@@ -62,7 +59,7 @@ public class Wall {
         Array<RectangleMapObject> rectangleObjects = mapObjects.getByType(RectangleMapObject.class);
         for (RectangleMapObject rectangleObject : rectangleObjects) {
             Rectangle tmp = rectangleObject.getRectangle();
-            Rectangle rectangle = scaleRect(tmp, 1 / 100f);
+            Rectangle rectangle = scaleRect(tmp);
             createStaticBody(world, rectangle, userData);
         }
     }
