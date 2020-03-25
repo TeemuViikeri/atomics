@@ -42,4 +42,12 @@ public class GameContactListener implements ContactListener {
             return true;
         } else return a.getUserData().equals("wall") && b.getUserData() instanceof Bullet;
     }
+
+    public static void sendBodiesToBeDestroyed(Array<Body> bodies, Array bodiesToBeDestroyed) {
+        for (Body body: bodies) {
+            if (body.getUserData().equals("dead")) {
+                bodiesToBeDestroyed.add(body);
+            }
+        }
+    }
 }

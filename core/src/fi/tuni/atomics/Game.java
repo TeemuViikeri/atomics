@@ -60,54 +60,59 @@ public class Game extends ApplicationAdapter {
     private Array<Body> bodies;
     private Array<Body> bodiesToBeDestroyed;
     private Wall wall;
+
+    private Stage stage;
+    private Skin buttonSkin;
+    private Drawable up;
+    private Drawable down;
+
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
     private Skin touchpadSkin;
     private Drawable touchBackground;
     private Drawable touchKnob;
-    private Button speedButton;
-    private Button shootButton;
-    private Button.ButtonStyle speedButtonStyle;
-    private Skin buttonSkin;
-    private Drawable up;
-    private Drawable down;
-    private Stage stage;
     private Table joysticTable;
-    private Table speedButtonTable;
+    private Button.ButtonStyle speedButtonStyle;
+
+    private Button shootButton;
     private Table shootButtonTable;
+
+    private Button speedButton;
+    private Table speedButtonTable;
+
     private float desiredAngle;
     private float deltaX;
     private float deltaY;
     private Phosphorus phosphorus;
 
 	// Initiated fields
-    static float TILE_LENGTH_PIXELS = 32;
-    static float TILES_AMOUNT_WIDTH = 106;
-    static float TILES_AMOUNT_HEIGHT = 20;
-    static float WORLD_WIDTH_PIXELS = TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // = 3392 px
-	static float WORLD_HEIGHT_PIXELS = TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // = 640 px
-    private float ROOM_TILES_AMOUNT_WIDTH = 30;
-    private float ROOM_TILES_AMOUNT_HEIGHT = 20;
-    private float ROOM_WIDTH_PIXELS = ROOM_TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // 960 px
-    private float ROOM_HEIGHT_PIXELS = ROOM_TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // 640 px
-	private float PIPE_HORIZONTAL_TILES_AMOUNT = 8;
-	private float PIPE_VERTICAL_TILES_AMOUNT = 2;
-	private float PIPE_HORIZONTAL_PIXELS = PIPE_HORIZONTAL_TILES_AMOUNT * TILE_LENGTH_PIXELS;
-	private float FIRST_SCREEN_RIGHT_SIDE = 31 * TILE_LENGTH_PIXELS * scale;
-    private float SECOND_SCREEN_LEFT_SIDE = 37 * TILE_LENGTH_PIXELS * scale;
-    private float SECOND_SCREEN_RIGHT_SIDE = 69 * TILE_LENGTH_PIXELS * scale;
-    private float THIRD_SCREEN_LEFT_SIDE = 75 * TILE_LENGTH_PIXELS * scale;
-    private float FIRST_SCREEN_SPAWN_POINT = 30 * TILE_LENGTH_PIXELS * scale;
-    private float SECOND_SCREEN_LEFT_SPAWN_POINT = 38 * TILE_LENGTH_PIXELS * scale;
-    private float SECOND_SCREEN_RIGHT_SPAWN_POINT = 68 * TILE_LENGTH_PIXELS * scale;
-    private float THIRD_SCREEN_SPAWN_POINT = 76 * TILE_LENGTH_PIXELS * scale;
-
     static float scale = 1/100f;
     private double accumulator = 0;
     private float TIME_STEP = 1 / 60f;
     private int room = 2;
 	private boolean moving = false;
 	private float maxSpeed = 150f;
+
+    static float TILE_LENGTH_PIXELS = 32;
+    static float TILES_AMOUNT_WIDTH = 106;
+    static float TILES_AMOUNT_HEIGHT = 20;
+    static float WORLD_WIDTH_PIXELS = TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // = 3392 px
+    static float WORLD_HEIGHT_PIXELS = TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // = 640 px
+    static float ROOM_TILES_AMOUNT_WIDTH = 30;
+    static float ROOM_TILES_AMOUNT_HEIGHT = 20;
+    static float ROOM_WIDTH_PIXELS = ROOM_TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // 960 px
+    static float ROOM_HEIGHT_PIXELS = ROOM_TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // 640 px
+	static float PIPE_HORIZONTAL_TILES_AMOUNT = 8;
+	static float PIPE_HORIZONTAL_PIXELS = PIPE_HORIZONTAL_TILES_AMOUNT * TILE_LENGTH_PIXELS;
+	static float FIRST_SCREEN_RIGHT_SIDE = 31 * TILE_LENGTH_PIXELS * scale;
+    static float SECOND_SCREEN_LEFT_SIDE = 37 * TILE_LENGTH_PIXELS * scale;
+    static float SECOND_SCREEN_RIGHT_SIDE = 69 * TILE_LENGTH_PIXELS * scale;
+    static float THIRD_SCREEN_LEFT_SIDE = 75 * TILE_LENGTH_PIXELS * scale;
+    static float FIRST_SCREEN_SPAWN_POINT = 30 * TILE_LENGTH_PIXELS * scale;
+    static float SECOND_SCREEN_LEFT_SPAWN_POINT = 38 * TILE_LENGTH_PIXELS * scale;
+    static float SECOND_SCREEN_RIGHT_SPAWN_POINT = 68 * TILE_LENGTH_PIXELS * scale;
+    static float THIRD_SCREEN_SPAWN_POINT = 76 * TILE_LENGTH_PIXELS * scale;
+
     private State state = State.RUN;
 
     public enum State {
@@ -169,19 +174,23 @@ public class Game extends ApplicationAdapter {
         //         break;
         // }
 
-		clearScreen(97/255f, 134/255f, 106/255f);
+		GameUtil.clearScreen(97/255f, 134/255f, 106/255f);
 
 		batch.setProjectionMatrix(camera.combined);
-		moveCamera(camera);
+		GameUtil.moveCamera(camera);
 
 		tiledMapRenderer.render();
 		tiledMapRenderer.setView(camera);
         debugRenderer.render(world, camera.combined);
 
-		checkIfChangeRoom(player.getBody().getPosition().x);
+		GameUtil.checkIfChangeRoom(
+            player.getBody(),
+            player.getBody().getPosition().x,
+            player.getDesiredAngle()
+		);
 
 		world.getBodies(bodies);
-        sendBodiesToBeDestroyed();
+        GameContactListener.sendBodiesToBeDestroyed(bodies, bodiesToBeDestroyed);
 
         if (touchpad.isTouched()) {
             player.submarineRotation(deltaX, deltaY);
@@ -208,20 +217,12 @@ public class Game extends ApplicationAdapter {
                 phosphorus.getBody().getPosition().y - 0.25f,0.5f, 0.5f);
 		batch.end();
 
-        doPhysicsStep(Gdx.graphics.getDeltaTime());
+        GameUtil.doPhysicsStep(world, Gdx.graphics.getDeltaTime());
         clearBullets();
 
         //joystickTable.setDebug(true);
         //speedButtonTable.setDebug(true);
 	}
-
-    public void sendBodiesToBeDestroyed() {
-        for (Body body: bodies) {
-            if (body.getUserData().equals("dead")) {
-                bodiesToBeDestroyed.add(body);
-            }
-        }
-    }
 
     // For debugging button responsivity. delete later.
     public void resize(int width, int height) {
@@ -276,8 +277,8 @@ public class Game extends ApplicationAdapter {
         touchpad.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                    deltaX = ((Touchpad) actor).getKnobPercentX();
-                    deltaY = ((Touchpad) actor).getKnobPercentY();
+                deltaX = ((Touchpad) actor).getKnobPercentX();
+                deltaY = ((Touchpad) actor).getKnobPercentY();
             }
         });
 
@@ -381,96 +382,6 @@ public class Game extends ApplicationAdapter {
         }
     }
 
-    // Fixed time step
-    private void doPhysicsStep(float deltaTime) {
-
-        float frameTime = deltaTime;
-
-        if(deltaTime > 1 / 4f) {
-            frameTime = 1 / 4f;
-        }
-
-        accumulator += frameTime;
-
-        while (accumulator >= TIME_STEP) {
-            world.step(TIME_STEP, 8, 3);
-            accumulator -= TIME_STEP;
-        }
-    }
-
-    private void checkIfChangeRoom(float position) {
-		checkInWhatRoom(position);
-
-		if (position >= FIRST_SCREEN_RIGHT_SIDE && room == 1) {
-			player.getBody().setTransform(
-				SECOND_SCREEN_LEFT_SPAWN_POINT,
-				player.getBody().getPosition().y,
-				player.getDesiredAngle()
-			);
-		} else if (position <= SECOND_SCREEN_LEFT_SIDE && room == 2) {
-			player.getBody().setTransform(
-				FIRST_SCREEN_SPAWN_POINT,
-				player.getBody().getPosition().y,
-				player.getDesiredAngle()
-			);
-		} else if (position >= SECOND_SCREEN_RIGHT_SIDE && room == 2) {
-			player.getBody().setTransform(
-				THIRD_SCREEN_SPAWN_POINT,
-				player.getBody().getPosition().y,
-				player.getDesiredAngle()
-			);
-		} else if (position <= THIRD_SCREEN_LEFT_SIDE && room == 3) {
-			player.getBody().setTransform(
-				SECOND_SCREEN_RIGHT_SPAWN_POINT,
-				player.getBody().getPosition().y,
-				player.getDesiredAngle()
-			);
-		}
-	}
-
- 	private void checkInWhatRoom(float position) {
-		if ( // Check if in the first room
-			position <= ROOM_WIDTH_PIXELS * scale
-		) {
-			room = 1;
-		} else if ( // Check if in the second room
-		 	position >= (ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale &&
-		 	position <= (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale
-		) {
-			room = 2;
-		} else if ( // Check if in the third room
-			position >= (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2) * scale
-		) {
-			room = 3;
-		}
-	}
-
-	private void moveCamera(OrthographicCamera camera) {
-		if (room == 1) {
-			camera.position.x = ROOM_WIDTH_PIXELS / 2 * scale;
-			camera.position.y = WORLD_HEIGHT_PIXELS / 2 * scale;
-		} else if (room == 2) {
-			camera.position.x = WORLD_WIDTH_PIXELS / 2 * scale;
-			camera.position.y = WORLD_HEIGHT_PIXELS / 2 * scale;
-		} else if (room == 3) {
-			camera.position.x = (WORLD_WIDTH_PIXELS - ROOM_WIDTH_PIXELS / 2) * scale;
-			camera.position.y = WORLD_HEIGHT_PIXELS / 2 * scale;
-		}
-
-		camera.update();
-	}
-
-	private void clearScreen(float r, float g, float b) {
-		Gdx.gl.glClearColor(r, g, b, 0);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	}
-	
-	@Override
-	public void dispose () {
-		batch.dispose();
-		world.dispose();
-	}
-
 	@Override
 	public void pause() {
         this.state = State.PAUSE;
@@ -480,4 +391,10 @@ public class Game extends ApplicationAdapter {
     public void resume() {
         this.state = State.RESUME;
     }
+
+	@Override
+	public void dispose () {
+		batch.dispose();
+		world.dispose();
+	}
 }

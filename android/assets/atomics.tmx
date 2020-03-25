@@ -13,7 +13,7 @@
  </layer>
  <layer id="4" name="airpipes" width="106" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt0aERAEAIA0EMhv4L/hoCM6925UWmCgAAAAAAAIBUL7a0czeLLe3c/fjpAb10AGU=
+   eJzt0TEKACAQA8FrLPT/D/YFBhTOaqZcSJUqAAAAAAAAAG6N0OfDhh4r9NNPaUOPHz9t8igAgA==
   </data>
  </layer>
  <objectgroup id="2" name="wall-rectangles">
@@ -38,7 +38,7 @@
   <object id="25" x="2448.98" y="0.0943394" width="943.018" height="16.9039"/>
   <object id="29" x="3375" y="17.0054" width="16.9993" height="606.003"/>
   <object id="40" x="2592" y="544" width="31.9844" height="79.0156"/>
-  <object id="41" x="2816" y="543.982" width="31.9844" height="79.0156"/>
+  <object id="41" x="2784" y="543.732" width="31.9844" height="79.0156"/>
   <object id="42" x="3008.01" y="543.977" width="31.9844" height="79.0156"/>
   <object id="43" x="3200" y="543.982" width="31.9844" height="79.0156"/>
  </objectgroup>
