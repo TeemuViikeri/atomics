@@ -99,7 +99,8 @@ public class Phosphorus {
             animation.getKeyFrame(
             this.setStateTime(), true),
             body.getPosition().x - 0.25f,
-            body.getPosition().y - 0.25f,0.5f, 0.5f);
+            body.getPosition().y - 0.25f,0.5f, 0.5f
+        );
     }
 
     public Body getBody() { return body; }

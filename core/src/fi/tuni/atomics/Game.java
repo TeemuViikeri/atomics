@@ -149,10 +149,10 @@ public class Game extends ApplicationAdapter {
         // player.getControls().getSpeedButtonTable().setDebug(true);
 	}
 
-//    public void resize(int width, int height) {
-//        player.getControls().getStage().getViewport().update(width, height, true);
-//        player.getControls().createButtons(world, player);
-//    }
+	public void resize(int width, int height) {
+        player.getControls().getStage().getViewport().update(width, height, true);
+        player.getControls().createButtons(world, player);
+    }
 
 	@Override
 	public void pause() {

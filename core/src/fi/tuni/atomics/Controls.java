@@ -19,13 +19,13 @@ class Controls {
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
     private Button speedButton;
-    private Table joystickTable = new Table();
-    private Table speedButtonTable = new Table();
-    private Table shootButtonTable = new Table();
 
     void createButtons(final World world, final Player player) {
         stage = new Stage();
         touchpad = new Touchpad(10, getTouchpadStyle());
+        Table joystickTable = new Table();
+        Table speedButtonTable = new Table();
+        Table shootButtonTable = new Table();
         joystickTable.setFillParent(true);
         speedButtonTable.setFillParent(true);
         shootButtonTable.setFillParent(true);
@@ -58,7 +58,7 @@ class Controls {
                 .padRight((float) -Gdx.graphics.getWidth() / 40f)
                 .fill();
 
-        stage.addActor(joystickTable);
+        stage.addActor(joystickTable)   ;
         stage.addActor(speedButtonTable);
         stage.addActor(shootButtonTable);
 
@@ -68,7 +68,7 @@ class Controls {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 player.setDeltaX(((Touchpad) actor).getKnobPercentX());
-                player.setDeltaY(((Touchpad) actor).getKnobPercentX());
+                player.setDeltaY(((Touchpad) actor).getKnobPercentY());
             }
         });
 
@@ -126,15 +126,15 @@ class Controls {
         return speedButton;
     }
 
-    Table getJoystickTable() {
-        return joystickTable;
-    }
-
-    Table getSpeedButtonTable() {
-        return speedButtonTable;
-    }
-
-    Table getShootButtonTable() {
-        return shootButtonTable;
-    }
+//    Table getJoystickTable() {
+//        return joystickTable;
+//    }
+//
+//    Table getSpeedButtonTable() {
+//        return speedButtonTable;
+//    }
+//
+//    Table getShootButtonTable() {
+//        return shootButtonTable;
+//    }
 }
