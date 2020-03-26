@@ -88,7 +88,7 @@ public class Game extends ApplicationAdapter {
         bullet = new Bullet();
         bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
-        phosphorus = new Phosphorus(13, 6.4f);
+        phosphorus = new Phosphorus();
         new Wall(tiledMap, "wall-rectangles");
 	}
 
@@ -127,6 +127,7 @@ public class Game extends ApplicationAdapter {
         // Check if
 		world.getBodies(bodies);
         collisionHandler.sendBodiesToBeDestroyed(bodies, bodiesToBeDestroyed);
+        phosphorus.spawnPhosphorus();
 
         // Player input
         player.submarineMove();
@@ -137,7 +138,6 @@ public class Game extends ApplicationAdapter {
 		batch.begin();
         player.draw(batch, player.getBody());
         gameUtil.drawBodies(bodies, batch, bullet);
-        phosphorus.draw(batch);
 		batch.end();
 
         // Fixed step and destroy bodies

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -14,16 +15,20 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 public class Phosphorus extends GameObject{
     private final int sheetRows = 2;
     private final int sheetCols = 5;
+    static final float width = 0.5f;
+    private final int TOP = 1, LEFT = 2, RIGHT = 3;
     static private Texture animationSheet = new Texture("phosphorus.png");
+    private float spawnTimer = 0;
+    private float spawnFrequency = 180;
     private Animation<TextureRegion> animation;
-    private float positionX;
-    private float positionY;
+    private Vector2 spawnPoint;
+    private int spawnside;
     private float stateTime;
+    private GameUtil gameUtil = new GameUtil();
 
-    Phosphorus(float x, float y) {
+    Phosphorus(Vector2 spawnPoint) {
+        this.spawnPoint = spawnPoint;
         stateTime = 1f;
-        positionX = x;
-        positionY = y;
         TextureRegion[] frames;
         TextureRegion[][] temp =  TextureRegion.split(
                 animationSheet,
@@ -31,12 +36,10 @@ public class Phosphorus extends GameObject{
                 animationSheet.getHeight() / sheetRows);
         frames = to1d(temp);
         animation = new Animation<>(1 / 9f, frames);
-        createBody();
+    }
 
-        body.applyLinearImpulse(
-            new Vector2(3, -3),
-            body.getWorldCenter(),
-            true);
+    Phosphorus() {
+
     }
 
     private TextureRegion[] to1d(TextureRegion[][] temp) {
@@ -68,7 +71,7 @@ public class Phosphorus extends GameObject{
         bodyDef = new BodyDef();
 
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(positionX, positionY);
+        bodyDef.position.set(spawnPoint);
 
         return bodyDef;
     }
@@ -83,18 +86,34 @@ public class Phosphorus extends GameObject{
 
         PolygonShape polygon = new PolygonShape();
 
-        polygon.setAsBox(0.25f, 0.25f);
+        polygon.setAsBox(width / 2, width / 2);
         fixtureDef.shape = polygon;
 
         return fixtureDef;
     }
 
-    void draw(SpriteBatch batch) {
-        batch.draw(
-            animation.getKeyFrame(
-            this.setStateTime(), true),
-            body.getPosition().x - 0.25f,
-            body.getPosition().y - 0.25f,0.5f, 0.5f
-        );
+    void spawnPhosphorus() {
+        spawnTimer++;
+        spawnside =  MathUtils.random(1,3);
+
+        if (spawnTimer >= spawnFrequency) {
+            spawnPoint = gameUtil.getSpawnPoint(spawnside);
+            Phosphorus phosphorus = new Phosphorus(spawnPoint);
+            phosphorus.createBody();
+            spawnTimer = 0;
+
+            if (spawnside == TOP) {
+                phosphorus.body.applyLinearImpulse(new Vector2(0, -1),
+                        phosphorus.body.getWorldCenter(),  true);
+            } else if (spawnside == LEFT) {
+                phosphorus.body.applyLinearImpulse(new Vector2(1.5f,-1),
+                        phosphorus.body.getWorldCenter(), true);
+            } else if (spawnside == RIGHT) {
+                phosphorus.body.applyLinearImpulse(new Vector2(-1.5f,-1),
+                        phosphorus.body.getWorldCenter(), true);
+            }
+        }
     }
+
+    public Body getBody() { return body; }
 }

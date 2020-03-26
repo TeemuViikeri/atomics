@@ -5,13 +5,20 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 
+import static fi.tuni.atomics.Game.PIPE_HORIZONTAL_PIXELS;
+import static fi.tuni.atomics.Game.ROOM_WIDTH_PIXELS;
+import static fi.tuni.atomics.Game.WORLD_HEIGHT_PIXELS;
+import static fi.tuni.atomics.Game.scale;
+
 class GameUtil {
     private double accumulator = 0;
     private int room = 2;
+    private final int TOP = 1, LEFT = 2, RIGHT = 3;
 
     void drawBodies(Array<Body> bodies, SpriteBatch batch, Bullet bullet) {
         for (Body body: bodies) {
@@ -38,6 +45,16 @@ class GameUtil {
                     bullet.getTexture().getHeight(),
                     false,
                     false
+                );
+            } else if (temp instanceof Phosphorus) {
+                batch.draw(((Phosphorus) temp)
+                                .getAnimation()
+                                .getKeyFrame(((Phosphorus)temp)
+                                .setStateTime(), true),
+                        body.getPosition().x - 0.25f,
+                        body.getPosition().y - 0.25f,
+                        0.5f,
+                        0.5f
                 );
             }
         }
@@ -124,5 +141,31 @@ class GameUtil {
     void clearScreen() {
         Gdx.gl.glClearColor((float) 0.38039216, (float) 0.5254902, (float) 0.41568628, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    }
+
+    Vector2 getSpawnPoint(int spawnside) {
+        float y;
+        float x;
+
+        if (spawnside == TOP) {
+            y = WORLD_HEIGHT_PIXELS * scale + Phosphorus.width;
+            x = MathUtils.random((ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale,
+                    (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale - Phosphorus.width);
+
+            return new Vector2(x, y);
+        } else if (spawnside == LEFT) {
+            x = (ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale - Phosphorus.width;
+            y = MathUtils.random(WORLD_HEIGHT_PIXELS * 3/4 * scale,
+                    WORLD_HEIGHT_PIXELS * scale + Phosphorus.width);
+
+            return new Vector2(x,y);
+        } else if (spawnside == RIGHT) {
+            x = (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale + Phosphorus.width;
+            y = MathUtils.random(WORLD_HEIGHT_PIXELS * 3/4 * scale, WORLD_HEIGHT_PIXELS * scale);
+
+            return new Vector2(x,y);
+        } else {
+            throw new RuntimeException("Couldn't get a real phosphorus spawnpoint");
+        }
     }
 }
