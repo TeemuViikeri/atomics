@@ -16,7 +16,8 @@ public class Phosphorus extends GameObject{
     private final int sheetRows = 2;
     private final int sheetCols = 5;
     static final float width = 0.5f;
-    private final int TOP = 1, LEFT = 2, RIGHT = 3;
+    private final int TOP = 1, TOPLEFT = 2, TOPRIGHT = 3, BOTTOM = 4, BOTTOMLEFT = 5,
+            BOTTOMRIGHT = 6;
     static private Texture animationSheet = new Texture("phosphorus.png");
     private float spawnTimer = 0;
     private float spawnFrequency = 180;
@@ -94,7 +95,7 @@ public class Phosphorus extends GameObject{
 
     void spawnPhosphorus() {
         spawnTimer++;
-        spawnside =  MathUtils.random(1,3);
+        spawnside =  MathUtils.random(1,6);
 
         if (spawnTimer >= spawnFrequency) {
             spawnPoint = gameUtil.getSpawnPoint(spawnside);
@@ -105,11 +106,20 @@ public class Phosphorus extends GameObject{
             if (spawnside == TOP) {
                 phosphorus.body.applyLinearImpulse(new Vector2(0, -1),
                         phosphorus.body.getWorldCenter(),  true);
-            } else if (spawnside == LEFT) {
+            } else if (spawnside == TOPLEFT) {
                 phosphorus.body.applyLinearImpulse(new Vector2(1.5f,-1),
                         phosphorus.body.getWorldCenter(), true);
-            } else if (spawnside == RIGHT) {
+            } else if (spawnside == TOPRIGHT) {
                 phosphorus.body.applyLinearImpulse(new Vector2(-1.5f,-1),
+                        phosphorus.body.getWorldCenter(), true);
+            } else if (spawnside == BOTTOM) {
+                phosphorus.body.applyLinearImpulse(new Vector2(0, 1),
+                        phosphorus.body.getWorldCenter(),  true);
+            } else if (spawnside == BOTTOMLEFT) {
+                phosphorus.body.applyLinearImpulse(new Vector2(1.5f,1),
+                        phosphorus.body.getWorldCenter(), true);
+            } else if (spawnside == BOTTOMRIGHT) {
+                phosphorus.body.applyLinearImpulse(new Vector2(-1.5f,1),
                         phosphorus.body.getWorldCenter(), true);
             }
         }

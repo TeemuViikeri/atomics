@@ -18,7 +18,8 @@ import static fi.tuni.atomics.Game.scale;
 class GameUtil {
     private double accumulator = 0;
     private int room = 2;
-    private final int TOP = 1, LEFT = 2, RIGHT = 3;
+    private final int TOP = 1, TOPLEFT = 2, TOPRIGHT = 3, BOTTOM = 4, BOTTOMLEFT = 5,
+            BOTTOMRIGHT = 6;
 
     void drawBodies(Array<Body> bodies, SpriteBatch batch, Bullet bullet) {
         for (Body body: bodies) {
@@ -148,20 +149,38 @@ class GameUtil {
         float x;
 
         if (spawnside == TOP) {
-            y = WORLD_HEIGHT_PIXELS * scale + Phosphorus.width;
             x = MathUtils.random((ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale,
                     (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale - Phosphorus.width);
+            y = WORLD_HEIGHT_PIXELS * scale + Phosphorus.width;
 
             return new Vector2(x, y);
-        } else if (spawnside == LEFT) {
+        } else if (spawnside == TOPLEFT) {
             x = (ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale - Phosphorus.width;
             y = MathUtils.random(WORLD_HEIGHT_PIXELS * 3/4 * scale,
                     WORLD_HEIGHT_PIXELS * scale + Phosphorus.width);
 
             return new Vector2(x,y);
-        } else if (spawnside == RIGHT) {
+        } else if (spawnside == TOPRIGHT) {
             x = (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale + Phosphorus.width;
             y = MathUtils.random(WORLD_HEIGHT_PIXELS * 3/4 * scale, WORLD_HEIGHT_PIXELS * scale);
+
+            return new Vector2(x,y);
+        } else if (spawnside == BOTTOM) {
+            x = MathUtils.random((ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale
+                            + Phosphorus.width,
+                    (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale - Phosphorus.width);
+            y = - Phosphorus.width;
+
+            return new Vector2(x,y);
+        } else if (spawnside == BOTTOMLEFT) {
+            x = (ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale - Phosphorus.width;
+            y = MathUtils.random(-Phosphorus.width,
+                    WORLD_HEIGHT_PIXELS * 1/4 * scale);
+
+            return new Vector2(x,y);
+        } else if (spawnside == BOTTOMRIGHT) {
+            x = (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale + Phosphorus.width;
+            y = MathUtils.random(-Phosphorus.width, WORLD_HEIGHT_PIXELS * 1/4 * scale);
 
             return new Vector2(x,y);
         } else {
