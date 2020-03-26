@@ -21,41 +21,61 @@ class GameUtil {
     private final int TOP = 1, TOPLEFT = 2, TOPRIGHT = 3, BOTTOM = 4, BOTTOMLEFT = 5,
             BOTTOMRIGHT = 6;
 
-    void drawBodies(Array<Body> bodies, SpriteBatch batch, Bullet bullet) {
+    void drawBodies(Array<Body> bodies, SpriteBatch batch, Player player) {
         for (Body body: bodies) {
             if (body.getUserData().equals("dead")) {
                 continue;
             }
+
             GameObject temp = (GameObject) body.getUserData();
-            Shape.Type tempShape = temp.getFixtureDef().shape.getType();
-            if (tempShape == Shape.Type.Circle) {
+            if (temp instanceof Bullet) {
+                Bullet bulletTemp = (Bullet) temp;
                 batch.draw(
-                    bullet.getTexture(),
-                    body.getPosition().x - bullet.getFixture().shape.getRadius(),
-                    body.getPosition().y - bullet.getFixture().shape.getRadius(),
-                    bullet.getFixture().shape.getRadius(),
-                    bullet.getFixture().shape.getRadius(),
-                    bullet.getFixture().shape.getRadius() * 2,
-                    bullet.getFixture().shape.getRadius() * 2,
+                    bulletTemp.getTexture(),
+                    body.getPosition().x - bulletTemp.getWidth() / 2,
+                    body.getPosition().y - bulletTemp.getHeight() / 2,
+                    bulletTemp.getWidth() / 2,
+                    bulletTemp.getHeight() / 2,
+                    bulletTemp.getWidth(),
+                    bulletTemp.getHeight(),
                     1.0f,
                     1.0f,
                     body.getAngle() * MathUtils.radiansToDegrees,
                     0,
                     0,
-                    bullet.getTexture().getWidth(),
-                    bullet.getTexture().getHeight(),
+                    bulletTemp.getTexture().getWidth(),
+                    bulletTemp.getTexture().getHeight(),
                     false,
                     false
                 );
             } else if (temp instanceof Phosphorus) {
                 batch.draw(((Phosphorus) temp)
-                                .getAnimation()
-                                .getKeyFrame(((Phosphorus)temp)
-                                .setStateTime(), true),
-                        body.getPosition().x - 0.25f,
-                        body.getPosition().y - 0.25f,
-                        0.5f,
-                        0.5f
+                        .getAnimation()
+                        .getKeyFrame(((Phosphorus)temp)
+                        .setStateTime(), true),
+                body.getPosition().x - 0.25f,
+                body.getPosition().y - 0.25f,
+                0.5f,
+                0.5f
+                );
+            } else if (temp instanceof Player) {
+                batch.draw(
+                    player.getTexture(),
+                    body.getPosition().x - player.getWidth() / 2,
+                    body.getPosition().y - player.getHeight() / 2,
+                    player.getWidth() / 2,
+                    player.getHeight() / 2,
+                    player.getWidth(),
+                    player.getHeight(),
+                    1.0f,
+                    1.0f,
+                    body.getAngle() * MathUtils.radiansToDegrees,
+                    0,
+                    0,
+                    player.getTexture().getWidth(),
+                    player.getTexture().getHeight(),
+                    false,
+                    false
                 );
             }
         }

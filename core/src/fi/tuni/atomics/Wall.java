@@ -31,11 +31,11 @@ class Wall extends GameObject {
         body = Game.world.createBody(bodyDef);
         body.setUserData(this);
 
-        PolygonShape groundBox = new PolygonShape();
-        groundBox.setAsBox(width / 2, height / 2);
+        shape = new PolygonShape();
+        ((PolygonShape) shape).setAsBox(width / 2, height / 2);
 
         fixtureDef = new FixtureDef();
-        fixtureDef.shape = groundBox;
+        fixtureDef.shape = shape;
 
         fixtureDef.filter.groupIndex = -2;
         body.createFixture(fixtureDef);

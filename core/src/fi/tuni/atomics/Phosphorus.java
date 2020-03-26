@@ -7,17 +7,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
-public class Phosphorus extends GameObject{
+class Phosphorus extends GameObject{
+    private final int TOP = 1, TOPLEFT = 2, TOPRIGHT = 3, BOTTOM = 4, BOTTOMLEFT = 5,
+            BOTTOMRIGHT = 6;
     private final int sheetRows = 2;
     private final int sheetCols = 5;
     static final float width = 0.5f;
-    private final int TOP = 1, TOPLEFT = 2, TOPRIGHT = 3, BOTTOM = 4, BOTTOMLEFT = 5,
-            BOTTOMRIGHT = 6;
     static private Texture animationSheet = new Texture("phosphorus.png");
     private float spawnTimer = 0;
     private float spawnFrequency = 180;
@@ -27,7 +26,7 @@ public class Phosphorus extends GameObject{
     private float stateTime;
     private GameUtil gameUtil = new GameUtil();
 
-    Phosphorus(Vector2 spawnPoint) {
+    private Phosphorus(Vector2 spawnPoint) {
         this.spawnPoint = spawnPoint;
         stateTime = 1f;
         TextureRegion[] frames;
@@ -85,10 +84,10 @@ public class Phosphorus extends GameObject{
         fixtureDef.restitution = 0f;
         fixtureDef.friction = 0f;
 
-        PolygonShape polygon = new PolygonShape();
+        shape = new PolygonShape();
 
-        polygon.setAsBox(width / 2, width / 2);
-        fixtureDef.shape = polygon;
+        ((PolygonShape) shape).setAsBox(width / 2, width / 2);
+        fixtureDef.shape = shape;
 
         return fixtureDef;
     }
@@ -124,6 +123,4 @@ public class Phosphorus extends GameObject{
             }
         }
     }
-
-    public Body getBody() { return body; }
 }

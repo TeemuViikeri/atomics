@@ -22,7 +22,6 @@ public class Game extends ApplicationAdapter {
     static World world;
     private Box2DDebugRenderer debugRenderer;
     private Player player;
-    private Bullet bullet;
     private Array<Body> bodies;
     private Array<Body> bodiesToBeDestroyed;
     private CollisionHandler collisionHandler;
@@ -85,7 +84,6 @@ public class Game extends ApplicationAdapter {
         player = new Player(
                 WORLD_WIDTH_PIXELS / 2 * scale,
                 WORLD_HEIGHT_PIXELS / 2 * scale);
-        bullet = new Bullet();
         bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
         phosphorus = new Phosphorus();
@@ -136,8 +134,7 @@ public class Game extends ApplicationAdapter {
 
         // Draw
 		batch.begin();
-        player.draw(batch, player.getBody());
-        gameUtil.drawBodies(bodies, batch, bullet);
+        gameUtil.drawBodies(bodies, batch, player);
 		batch.end();
 
         // Fixed step and destroy bodies
