@@ -3,7 +3,9 @@ package fi.tuni.atomics;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
 public class Game extends ApplicationAdapter {
@@ -28,19 +31,20 @@ public class Game extends ApplicationAdapter {
     private CollisionHandler collisionHandler;
     private GameUtil gameUtil;
     private Phosphorus phosphorus;
+    private Score score;
 
 	// Initiated fields
     static float scale = 1/100f;
-    private static float TILE_LENGTH_PIXELS = 32;
-    private static float TILES_AMOUNT_WIDTH = 106;
-    private static float TILES_AMOUNT_HEIGHT = 20;
+    static float TILE_LENGTH_PIXELS = 32;
+    static float TILES_AMOUNT_WIDTH = 106;
+    static float TILES_AMOUNT_HEIGHT = 20;
     static float WORLD_WIDTH_PIXELS = TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // = 3392 px
     static float WORLD_HEIGHT_PIXELS = TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // = 640 px
-    private static float ROOM_TILES_AMOUNT_WIDTH = 30;
-    private static float ROOM_TILES_AMOUNT_HEIGHT = 20;
+    static float ROOM_TILES_AMOUNT_WIDTH = 30;
+    static float ROOM_TILES_AMOUNT_HEIGHT = 20;
     static float ROOM_WIDTH_PIXELS = ROOM_TILES_AMOUNT_WIDTH * TILE_LENGTH_PIXELS; // 960 px
-    private static float ROOM_HEIGHT_PIXELS = ROOM_TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // 640 px
-	private static float PIPE_HORIZONTAL_TILES_AMOUNT = 8;
+    static float ROOM_HEIGHT_PIXELS = ROOM_TILES_AMOUNT_HEIGHT * TILE_LENGTH_PIXELS; // 640 px
+	static float PIPE_HORIZONTAL_TILES_AMOUNT = 8;
 	static float PIPE_HORIZONTAL_PIXELS = PIPE_HORIZONTAL_TILES_AMOUNT * TILE_LENGTH_PIXELS;
 	static float FIRST_SCREEN_RIGHT_SIDE = 31 * TILE_LENGTH_PIXELS * scale;
     static float SECOND_SCREEN_LEFT_SIDE = 37 * TILE_LENGTH_PIXELS * scale;
@@ -89,6 +93,7 @@ public class Game extends ApplicationAdapter {
         bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
         phosphorus = new Phosphorus();
+        score = new Score();
         new Wall(tiledMap, "wall-rectangles");
 	}
 
@@ -133,6 +138,9 @@ public class Game extends ApplicationAdapter {
         player.submarineMove();
         player.getControls().getStage().act(Gdx.graphics.getDeltaTime());
         player.getControls().getStage().draw();
+
+        // Score
+        score.getStage().draw();
 
         // Draw
 		batch.begin();

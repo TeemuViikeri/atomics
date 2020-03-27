@@ -17,7 +17,7 @@ import static fi.tuni.atomics.Game.scale;
 
 class GameUtil {
     private double accumulator = 0;
-    private int room = 2;
+    private static int room = 2;
     private final int TOP = 1, TOPLEFT = 2, TOPRIGHT = 3, BOTTOM = 4, BOTTOMLEFT = 5,
             BOTTOMRIGHT = 6;
 

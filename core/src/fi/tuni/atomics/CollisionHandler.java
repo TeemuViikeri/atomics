@@ -24,6 +24,7 @@ public class CollisionHandler implements ContactListener {
         }
 
         if (isBulletContactingPhosphorus(bodyA, bodyB)) {
+            Score.collectPhosphorus();
             bodyA.setUserData("dead");
             bodyB.setUserData("dead");
         }
