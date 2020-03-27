@@ -2,19 +2,14 @@ package fi.tuni.atomics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
 class Player extends GameObject {
-    private Sprite sprite;
     private Controls controls;
     private float desiredAngle;
     private float deltaX;
@@ -23,15 +18,11 @@ class Player extends GameObject {
     private int shootingTimer = 0;
 
     Player(float x, float y) {
-        Texture texture = new Texture("cropped-subbi.png");
-        sprite = new Sprite(texture);
+        texture = new Texture("cropped-subbi.png");
         controls = new Controls();
-
-        setSpeed(0); // Check the right speed variable
-
-        sprite.setPosition(x, y);
-        sprite.setSize(0.50f, 0.25f);
-        sprite.setOriginCenter();
+        width = 0.5f;
+        height = 0.25f;
+        speed = 0;
         createSubmarineBody();
         controls.createButtons(this);
     }
@@ -61,9 +52,9 @@ class Player extends GameObject {
         //fixtureDef.restitution = 1f;
         //fixtureDef.friction    = 0;
 
-        PolygonShape polygon = new PolygonShape();
-        polygon.setAsBox(0.25f, 0.125f);
-        fixtureDef.shape = polygon;
+        shape = new PolygonShape();
+        ((PolygonShape) shape).setAsBox(0.25f, 0.125f);
+        fixtureDef.shape = shape;
 
         return fixtureDef;
     }
@@ -138,7 +129,7 @@ class Player extends GameObject {
         body.setTransform(body.getPosition(), newAngle);
     }
 
-    void fireBullet() {
+    private void fireBullet() {
         Bullet bulletObj = new Bullet(
             body
         );
@@ -158,51 +149,7 @@ class Player extends GameObject {
         );
     }
 
-    // Draw methods
-    void draw(SpriteBatch batch, Body body) {
-        sprite.setPosition(
-        body.getPosition().x - sprite.getWidth() / 2f,
-        body.getPosition().y - sprite.getHeight() / 2f
-        );
-        sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-        sprite.draw(batch);
-    }
-
-//     void drawBullets(Array<Body> bodies, SpriteBatch batch, Bullet bullet) {
-//        for (Body body: bodies) {
-//            Object temp = body.getUserData();
-//            if (temp instanceof Bullet) {
-//                batch.draw(
-//                    bullet.getTexture(),
-//                    body.getPosition().x - bullet.getFixture().shape.getRadius(),
-//                    body.getPosition().y - bullet.getFixture().shape.getRadius(),
-//                    bullet.getFixture().shape.getRadius(),
-//                    bullet.getFixture().shape.getRadius(),
-//                    bullet.getFixture().shape.getRadius() * 2,
-//                    bullet.getFixture().shape.getRadius() * 2,
-//                    1.0f,
-//                    1.0f,
-//                    body.getAngle() * MathUtils.radiansToDegrees,
-//                    0,
-//                    0,
-//                    bullet.getTexture().getWidth(),
-//                    bullet.getTexture().getHeight(),
-//                    false,
-//                    false
-//                );
-//            }
-//        }
-//    }
-
     // Getters and setters
-    Body getBody() {
-        return body;
-    }
-
-    private void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
     float getDesiredAngle() {
         return desiredAngle;
     }

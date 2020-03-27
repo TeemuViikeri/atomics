@@ -7,25 +7,16 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 class Bullet extends GameObject {
-    private Texture texture = new Texture("bullet.png");
-
     Bullet(Body playerBody) {
-        speed = 3f; // Check the right speed variable
+        speed = 3f;
+        texture = new Texture("bullet.png");
         createBulletBody(playerBody);
-    }
-
-    Bullet() {
-        createSimpleBulletBody();
+        width = fixtureDef.shape.getRadius() * 2;
+        height = fixtureDef.shape.getRadius() * 2;
     }
 
     private void createBulletBody(Body playerBody) {
         body = Game.world.createBody(getDefinitionOfBody(playerBody));
-        body.createFixture(getFixtureDefinition());
-        body.setUserData(this);
-    }
-
-    private void createSimpleBulletBody() {
-        body = Game.world.createBody(getSimpleDefinitionOfBody());
         body.createFixture(getFixtureDefinition());
         body.setUserData(this);
     }
@@ -40,14 +31,7 @@ class Bullet extends GameObject {
         return bodyDef;
     }
 
-    private BodyDef getSimpleDefinitionOfBody() {
-        bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-
-        return bodyDef;
-    }
-
-    FixtureDef getFixtureDefinition() {
+    private FixtureDef getFixtureDefinition() {
         fixtureDef = new FixtureDef();
 
         fixtureDef.filter.groupIndex = -1;
@@ -55,26 +39,11 @@ class Bullet extends GameObject {
         fixtureDef.restitution = 0f;
         fixtureDef.friction = 0f;
 
-        CircleShape circleshape = new CircleShape();
+        shape = new CircleShape();
 
-        circleshape.setRadius(0.05f);
-        fixtureDef.shape = circleshape;
+        shape.setRadius(0.05f);
+        fixtureDef.shape = shape;
 
-        return fixtureDef;
-    }
-
-    // Getters and setters
-    Texture getTexture() {
-        return texture;
-    }
-
-    float getSpeed() {
-        return speed;
-    }
-
-    Body getBody() { return body; }
-
-    FixtureDef getFixture() {
         return fixtureDef;
     }
 }
