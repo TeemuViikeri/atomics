@@ -112,9 +112,6 @@ public class Game extends ApplicationAdapter {
         //         break;
         // }
 
-		// Debuggers
-        debugRenderer.render(world, camera.combined);
-
         // Render setup
 		gameUtil.clearScreen();
 		batch.setProjectionMatrix(camera.combined);
@@ -149,6 +146,9 @@ public class Game extends ApplicationAdapter {
         gameUtil.doPhysicsStep(Gdx.graphics.getDeltaTime());
         collisionHandler.clearBodies(bodiesToBeDestroyed);
 
+        // Debuggers
+        debugRenderer.render(world, camera.combined);
+
         // player.getControls().getJoystickTable().setDebug(true);
         // player.getControls().getSpeedButtonTable().setDebug(true);
 	}
@@ -156,6 +156,7 @@ public class Game extends ApplicationAdapter {
 	public void resize(int width, int height) {
         player.getControls().getStage().getViewport().update(width, height, true);
         player.getControls().createButtons(player);
+        score = new Score();
     }
 
 	@Override
