@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import fi.tuni.atomics.Game;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
@@ -14,6 +13,6 @@ public class AndroidLauncher extends AndroidApplication {
 
 		config.useImmersiveMode = true;
 
-		initialize(new Game(), config);
+		initialize(new Atomics(), config);
 	}
 }

@@ -28,6 +28,10 @@ public class CollisionHandler implements ContactListener {
             bodyA.setUserData("dead");
             bodyB.setUserData("dead");
         }
+
+        if (isPlayerContactingPhosphorus(bodyA, bodyB)) {
+            Player.loseHitpoint();
+        }
     }
 
     @Override
@@ -51,6 +55,12 @@ public class CollisionHandler implements ContactListener {
         } else return a.getUserData() instanceof Wall && b.getUserData() instanceof Bullet;
     }
 
+    private boolean isPlayerContactingPhosphorus(Body a, Body b) {
+        if (a.getUserData() instanceof Player && b.getUserData() instanceof Phosphorus) {
+            return true;
+        } else return a.getUserData() instanceof Phosphorus && b.getUserData() instanceof Player;
+    }
+
     private boolean isBulletContactingPhosphorus(Body a, Body b) {
         if (
             a.getUserData() instanceof Bullet &&
@@ -64,6 +74,13 @@ public class CollisionHandler implements ContactListener {
 
     void sendBodiesToBeDestroyed(Array<Body> bodies, Array<Body> bodiesToBeDestroyed) {
         for (Body body: bodies) {
+            if (body.getPosition().y >= Atomics.WORLD_HEIGHT_PIXELS * Atomics.scale
+                    + Phosphorus.width * 2) {
+                body.setUserData("dead");
+            } else if (body.getPosition().y <= - Phosphorus.width * 2) {
+                body.setUserData("dead");
+            }
+
             if (body.getUserData().equals("dead")) {
                 bodiesToBeDestroyed.add(body);
             }
@@ -73,7 +90,7 @@ public class CollisionHandler implements ContactListener {
     void clearBodies(Array<Body> bodiesToBeDestroyed) {
         for (Iterator<Body> i = bodiesToBeDestroyed.iterator(); i.hasNext();) {
             Body body = i.next();
-            Game.world.destroyBody(body);
+            Atomics.world.destroyBody(body);
             i.remove();
         }
     }

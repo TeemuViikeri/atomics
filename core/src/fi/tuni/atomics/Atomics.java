@@ -3,9 +3,7 @@ package fi.tuni.atomics;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -14,12 +12,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
-public class Game extends ApplicationAdapter {
+public class Atomics extends ApplicationAdapter {
 	// Non-initiated fields
+    static float HUD_Y;
 	private SpriteBatch batch;
+	private SpriteBatch HUDBatch;
 	private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
     static World world;
@@ -31,6 +30,7 @@ public class Game extends ApplicationAdapter {
     private GameUtil gameUtil;
     private Phosphorus phosphorus;
     private Score score;
+
 
 	// Initiated fields
     static float scale = 1/100f;
@@ -67,11 +67,13 @@ public class Game extends ApplicationAdapter {
 	public void create () {
 		// LibGDX
 		batch = new SpriteBatch();
+		HUDBatch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(
 				false,
                 ROOM_WIDTH_PIXELS * scale,
                 ROOM_HEIGHT_PIXELS * scale);
+		HUD_Y = Gdx.graphics.getHeight() - Atomics.TILE_LENGTH_PIXELS * 4;
 
 		// TiledMap
         TiledMap tiledMap = new TmxMapLoader().load("atomics.tmx");
@@ -124,23 +126,27 @@ public class Game extends ApplicationAdapter {
             player.getDesiredAngle()
 		);
 
-        // Check if
+        // Check destroyable bodies
 		world.getBodies(bodies);
         collisionHandler.sendBodiesToBeDestroyed(bodies, bodiesToBeDestroyed);
-        phosphorus.spawnPhosphorus();
 
         // Player input
         player.submarineMove();
         player.getControls().getStage().act(Gdx.graphics.getDeltaTime());
         player.getControls().getStage().draw();
 
-        // Score
-        score.getStage().draw();
-
-        // Draw
+        // Spawn and draw
 		batch.begin();
+        phosphorus.spawnPhosphorus();
         gameUtil.drawBodies(bodies, batch, player);
 		batch.end();
+
+		// HUD render.
+        HUDBatch.begin();
+        player.drawHitpoints(HUDBatch);
+        score.draw(HUDBatch);
+        HUDBatch.end();
+
 
         // Fixed step and destroy bodies
         gameUtil.doPhysicsStep(Gdx.graphics.getDeltaTime());
@@ -157,6 +163,7 @@ public class Game extends ApplicationAdapter {
         player.getControls().getStage().getViewport().update(width, height, true);
         player.getControls().createButtons(player);
         score = new Score();
+        create();
     }
 
 	@Override

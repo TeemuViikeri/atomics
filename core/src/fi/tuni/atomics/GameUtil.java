@@ -7,13 +7,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 
-import static fi.tuni.atomics.Game.PIPE_HORIZONTAL_PIXELS;
-import static fi.tuni.atomics.Game.ROOM_WIDTH_PIXELS;
-import static fi.tuni.atomics.Game.WORLD_HEIGHT_PIXELS;
-import static fi.tuni.atomics.Game.scale;
+import static fi.tuni.atomics.Atomics.PIPE_HORIZONTAL_PIXELS;
+import static fi.tuni.atomics.Atomics.ROOM_WIDTH_PIXELS;
+import static fi.tuni.atomics.Atomics.WORLD_HEIGHT_PIXELS;
+import static fi.tuni.atomics.Atomics.scale;
 
 class GameUtil {
     private double accumulator = 0;
@@ -92,7 +91,7 @@ class GameUtil {
 
         float TIME_STEP = 1 / 60f;
         while (accumulator >= TIME_STEP) {
-            Game.world.step(TIME_STEP, 8, 3);
+            Atomics.world.step(TIME_STEP, 8, 3);
             accumulator -= TIME_STEP;
         }
     }
@@ -100,27 +99,27 @@ class GameUtil {
     void checkIfChangeRoom(Body playerBody, float position, float desiredAngle) {
         checkInWhatRoom(position);
 
-        if (position >= Game.FIRST_SCREEN_RIGHT_SIDE && room == 1) {
+        if (position >= Atomics.FIRST_SCREEN_RIGHT_SIDE && room == 1) {
            playerBody.setTransform(
-                    Game.SECOND_SCREEN_LEFT_SPAWN_POINT,
+                    Atomics.SECOND_SCREEN_LEFT_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
             );
-        } else if (position <= Game.SECOND_SCREEN_LEFT_SIDE && room == 2) {
+        } else if (position <= Atomics.SECOND_SCREEN_LEFT_SIDE && room == 2) {
            playerBody.setTransform(
-                   Game.FIRST_SCREEN_SPAWN_POINT,
+                   Atomics.FIRST_SCREEN_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
             );
-        } else if (position >= Game.SECOND_SCREEN_RIGHT_SIDE && room == 2) {
+        } else if (position >= Atomics.SECOND_SCREEN_RIGHT_SIDE && room == 2) {
            playerBody.setTransform(
-                   Game.THIRD_SCREEN_SPAWN_POINT,
+                   Atomics.THIRD_SCREEN_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
             );
-        } else if (position <= Game.THIRD_SCREEN_LEFT_SIDE && room == 3) {
+        } else if (position <= Atomics.THIRD_SCREEN_LEFT_SIDE && room == 3) {
            playerBody.setTransform(
-                   Game.SECOND_SCREEN_RIGHT_SPAWN_POINT,
+                   Atomics.SECOND_SCREEN_RIGHT_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
             );
@@ -129,16 +128,16 @@ class GameUtil {
 
     private void checkInWhatRoom(float position) {
         if ( // Check if in the first room
-                position <= Game.ROOM_WIDTH_PIXELS * Game.scale
+                position <= Atomics.ROOM_WIDTH_PIXELS * Atomics.scale
         ) {
             room = 1;
         } else if ( // Check if in the second room
-                position >= (Game.ROOM_WIDTH_PIXELS + Game.PIPE_HORIZONTAL_PIXELS) * Game.scale &&
-                        position <= (Game.ROOM_WIDTH_PIXELS * 2 + Game.PIPE_HORIZONTAL_PIXELS) * Game.scale
+                position >= (Atomics.ROOM_WIDTH_PIXELS + Atomics.PIPE_HORIZONTAL_PIXELS) * Atomics.scale &&
+                        position <= (Atomics.ROOM_WIDTH_PIXELS * 2 + Atomics.PIPE_HORIZONTAL_PIXELS) * Atomics.scale
         ) {
             room = 2;
         } else if ( // Check if in the third room
-                position >= (Game.ROOM_WIDTH_PIXELS * 2 + Game.PIPE_HORIZONTAL_PIXELS * 2) * Game.scale
+                position >= (Atomics.ROOM_WIDTH_PIXELS * 2 + Atomics.PIPE_HORIZONTAL_PIXELS * 2) * Atomics.scale
         ) {
             room = 3;
         }
@@ -146,14 +145,14 @@ class GameUtil {
 
     void moveCamera(OrthographicCamera camera) {
         if (room == 1) {
-            camera.position.x = Game.ROOM_WIDTH_PIXELS / 2 * Game.scale;
-            camera.position.y = Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale;
+            camera.position.x = Atomics.ROOM_WIDTH_PIXELS / 2 * Atomics.scale;
+            camera.position.y = Atomics.WORLD_HEIGHT_PIXELS / 2 * Atomics.scale;
         } else if (room == 2) {
-            camera.position.x = Game.WORLD_WIDTH_PIXELS / 2 * Game.scale;
-            camera.position.y = Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale;
+            camera.position.x = Atomics.WORLD_WIDTH_PIXELS / 2 * Atomics.scale;
+            camera.position.y = Atomics.WORLD_HEIGHT_PIXELS / 2 * Atomics.scale;
         } else if (room == 3) {
-            camera.position.x = (Game.WORLD_WIDTH_PIXELS - Game.ROOM_WIDTH_PIXELS / 2) * Game.scale;
-            camera.position.y = Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale;
+            camera.position.x = (Atomics.WORLD_WIDTH_PIXELS - Atomics.ROOM_WIDTH_PIXELS / 2) * Atomics.scale;
+            camera.position.y = Atomics.WORLD_HEIGHT_PIXELS / 2 * Atomics.scale;
         }
 
         camera.update();

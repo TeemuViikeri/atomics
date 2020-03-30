@@ -3,7 +3,6 @@ package fi.tuni.atomics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -24,6 +23,7 @@ class Phosphorus extends GameObject{
     private Vector2 spawnPoint;
     private int spawnside;
     private float stateTime;
+    private float speed = 2;
     private GameUtil gameUtil = new GameUtil();
 
     private Phosphorus(Vector2 spawnPoint) {
@@ -62,7 +62,7 @@ class Phosphorus extends GameObject{
     }
 
     private void createBody() {
-        body = Game.world.createBody(getDefinitionOfBody());
+        body = Atomics.world.createBody(getDefinitionOfBody());
         body.createFixture(getFixtureDefinition());
         body.setUserData(this);
     }
@@ -103,22 +103,22 @@ class Phosphorus extends GameObject{
             spawnTimer = 0;
 
             if (spawnside == TOP) {
-                phosphorus.body.applyLinearImpulse(new Vector2(0, -1),
+                phosphorus.body.applyLinearImpulse(new Vector2(0, -speed),
                         phosphorus.body.getWorldCenter(),  true);
             } else if (spawnside == TOPLEFT) {
-                phosphorus.body.applyLinearImpulse(new Vector2(1.5f,-1),
+                phosphorus.body.applyLinearImpulse(new Vector2(1.5f * speed,-speed),
                         phosphorus.body.getWorldCenter(), true);
             } else if (spawnside == TOPRIGHT) {
-                phosphorus.body.applyLinearImpulse(new Vector2(-1.5f,-1),
+                phosphorus.body.applyLinearImpulse(new Vector2(-1.5f * speed,-speed),
                         phosphorus.body.getWorldCenter(), true);
             } else if (spawnside == BOTTOM) {
-                phosphorus.body.applyLinearImpulse(new Vector2(0, 1),
+                phosphorus.body.applyLinearImpulse(new Vector2(0, speed),
                         phosphorus.body.getWorldCenter(),  true);
             } else if (spawnside == BOTTOMLEFT) {
-                phosphorus.body.applyLinearImpulse(new Vector2(1.5f,1),
+                phosphorus.body.applyLinearImpulse(new Vector2(1.5f * speed,speed),
                         phosphorus.body.getWorldCenter(), true);
             } else if (spawnside == BOTTOMRIGHT) {
-                phosphorus.body.applyLinearImpulse(new Vector2(-1.5f,1),
+                phosphorus.body.applyLinearImpulse(new Vector2(-1.5f * speed,speed),
                         phosphorus.body.getWorldCenter(), true);
             }
         }

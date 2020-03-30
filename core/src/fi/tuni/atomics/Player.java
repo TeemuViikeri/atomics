@@ -2,34 +2,45 @@ package fi.tuni.atomics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 class Player extends GameObject {
+    public static int hitpoints;
     private Controls controls;
     private float desiredAngle;
     private float deltaX;
     private float deltaY;
     private boolean moving;
+    private Texture hp3;
+    private Texture hp2;
+    private Texture hp1;
     private int shootingTimer = 0;
+    private Stage stage;
 
     Player(float x, float y) {
         texture = new Texture("cropped-subbi.png");
+        hp3 = new Texture("hp3.png");
+        hp2 = new Texture("hp2.png");
+        hp1 = new Texture("hp1.png");
         controls = new Controls();
         width = 0.5f;
         height = 0.25f;
         speed = 0;
+        hitpoints = 3;
         createSubmarineBody();
         controls.createButtons(this);
     }
 
     // Body creation
     private void createSubmarineBody() {
-        body = Game.world.createBody(getSubmarineBodyDef());
+        body = Atomics.world.createBody(getSubmarineBodyDef());
         body.createFixture(getSubmarineFixtureDef());
         body.setUserData(this);
     }
@@ -38,8 +49,8 @@ class Player extends GameObject {
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
 
-        bodyDef.position.set(Game.WORLD_WIDTH_PIXELS / 2 * Game.scale,
-                Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale);
+        bodyDef.position.set(Atomics.WORLD_WIDTH_PIXELS / 2 * Atomics.scale,
+                Atomics.WORLD_HEIGHT_PIXELS / 2 * Atomics.scale);
 
         return bodyDef;
     }
@@ -147,6 +158,30 @@ class Player extends GameObject {
             bulletBody.getWorldCenter(),
             true
         );
+    }
+
+    public static void loseHitpoint() {
+        hitpoints--;
+    }
+
+    public void drawHitpoints(SpriteBatch batch) {
+        System.out.println(Gdx.graphics.getWidth() * 3/4 + " " + Atomics.HUD_Y);
+        if (hitpoints == 3) {
+            batch.draw(hp3, (float) Gdx.graphics.getWidth() * 3/4,
+                    Atomics.HUD_Y,
+                    hp3.getWidth() * 2 * (float) Gdx.graphics.getWidth() / 640,
+                    hp3.getHeight() * 2 * (float) Gdx.graphics.getWidth() / 640);
+        } else if (hitpoints == 2) {
+            batch.draw(hp2, (float) Gdx.graphics.getWidth() * 3/4,
+                    Atomics.HUD_Y,
+                    hp3.getWidth() * 2 * (float) Gdx.graphics.getWidth() / 640,
+                    hp3.getHeight() * 2 * (float) Gdx.graphics.getWidth() / 640);
+        } else if (hitpoints == 1) {
+            batch.draw(hp1, (float) Gdx.graphics.getWidth() * 3/4,
+                    Atomics.HUD_Y,
+                    hp3.getWidth() * 2 * (float) Gdx.graphics.getWidth() / 640,
+                    hp3.getHeight() * 2 * (float) Gdx.graphics.getWidth() / 640);
+        }
     }
 
     // Getters and setters
