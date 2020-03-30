@@ -1,6 +1,7 @@
 package fi.tuni.atomics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -12,7 +13,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 class Player extends GameObject {
-    public static int hitpoints;
+    private static int hitpoints;
     private Controls controls;
     private float desiredAngle;
     private float deltaX;
@@ -40,7 +41,7 @@ class Player extends GameObject {
 
     // Body creation
     private void createSubmarineBody() {
-        body = Atomics.world.createBody(getSubmarineBodyDef());
+        body = PlayScreen.world.createBody(getSubmarineBodyDef());
         body.createFixture(getSubmarineFixtureDef());
         body.setUserData(this);
     }
@@ -49,8 +50,8 @@ class Player extends GameObject {
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
 
-        bodyDef.position.set(Atomics.WORLD_WIDTH_PIXELS / 2 * Atomics.scale,
-                Atomics.WORLD_HEIGHT_PIXELS / 2 * Atomics.scale);
+        bodyDef.position.set(PlayScreen.WORLD_WIDTH_PIXELS / 2 * PlayScreen.scale,
+                PlayScreen.WORLD_HEIGHT_PIXELS / 2 * PlayScreen.scale);
 
         return bodyDef;
     }
@@ -165,20 +166,19 @@ class Player extends GameObject {
     }
 
     public void drawHitpoints(SpriteBatch batch) {
-        System.out.println(Gdx.graphics.getWidth() * 3/4 + " " + Atomics.HUD_Y);
         if (hitpoints == 3) {
             batch.draw(hp3, (float) Gdx.graphics.getWidth() * 3/4,
-                    Atomics.HUD_Y,
+                    PlayScreen.HUD_Y,
                     hp3.getWidth() * 2 * (float) Gdx.graphics.getWidth() / 640,
                     hp3.getHeight() * 2 * (float) Gdx.graphics.getWidth() / 640);
         } else if (hitpoints == 2) {
             batch.draw(hp2, (float) Gdx.graphics.getWidth() * 3/4,
-                    Atomics.HUD_Y,
+                    PlayScreen.HUD_Y,
                     hp3.getWidth() * 2 * (float) Gdx.graphics.getWidth() / 640,
                     hp3.getHeight() * 2 * (float) Gdx.graphics.getWidth() / 640);
         } else if (hitpoints == 1) {
             batch.draw(hp1, (float) Gdx.graphics.getWidth() * 3/4,
-                    Atomics.HUD_Y,
+                    PlayScreen.HUD_Y,
                     hp3.getWidth() * 2 * (float) Gdx.graphics.getWidth() / 640,
                     hp3.getHeight() * 2 * (float) Gdx.graphics.getWidth() / 640);
         }

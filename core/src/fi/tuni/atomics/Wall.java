@@ -28,7 +28,7 @@ class Wall extends GameObject {
         float centerY = height / 2 + y;
 
         bodyDef.position.set(centerX, centerY);
-        body = Atomics.world.createBody(bodyDef);
+        body = PlayScreen.world.createBody(bodyDef);
         body.setUserData(this);
 
         shape = new PolygonShape();

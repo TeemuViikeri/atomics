@@ -123,16 +123,4 @@ class Controls {
     Button getShootButton() {
         return shootButton;
     }
-
-//    Table getJoystickTable() {
-//        return joystickTable;
-//    }
-//
-//    Table getSpeedButtonTable() {
-//        return speedButtonTable;
-//    }
-//
-//    Table getShootButtonTable() {
-//        return shootButtonTable;
-//    }
 }

@@ -30,8 +30,8 @@ public class Score {
     }
 
     void draw(SpriteBatch batch) {
-        font.draw(batch, "Score " + score, Atomics.TILE_LENGTH_PIXELS * 2,
-                Atomics.HUD_Y + layout.height);
+        font.draw(batch, "Score " + score, PlayScreen.TILE_LENGTH_PIXELS * 2,
+                PlayScreen.HUD_Y + layout.height);
     }
 
     static void collectPhosphorus() {

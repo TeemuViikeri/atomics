@@ -74,7 +74,7 @@ public class CollisionHandler implements ContactListener {
 
     void sendBodiesToBeDestroyed(Array<Body> bodies, Array<Body> bodiesToBeDestroyed) {
         for (Body body: bodies) {
-            if (body.getPosition().y >= Atomics.WORLD_HEIGHT_PIXELS * Atomics.scale
+            if (body.getPosition().y >= PlayScreen.WORLD_HEIGHT_PIXELS * PlayScreen.scale
                     + Phosphorus.width * 2) {
                 body.setUserData("dead");
             } else if (body.getPosition().y <= - Phosphorus.width * 2) {
@@ -90,7 +90,7 @@ public class CollisionHandler implements ContactListener {
     void clearBodies(Array<Body> bodiesToBeDestroyed) {
         for (Iterator<Body> i = bodiesToBeDestroyed.iterator(); i.hasNext();) {
             Body body = i.next();
-            Atomics.world.destroyBody(body);
+            PlayScreen.world.destroyBody(body);
             i.remove();
         }
     }

@@ -9,11 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 
-import static fi.tuni.atomics.Atomics.PIPE_HORIZONTAL_PIXELS;
-import static fi.tuni.atomics.Atomics.ROOM_WIDTH_PIXELS;
-import static fi.tuni.atomics.Atomics.WORLD_HEIGHT_PIXELS;
-import static fi.tuni.atomics.Atomics.scale;
-
 class GameUtil {
     private double accumulator = 0;
     private static int room = 2;
@@ -91,7 +86,7 @@ class GameUtil {
 
         float TIME_STEP = 1 / 60f;
         while (accumulator >= TIME_STEP) {
-            Atomics.world.step(TIME_STEP, 8, 3);
+            PlayScreen.world.step(TIME_STEP, 8, 3);
             accumulator -= TIME_STEP;
         }
     }
@@ -99,27 +94,27 @@ class GameUtil {
     void checkIfChangeRoom(Body playerBody, float position, float desiredAngle) {
         checkInWhatRoom(position);
 
-        if (position >= Atomics.FIRST_SCREEN_RIGHT_SIDE && room == 1) {
+        if (position >= PlayScreen.FIRST_SCREEN_RIGHT_SIDE && room == 1) {
            playerBody.setTransform(
-                    Atomics.SECOND_SCREEN_LEFT_SPAWN_POINT,
+                    PlayScreen.SECOND_SCREEN_LEFT_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
             );
-        } else if (position <= Atomics.SECOND_SCREEN_LEFT_SIDE && room == 2) {
+        } else if (position <= PlayScreen.SECOND_SCREEN_LEFT_SIDE && room == 2) {
            playerBody.setTransform(
-                   Atomics.FIRST_SCREEN_SPAWN_POINT,
+                   PlayScreen.FIRST_SCREEN_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
             );
-        } else if (position >= Atomics.SECOND_SCREEN_RIGHT_SIDE && room == 2) {
+        } else if (position >= PlayScreen.SECOND_SCREEN_RIGHT_SIDE && room == 2) {
            playerBody.setTransform(
-                   Atomics.THIRD_SCREEN_SPAWN_POINT,
+                   PlayScreen.THIRD_SCREEN_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
             );
-        } else if (position <= Atomics.THIRD_SCREEN_LEFT_SIDE && room == 3) {
+        } else if (position <= PlayScreen.THIRD_SCREEN_LEFT_SIDE && room == 3) {
            playerBody.setTransform(
-                   Atomics.SECOND_SCREEN_RIGHT_SPAWN_POINT,
+                   PlayScreen.SECOND_SCREEN_RIGHT_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
             );
@@ -128,16 +123,16 @@ class GameUtil {
 
     private void checkInWhatRoom(float position) {
         if ( // Check if in the first room
-                position <= Atomics.ROOM_WIDTH_PIXELS * Atomics.scale
+                position <= PlayScreen.ROOM_WIDTH_PIXELS * PlayScreen.scale
         ) {
             room = 1;
         } else if ( // Check if in the second room
-                position >= (Atomics.ROOM_WIDTH_PIXELS + Atomics.PIPE_HORIZONTAL_PIXELS) * Atomics.scale &&
-                        position <= (Atomics.ROOM_WIDTH_PIXELS * 2 + Atomics.PIPE_HORIZONTAL_PIXELS) * Atomics.scale
+                position >= (PlayScreen.ROOM_WIDTH_PIXELS + PlayScreen.PIPE_HORIZONTAL_PIXELS) * PlayScreen.scale &&
+                        position <= (PlayScreen.ROOM_WIDTH_PIXELS * 2 + PlayScreen.PIPE_HORIZONTAL_PIXELS) * PlayScreen.scale
         ) {
             room = 2;
         } else if ( // Check if in the third room
-                position >= (Atomics.ROOM_WIDTH_PIXELS * 2 + Atomics.PIPE_HORIZONTAL_PIXELS * 2) * Atomics.scale
+                position >= (PlayScreen.ROOM_WIDTH_PIXELS * 2 + PlayScreen.PIPE_HORIZONTAL_PIXELS * 2) * PlayScreen.scale
         ) {
             room = 3;
         }
@@ -145,14 +140,14 @@ class GameUtil {
 
     void moveCamera(OrthographicCamera camera) {
         if (room == 1) {
-            camera.position.x = Atomics.ROOM_WIDTH_PIXELS / 2 * Atomics.scale;
-            camera.position.y = Atomics.WORLD_HEIGHT_PIXELS / 2 * Atomics.scale;
+            camera.position.x = PlayScreen.ROOM_WIDTH_PIXELS / 2 * PlayScreen.scale;
+            camera.position.y = PlayScreen.WORLD_HEIGHT_PIXELS / 2 * PlayScreen.scale;
         } else if (room == 2) {
-            camera.position.x = Atomics.WORLD_WIDTH_PIXELS / 2 * Atomics.scale;
-            camera.position.y = Atomics.WORLD_HEIGHT_PIXELS / 2 * Atomics.scale;
+            camera.position.x = PlayScreen.WORLD_WIDTH_PIXELS / 2 * PlayScreen.scale;
+            camera.position.y = PlayScreen.WORLD_HEIGHT_PIXELS / 2 * PlayScreen.scale;
         } else if (room == 3) {
-            camera.position.x = (Atomics.WORLD_WIDTH_PIXELS - Atomics.ROOM_WIDTH_PIXELS / 2) * Atomics.scale;
-            camera.position.y = Atomics.WORLD_HEIGHT_PIXELS / 2 * Atomics.scale;
+            camera.position.x = (PlayScreen.WORLD_WIDTH_PIXELS - PlayScreen.ROOM_WIDTH_PIXELS / 2) * PlayScreen.scale;
+            camera.position.y = PlayScreen.WORLD_HEIGHT_PIXELS / 2 * PlayScreen.scale;
         }
 
         camera.update();
@@ -168,38 +163,38 @@ class GameUtil {
         float x;
 
         if (spawnside == TOP) {
-            x = MathUtils.random((ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale,
-                    (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale - Phosphorus.width);
-            y = WORLD_HEIGHT_PIXELS * scale + Phosphorus.width;
+            x = MathUtils.random((PlayScreen.ROOM_WIDTH_PIXELS + PlayScreen.PIPE_HORIZONTAL_PIXELS) * PlayScreen.scale,
+                    (PlayScreen.ROOM_WIDTH_PIXELS * 2 + PlayScreen.PIPE_HORIZONTAL_PIXELS) * PlayScreen.scale - Phosphorus.width);
+            y = PlayScreen.WORLD_HEIGHT_PIXELS * PlayScreen.scale + Phosphorus.width;
 
             return new Vector2(x, y);
         } else if (spawnside == TOPLEFT) {
-            x = (ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale - Phosphorus.width;
-            y = MathUtils.random(WORLD_HEIGHT_PIXELS * 3/4 * scale,
-                    WORLD_HEIGHT_PIXELS * scale + Phosphorus.width);
+            x = (PlayScreen.ROOM_WIDTH_PIXELS + PlayScreen.PIPE_HORIZONTAL_PIXELS) * PlayScreen.scale - Phosphorus.width;
+            y = MathUtils.random(PlayScreen.WORLD_HEIGHT_PIXELS * 3/4 * PlayScreen.scale,
+                    PlayScreen.WORLD_HEIGHT_PIXELS * PlayScreen.scale + Phosphorus.width);
 
             return new Vector2(x,y);
         } else if (spawnside == TOPRIGHT) {
-            x = (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale + Phosphorus.width;
-            y = MathUtils.random(WORLD_HEIGHT_PIXELS * 3/4 * scale, WORLD_HEIGHT_PIXELS * scale);
+            x = (PlayScreen.ROOM_WIDTH_PIXELS * 2 + PlayScreen.PIPE_HORIZONTAL_PIXELS) * PlayScreen.scale + Phosphorus.width;
+            y = MathUtils.random(PlayScreen.WORLD_HEIGHT_PIXELS * 3/4 * PlayScreen.scale, PlayScreen.WORLD_HEIGHT_PIXELS * PlayScreen.scale);
 
             return new Vector2(x,y);
         } else if (spawnside == BOTTOM) {
-            x = MathUtils.random((ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale
+            x = MathUtils.random((PlayScreen.ROOM_WIDTH_PIXELS + PlayScreen.PIPE_HORIZONTAL_PIXELS) * PlayScreen.scale
                             + Phosphorus.width,
-                    (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale - Phosphorus.width);
+                    (PlayScreen.ROOM_WIDTH_PIXELS * 2 + PlayScreen.PIPE_HORIZONTAL_PIXELS) * PlayScreen.scale - Phosphorus.width);
             y = - Phosphorus.width;
 
             return new Vector2(x,y);
         } else if (spawnside == BOTTOMLEFT) {
-            x = (ROOM_WIDTH_PIXELS + PIPE_HORIZONTAL_PIXELS) * scale - Phosphorus.width;
+            x = (PlayScreen.ROOM_WIDTH_PIXELS + PlayScreen.PIPE_HORIZONTAL_PIXELS) * PlayScreen.scale - Phosphorus.width;
             y = MathUtils.random(-Phosphorus.width,
-                    WORLD_HEIGHT_PIXELS * 1/4 * scale);
+                    PlayScreen.WORLD_HEIGHT_PIXELS * 1/4 * PlayScreen.scale);
 
             return new Vector2(x,y);
         } else if (spawnside == BOTTOMRIGHT) {
-            x = (ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS) * scale + Phosphorus.width;
-            y = MathUtils.random(-Phosphorus.width, WORLD_HEIGHT_PIXELS * 1/4 * scale);
+            x = (PlayScreen.ROOM_WIDTH_PIXELS * 2 + PlayScreen.PIPE_HORIZONTAL_PIXELS) * PlayScreen.scale + Phosphorus.width;
+            y = MathUtils.random(-Phosphorus.width, PlayScreen.WORLD_HEIGHT_PIXELS * 1/4 * PlayScreen.scale);
 
             return new Vector2(x,y);
         } else {
