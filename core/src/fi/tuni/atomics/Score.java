@@ -26,8 +26,8 @@ public class Score {
         textStyle = new Label.LabelStyle();
         textStyle.font = font;
         text = new Label("Score: " + score, textStyle);
-        text.setBounds(Game.TILE_LENGTH_PIXELS * 2,
-                Gdx.graphics.getHeight() - Game.TILE_LENGTH_PIXELS * 2, 0,0);
+        text.setBounds(Atomics.TILE_LENGTH_PIXELS * 2,
+                Gdx.graphics.getHeight() - Atomics.TILE_LENGTH_PIXELS * 2, 0,0);
         stage = new Stage();
         table = new Table();
         stage.addActor(text);

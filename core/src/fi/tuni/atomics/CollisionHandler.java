@@ -73,7 +73,7 @@ public class CollisionHandler implements ContactListener {
     void clearBodies(Array<Body> bodiesToBeDestroyed) {
         for (Iterator<Body> i = bodiesToBeDestroyed.iterator(); i.hasNext();) {
             Body body = i.next();
-            Game.world.destroyBody(body);
+            Atomics.world.destroyBody(body);
             i.remove();
         }
     }

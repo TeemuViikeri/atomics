@@ -17,7 +17,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
-public class Game extends ApplicationAdapter {
+public class Atomics extends ApplicationAdapter {
 	// Non-initiated fields
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -124,10 +124,9 @@ public class Game extends ApplicationAdapter {
             player.getDesiredAngle()
 		);
 
-        // Check if
+        // Check destroyable bodies
 		world.getBodies(bodies);
         collisionHandler.sendBodiesToBeDestroyed(bodies, bodiesToBeDestroyed);
-        phosphorus.spawnPhosphorus();
 
         // Player input
         player.submarineMove();
@@ -137,8 +136,9 @@ public class Game extends ApplicationAdapter {
         // Score
         score.getStage().draw();
 
-        // Draw
+        // Spawn and draw
 		batch.begin();
+        phosphorus.spawnPhosphorus();
         gameUtil.drawBodies(bodies, batch, player);
 		batch.end();
 

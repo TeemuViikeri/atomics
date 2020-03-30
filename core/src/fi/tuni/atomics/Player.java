@@ -29,7 +29,7 @@ class Player extends GameObject {
 
     // Body creation
     private void createSubmarineBody() {
-        body = Game.world.createBody(getSubmarineBodyDef());
+        body = Atomics.world.createBody(getSubmarineBodyDef());
         body.createFixture(getSubmarineFixtureDef());
         body.setUserData(this);
     }
@@ -38,8 +38,8 @@ class Player extends GameObject {
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
 
-        bodyDef.position.set(Game.WORLD_WIDTH_PIXELS / 2 * Game.scale,
-                Game.WORLD_HEIGHT_PIXELS / 2 * Game.scale);
+        bodyDef.position.set(Atomics.WORLD_WIDTH_PIXELS / 2 * Atomics.scale,
+                Atomics.WORLD_HEIGHT_PIXELS / 2 * Atomics.scale);
 
         return bodyDef;
     }

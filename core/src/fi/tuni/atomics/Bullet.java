@@ -16,7 +16,7 @@ class Bullet extends GameObject {
     }
 
     private void createBulletBody(Body playerBody) {
-        body = Game.world.createBody(getDefinitionOfBody(playerBody));
+        body = Atomics.world.createBody(getDefinitionOfBody(playerBody));
         body.createFixture(getFixtureDefinition());
         body.setUserData(this);
     }
