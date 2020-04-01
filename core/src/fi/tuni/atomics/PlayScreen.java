@@ -1,6 +1,7 @@
 package fi.tuni.atomics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
 
 public class PlayScreen implements Screen {
@@ -26,6 +28,7 @@ public class PlayScreen implements Screen {
     private GameUtil gameUtil;
     private Phosphorus phosphorus;
     private Score score;
+    private PauseWindow pause;
     static float HUD_Y;
 
     static float scale = 1/100f;
@@ -107,8 +110,12 @@ public class PlayScreen implements Screen {
 
         // Player input
         player.submarineMove();
-        player.getControls().getStage().act(Gdx.graphics.getDeltaTime());
-        player.getControls().getStage().draw();
+        Controls.getStage().act(Gdx.graphics.getDeltaTime());
+        Controls.getStage().draw();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            pause = new PauseWindow();
+        }
 
         // Spawn and draw
         Atomics.batch.begin();
@@ -116,7 +123,7 @@ public class PlayScreen implements Screen {
         gameUtil.drawBodies(bodies, Atomics.batch, player);
         Atomics.batch.end();
 
-        // HUD render.
+        // HUD render
         Atomics.HUDBatch.begin();
         player.drawHitpoints(Atomics.HUDBatch);
         score.draw(Atomics.HUDBatch);
@@ -132,7 +139,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        player.getControls().getStage().getViewport().update(width, height, true);
+        Controls.getStage().getViewport().update(width, height, true);
         player.getControls().createButtons(player);
         score = new Score();
     }
