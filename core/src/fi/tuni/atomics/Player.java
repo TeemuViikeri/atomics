@@ -22,7 +22,7 @@ class Player extends GameObject {
     private Texture hp3;
     private Texture hp2;
     private Texture hp1;
-    private int shootingTimer = 0;
+    private float shootingTimer = 0;
     private Stage stage;
 
     Player(float x, float y) {
@@ -106,10 +106,10 @@ class Player extends GameObject {
     }
 
     private void checkInput() {
-        shootingTimer++;
+        shootingTimer+=Gdx.graphics.getDeltaTime();
         float maxSpeed = 150f;
 
-        if (controls.getShootButton().isPressed() && shootingTimer >= 10) {
+        if (controls.getShootButton().isPressed() && shootingTimer >= 0.2f) {
             fireBullet();
             shootingTimer = 0;
         }
@@ -169,18 +169,18 @@ class Player extends GameObject {
         if (hitpoints == 3) {
             batch.draw(hp3, (float) Gdx.graphics.getWidth() * 3/4,
                     PlayScreen.HUD_Y,
-                    hp3.getWidth() * 2 * (float) Gdx.graphics.getWidth() / 640,
-                    hp3.getHeight() * 2 * (float) Gdx.graphics.getWidth() / 640);
+                    hp3.getWidth() * (float) Gdx.graphics.getWidth() / 640,
+                    hp3.getHeight() * (float) Gdx.graphics.getWidth() / 640);
         } else if (hitpoints == 2) {
             batch.draw(hp2, (float) Gdx.graphics.getWidth() * 3/4,
                     PlayScreen.HUD_Y,
-                    hp3.getWidth() * 2 * (float) Gdx.graphics.getWidth() / 640,
-                    hp3.getHeight() * 2 * (float) Gdx.graphics.getWidth() / 640);
+                    hp3.getWidth() * (float) Gdx.graphics.getWidth() / 640,
+                    hp3.getHeight() * (float) Gdx.graphics.getWidth() / 640);
         } else if (hitpoints == 1) {
             batch.draw(hp1, (float) Gdx.graphics.getWidth() * 3/4,
                     PlayScreen.HUD_Y,
-                    hp3.getWidth() * 2 * (float) Gdx.graphics.getWidth() / 640,
-                    hp3.getHeight() * 2 * (float) Gdx.graphics.getWidth() / 640);
+                    hp3.getWidth() * (float) Gdx.graphics.getWidth() / 640,
+                    hp3.getHeight() * (float) Gdx.graphics.getWidth() / 640);
         }
     }
 
