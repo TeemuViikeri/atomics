@@ -23,10 +23,24 @@ public class CollisionHandler implements ContactListener {
             }
         }
 
+        if (isPlayerContactingPipe(bodyA, bodyB)) {
+            if (bodyA.getUserData() instanceof Pipe) {
+                ((Pipe) bodyA.getUserData()).isTouched = true;
+            } else if (bodyB.getUserData() instanceof Pipe) {
+                ((Pipe) bodyB.getUserData()).isTouched = true;
+            }
+        }
+
         if (isBulletContactingPhosphorus(bodyA, bodyB)) {
             Score.collectPhosphorus();
             bodyA.setUserData("dead");
             bodyB.setUserData("dead");
+        }
+
+        if (isMicrobeContactingWall(bodyA, bodyB)) {
+            if (bodyA.getUserData() instanceof Microbe) {
+            } else if (bodyB.getUserData() instanceof Microbe) {
+            }
         }
 
         if (isPlayerContactingPhosphorus(bodyA, bodyB)) {
@@ -36,7 +50,13 @@ public class CollisionHandler implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-
+        Body bodyA = contact.getFixtureA().getBody();
+        Body bodyB = contact.getFixtureB().getBody();
+        if (bodyA.getUserData() instanceof Pipe) {
+            ((Pipe) bodyA.getUserData()).isTouched = false;
+        } else if (bodyB.getUserData() instanceof Pipe) {
+            ((Pipe) bodyB.getUserData()).isTouched = false;
+        }
     }
 
     @Override
@@ -55,10 +75,22 @@ public class CollisionHandler implements ContactListener {
         } else return a.getUserData() instanceof Wall && b.getUserData() instanceof Bullet;
     }
 
+    private boolean isPlayerContactingPipe(Body a, Body b) {
+        if (a.getUserData() instanceof Player && b.getUserData() instanceof Pipe) {
+            return true;
+        } else return a.getUserData() instanceof Pipe && b.getUserData() instanceof Player;
+    }
+
     private boolean isPlayerContactingPhosphorus(Body a, Body b) {
         if (a.getUserData() instanceof Player && b.getUserData() instanceof Phosphorus) {
             return true;
         } else return a.getUserData() instanceof Phosphorus && b.getUserData() instanceof Player;
+    }
+
+    private boolean isMicrobeContactingWall(Body a, Body b) {
+        if (a.getUserData() instanceof Microbe && b.getUserData() instanceof Wall) {
+            return true;
+        } else return a.getUserData() instanceof Wall && b.getUserData() instanceof Microbe;
     }
 
     private boolean isBulletContactingPhosphorus(Body a, Body b) {

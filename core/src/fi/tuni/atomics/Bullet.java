@@ -17,6 +17,7 @@ class Bullet extends GameObject {
 
     private void createBulletBody(Body playerBody) {
         body = PlayScreen.world.createBody(getDefinitionOfBody(playerBody));
+        body.setGravityScale(0);
         body.createFixture(getFixtureDefinition());
         body.setUserData(this);
     }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -52,6 +53,15 @@ class GameUtil {
                 0.5f,
                 0.5f
                 );
+            } else if (temp instanceof Microbe) {
+                batch.draw(((Microbe) temp)
+                                .getAnimation()
+                                .getKeyFrame(((Microbe)temp)
+                                        .setStateTime(), true),
+                        body.getPosition().x - 0.25f,
+                        body.getPosition().y - 0.25f,
+                        0.5f,
+                        0.5f);
             } else if (temp instanceof Player) {
                 batch.draw(
                     player.getTexture(),
@@ -91,6 +101,17 @@ class GameUtil {
         }
     }
 
+    TextureRegion[] to1d(TextureRegion[][] temp, int sheetRows, int sheetCols) {
+        int index = 0;
+        TextureRegion[] temporary = new TextureRegion[sheetRows * sheetCols];
+        for (int i = 0; i < sheetRows; i++) {
+            for (int j = 0; j < sheetCols; j++) {
+                temporary[index++] = temp[i][j];
+            }
+        }
+        return temporary;
+    }
+
     void checkIfChangeRoom(Body playerBody, float position, float desiredAngle) {
         checkInWhatRoom(position);
 
@@ -121,7 +142,7 @@ class GameUtil {
         }
     }
 
-    private void checkInWhatRoom(float position) {
+    void checkInWhatRoom(float position) {
         if ( // Check if in the first room
                 position <= PlayScreen.ROOM_WIDTH_PIXELS * PlayScreen.scale
         ) {
@@ -136,6 +157,10 @@ class GameUtil {
         ) {
             room = 3;
         }
+    }
+
+    int getRoom() {
+        return room;
     }
 
     void moveCamera(OrthographicCamera camera) {

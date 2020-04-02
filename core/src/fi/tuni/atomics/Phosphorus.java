@@ -63,6 +63,7 @@ class Phosphorus extends GameObject{
 
     private void createBody() {
         body = PlayScreen.world.createBody(getDefinitionOfBody());
+        body.setGravityScale(0);
         body.createFixture(getFixtureDefinition());
         body.setUserData(this);
     }

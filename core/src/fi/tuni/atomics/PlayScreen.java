@@ -30,6 +30,8 @@ public class PlayScreen implements Screen {
     private Score score;
     private PauseWindow pause;
     static float HUD_Y;
+    private Microbe microbe;
+    private Pipe pipes;
 
     static float scale = 1/100f;
     static float TILE_LENGTH_PIXELS = 32;
@@ -68,7 +70,7 @@ public class PlayScreen implements Screen {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
 
         // Box2D
-        world = new World(new Vector2(0, 0), true);
+        world = new World(new Vector2(0, -1f), true);
         debugRenderer = new Box2DDebugRenderer();
         world.setContactListener(new CollisionHandler());
         collisionHandler = new CollisionHandler();
@@ -83,6 +85,9 @@ public class PlayScreen implements Screen {
         phosphorus = new Phosphorus();
         score = new Score();
         new Wall(tiledMap, "wall-rectangles");
+        microbe = new Microbe(new Vector2((ROOM_WIDTH_PIXELS * 2  + PIPE_HORIZONTAL_PIXELS * 2 + 100f) * scale, 5));
+        pipes = new Pipe();
+        pipes.createPipes();
     }
 
     @Override
@@ -117,8 +122,12 @@ public class PlayScreen implements Screen {
             pause = new PauseWindow();
         }
 
+        // Updates.
+        pipes.update();
+
         // Spawn and draw
         Atomics.batch.begin();
+        pipes.draw(Atomics.batch);
         phosphorus.spawnPhosphorus();
         gameUtil.drawBodies(bodies, Atomics.batch, player);
         Atomics.batch.end();

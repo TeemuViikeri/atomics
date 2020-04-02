@@ -19,8 +19,8 @@ class Controls {
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
     private Button speedButton;
-    private Button shootButton;
-    private Button pauseButton;
+    static Button shootButton;
+    //private Button pauseButton;
 
     void createButtons(final Player player) {
         stage = new Stage();
@@ -32,7 +32,7 @@ class Controls {
         joystickTable.setFillParent(true);
         speedButtonTable.setFillParent(true);
         shootButtonTable.setFillParent(true);
-        pauseButtonTable.setFillParent(true);
+        //pauseButtonTable.setFillParent(true);
 
         joystickTable.add(touchpad).width(Gdx.graphics.getHeight() / 6.0f)
                 .height(Gdx.graphics.getHeight() / 6.0f)
@@ -62,20 +62,20 @@ class Controls {
                 .padRight((float) -Gdx.graphics.getWidth() / 40f)
                 .fill();
 
-        pauseButton = new Button(getButtonStyle());
-        pauseButtonTable.add(pauseButton)
-                .width((float) Gdx.graphics.getHeight() / 6.f)
-                .height((float) Gdx.graphics.getHeight() / 6.0f)
-                .padLeft((float) Gdx.graphics.getWidth() / 3f)
-                .padBottom((float) -Gdx.graphics.getHeight() / 3.5f)
-                .padTop((float) Gdx.graphics.getHeight() / 3.5f)
-                .padRight((float) -Gdx.graphics.getWidth() / 40f)
-                .fill();
+        //pauseButton = new Button(getButtonStyle());
+        //pauseButtonTable.add(pauseButton)
+                //.width((float) Gdx.graphics.getHeight() / 6.f)
+                //.height((float) Gdx.graphics.getHeight() / 6.0f)
+                //.padLeft((float) Gdx.graphics.getWidth() / 3f)
+                //.padBottom((float) -Gdx.graphics.getHeight() / 3.5f)
+                //.padTop((float) Gdx.graphics.getHeight() / 3.5f)
+                //.padRight((float) -Gdx.graphics.getWidth() / 40f)
+                //.fill();
 
         stage.addActor(joystickTable);
         stage.addActor(speedButtonTable);
         stage.addActor(shootButtonTable);
-        stage.addActor(pauseButtonTable);
+        //stage.addActor(pauseButtonTable);
 
         Gdx.input.setInputProcessor(stage);
 
@@ -86,6 +86,7 @@ class Controls {
                 player.setDeltaY(((Touchpad) actor).getKnobPercentY());
             }
         });
+
     }
 
     private Button.ButtonStyle getButtonStyle() {

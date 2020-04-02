@@ -23,13 +23,14 @@ class Player extends GameObject {
     private Texture hp2;
     private Texture hp1;
     private float shootingTimer = 0;
-    private Stage stage;
+    private GameUtil gameUtil;
 
     Player(float x, float y) {
         texture = new Texture("cropped-subbi.png");
         hp3 = new Texture("hp3.png");
         hp2 = new Texture("hp2.png");
         hp1 = new Texture("hp1.png");
+        gameUtil = new GameUtil();
         controls = new Controls();
         width = 0.5f;
         height = 0.25f;
@@ -42,6 +43,7 @@ class Player extends GameObject {
     // Body creation
     private void createSubmarineBody() {
         body = PlayScreen.world.createBody(getSubmarineBodyDef());
+        body.setGravityScale(0);
         body.createFixture(getSubmarineFixtureDef());
         body.setUserData(this);
     }
@@ -108,8 +110,8 @@ class Player extends GameObject {
     private void checkInput() {
         shootingTimer+=Gdx.graphics.getDeltaTime();
         float maxSpeed = 150f;
-
-        if (controls.getShootButton().isPressed() && shootingTimer >= 0.2f) {
+        if (controls.getShootButton().isPressed() && shootingTimer >= 0.2f &&
+                gameUtil.getRoom() == 2) {
             fireBullet();
             shootingTimer = 0;
         }
@@ -169,18 +171,18 @@ class Player extends GameObject {
         if (hitpoints == 3) {
             batch.draw(hp3, (float) Gdx.graphics.getWidth() * 3/4,
                     PlayScreen.HUD_Y,
-                    hp3.getWidth() * (float) Gdx.graphics.getWidth() / 640,
-                    hp3.getHeight() * (float) Gdx.graphics.getWidth() / 640);
+                    (float) hp3.getWidth() / 2 * Gdx.graphics.getWidth() / 640,
+                    (float) hp3.getHeight() / 2 * Gdx.graphics.getWidth() / 640);
         } else if (hitpoints == 2) {
             batch.draw(hp2, (float) Gdx.graphics.getWidth() * 3/4,
                     PlayScreen.HUD_Y,
-                    hp3.getWidth() * (float) Gdx.graphics.getWidth() / 640,
-                    hp3.getHeight() * (float) Gdx.graphics.getWidth() / 640);
+                    (float) hp3.getWidth() / 2 * Gdx.graphics.getWidth() / 640,
+                    (float) hp3.getHeight() / 2 * Gdx.graphics.getWidth() / 640);
         } else if (hitpoints == 1) {
             batch.draw(hp1, (float) Gdx.graphics.getWidth() * 3/4,
                     PlayScreen.HUD_Y,
-                    hp3.getWidth() * (float) Gdx.graphics.getWidth() / 640,
-                    hp3.getHeight() * (float) Gdx.graphics.getWidth() / 640);
+                    (float) hp3.getWidth() / 2 * Gdx.graphics.getWidth() / 640,
+                    (float) hp3.getHeight() / 2 * Gdx.graphics.getWidth() / 640);
         }
     }
 
