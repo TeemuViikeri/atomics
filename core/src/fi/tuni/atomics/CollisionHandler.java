@@ -32,19 +32,35 @@ public class CollisionHandler implements ContactListener {
         }
 
         if (isBulletContactingPhosphorus(bodyA, bodyB)) {
-            Score.collectPhosphorus();
             bodyA.setUserData("dead");
             bodyB.setUserData("dead");
-        }
+            }
 
         if (isMicrobeContactingWall(bodyA, bodyB)) {
             if (bodyA.getUserData() instanceof Microbe) {
+
             } else if (bodyB.getUserData() instanceof Microbe) {
+
             }
         }
 
         if (isPlayerContactingPhosphorus(bodyA, bodyB)) {
             Player.loseHitpoint();
+            if (bodyA.getUserData() instanceof Phosphorus) {
+                bodyA.setUserData("dead");
+            } else {
+                bodyB.setUserData("dead");
+            }
+        }
+
+        if (isPlayerContactingCollectablePhosphorus(bodyA, bodyB)) {
+            if (bodyA.getUserData() instanceof CollectablePhosphorus) {
+                Score.collectPhosphorus();
+                bodyA.setUserData("dead");
+            } else {
+                Score.collectPhosphorus();
+                bodyB.setUserData("dead");
+            }
         }
     }
 
@@ -104,6 +120,18 @@ public class CollisionHandler implements ContactListener {
                     b.getUserData() instanceof Bullet;
     }
 
+    private boolean isPlayerContactingCollectablePhosphorus(Body a, Body b) {
+        if (
+            a.getUserData() instanceof Player &&
+            b.getUserData() instanceof CollectablePhosphorus
+            ) {
+            return true;
+        } else {
+            return  a.getUserData() instanceof CollectablePhosphorus &&
+                    b.getUserData() instanceof Player;
+        }
+    }
+
     void sendBodiesToBeDestroyed(Array<Body> bodies, Array<Body> bodiesToBeDestroyed) {
         for (Body body: bodies) {
             if (body.getPosition().y >= PlayScreen.WORLD_HEIGHT_PIXELS * PlayScreen.scale
@@ -122,6 +150,11 @@ public class CollisionHandler implements ContactListener {
     void clearBodies(Array<Body> bodiesToBeDestroyed) {
         for (Iterator<Body> i = bodiesToBeDestroyed.iterator(); i.hasNext();) {
             Body body = i.next();
+
+            if (body.getFixtureList().get(0).getFilterData().groupIndex == -2) {
+                new CollectablePhosphorus(body.getPosition().x, body.getPosition().y);
+            }
+
             PlayScreen.world.destroyBody(body);
             i.remove();
         }

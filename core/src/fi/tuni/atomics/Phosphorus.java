@@ -16,7 +16,7 @@ class Phosphorus extends GameObject{
     private final int sheetRows = 2;
     private final int sheetCols = 5;
     static final float width = 0.5f;
-    static private Texture animationSheet = new Texture("phosphorus.png");
+    static private Texture animationSheet = new Texture("phosphorus2.png");
     private float spawnTimer = 0;
     private float spawnFrequency = 180;
     private Animation<TextureRegion> animation;
@@ -34,31 +34,12 @@ class Phosphorus extends GameObject{
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
                 animationSheet.getHeight() / sheetRows);
-        frames = to1d(temp);
+        frames = gameUtil.to1d(temp, sheetRows, sheetCols, this);
         animation = new Animation<>(1 / 9f, frames);
     }
 
-    Phosphorus() {
+    public Phosphorus() {
 
-    }
-
-    private TextureRegion[] to1d(TextureRegion[][] temp) {
-        int index = 0;
-        TextureRegion[] temporary = new TextureRegion[sheetRows * sheetCols];
-        for (int i = 0; i < sheetRows; i++) {
-            for (int j = 0; j < sheetCols; j++) {
-                temporary[index++] = temp[i][j];
-            }
-        }
-        return temporary;
-    }
-
-    float setStateTime() {
-        return stateTime+= Gdx.graphics.getDeltaTime();
-    }
-
-    Animation<TextureRegion> getAnimation() {
-        return animation;
     }
 
     private void createBody() {
@@ -123,5 +104,13 @@ class Phosphorus extends GameObject{
                         phosphorus.body.getWorldCenter(), true);
             }
         }
+    }
+
+    float setStateTime() {
+        return stateTime+= Gdx.graphics.getDeltaTime();
+    }
+
+    Animation<TextureRegion> getAnimation() {
+        return animation;
     }
 }

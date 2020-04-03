@@ -39,7 +39,7 @@ public class Pipe extends GameObject {
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
                 animationSheet.getHeight() / sheetRows);
-        frames = gameUtil.to1d(temp, sheetRows, sheetCols);
+        frames = gameUtil.to1d(temp, sheetRows, sheetCols, this);
         animation = new Animation<>(1 / 10f, frames);
         createBody();
     }
@@ -115,8 +115,6 @@ public class Pipe extends GameObject {
     }
 
     private void fixPipe() {
-        System.out.println(Controls.shootButton.isPressed());
-        System.out.println(isTouched);
         if (Controls.shootButton.isPressed() && isTouched) {
             fixTimer+=Gdx.graphics.getDeltaTime();
 

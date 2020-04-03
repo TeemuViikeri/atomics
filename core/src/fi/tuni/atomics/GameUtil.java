@@ -3,9 +3,11 @@ package fi.tuni.atomics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
@@ -52,6 +54,16 @@ class GameUtil {
                 body.getPosition().y - 0.25f,
                 0.5f,
                 0.5f
+                );
+            } else if (temp instanceof CollectablePhosphorus) {
+                batch.  draw(((CollectablePhosphorus) temp)
+                        .getAnimation()
+                        .getKeyFrame(((CollectablePhosphorus)temp)
+                                .setStateTime(), true),
+                body.getPosition().x - 0.25f,
+                body.getPosition().y - 0.25f,
+                0.35f,
+                0.35f
                 );
             } else if (temp instanceof Microbe) {
                 batch.draw(((Microbe) temp)
@@ -101,7 +113,7 @@ class GameUtil {
         }
     }
 
-    TextureRegion[] to1d(TextureRegion[][] temp, int sheetRows, int sheetCols) {
+    TextureRegion[] to1d(TextureRegion[][] temp, int sheetRows, int sheetCols, Object object) {
         int index = 0;
         TextureRegion[] temporary = new TextureRegion[sheetRows * sheetCols];
         for (int i = 0; i < sheetRows; i++) {

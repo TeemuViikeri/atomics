@@ -34,6 +34,7 @@ public class PlayScreen implements Screen {
     private Pipe pipes;
 
     static float scale = 1/100f;
+    static boolean spawnCollectablePhosphorus = false;
     static float TILE_LENGTH_PIXELS = 32;
     static float TILES_AMOUNT_WIDTH = 106;
     static float TILES_AMOUNT_HEIGHT = 20;
@@ -143,7 +144,7 @@ public class PlayScreen implements Screen {
         collisionHandler.clearBodies(bodiesToBeDestroyed);
 
         // Debuggers
-        debugRenderer.render(world, camera.combined);
+//        debugRenderer.render(world, camera.combined);
     }
 
     @Override
