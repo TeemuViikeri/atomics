@@ -9,7 +9,9 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.Iterator;
 
-public class CollisionHandler implements ContactListener {
+class CollisionHandler implements ContactListener {
+    boolean flag;
+
     @Override
     public void beginContact(Contact contact) {
         Body bodyA = contact.getFixtureA().getBody();
@@ -46,6 +48,7 @@ public class CollisionHandler implements ContactListener {
 
         if (isPlayerContactingPhosphorus(bodyA, bodyB)) {
             Player.loseHitpoint();
+
             if (bodyA.getUserData() instanceof Phosphorus) {
                 bodyA.setUserData("dead");
             } else {
@@ -153,8 +156,11 @@ public class CollisionHandler implements ContactListener {
         for (Iterator<Body> i = bodiesToBeDestroyed.iterator(); i.hasNext();) {
             Body body = i.next();
 
-            if (body.getFixtureList().get(0).getFilterData().groupIndex == -2) {
+            if (body.getFixtureList().get(0).getFilterData().groupIndex == -2
+                && !Player.playerLostHitPoint) {
                 new CollectablePhosphorus(body.getPosition().x, body.getPosition().y);
+            } else {
+                Player.playerLostHitPoint = false;
             }
 
             PlayScreen.world.destroyBody(body);

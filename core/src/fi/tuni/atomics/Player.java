@@ -23,6 +23,7 @@ class Player extends GameObject {
     private Texture hp2;
     private Texture hp1;
     private float shootingTimer = 0;
+    static boolean playerLostHitPoint;
     private GameUtil gameUtil;
 
     Player(float x, float y) {
@@ -165,6 +166,7 @@ class Player extends GameObject {
 
     public static void loseHitpoint() {
         hitpoints--;
+        playerLostHitPoint = true;
     }
 
     public void drawHitpoints(SpriteBatch batch) {
