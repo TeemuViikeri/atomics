@@ -13,7 +13,7 @@ public class CollisionHandler implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
         Body bodyA = contact.getFixtureA().getBody();
-        Body bodyB = contact.getFixtureB().getBody();
+        Body bodyB = contact.getFixtureB().getBody();;
 
         if (isBulletContactingWall(bodyA, bodyB)) {
             if (bodyA.getUserData() instanceof Bullet) {
@@ -55,11 +55,20 @@ public class CollisionHandler implements ContactListener {
 
         if (isPlayerContactingCollectablePhosphorus(bodyA, bodyB)) {
             if (bodyA.getUserData() instanceof CollectablePhosphorus) {
+                bodyA.getFixtureList().get(0).setSensor(false);
                 Score.collectPhosphorus();
                 bodyA.setUserData("dead");
             } else {
                 Score.collectPhosphorus();
                 bodyB.setUserData("dead");
+            }
+        }
+
+        if (isPhosphorusContactingCollectablePhosphorus(bodyA, bodyB)) {
+            if (bodyA.getUserData() instanceof CollectablePhosphorus) {
+                bodyA.getFixtureList().get(0).getFilterData().groupIndex = -3;
+            } else {
+                bodyB.getFixtureList().get(0).getFilterData().groupIndex = -3;
             }
         }
     }
@@ -68,10 +77,19 @@ public class CollisionHandler implements ContactListener {
     public void endContact(Contact contact) {
         Body bodyA = contact.getFixtureA().getBody();
         Body bodyB = contact.getFixtureB().getBody();
+
         if (bodyA.getUserData() instanceof Pipe) {
             ((Pipe) bodyA.getUserData()).isTouched = false;
         } else if (bodyB.getUserData() instanceof Pipe) {
             ((Pipe) bodyB.getUserData()).isTouched = false;
+        }
+
+        if (isPhosphorusContactingCollectablePhosphorus(bodyA, bodyB)) {
+            if (bodyA.getUserData() instanceof CollectablePhosphorus) {
+                bodyA.getFixtureList().get(0).getFilterData().groupIndex = -2;
+            } else {
+                bodyB.getFixtureList().get(0).getFilterData().groupIndex = -2;
+            }
         }
     }
 
@@ -129,6 +147,18 @@ public class CollisionHandler implements ContactListener {
         } else {
             return  a.getUserData() instanceof CollectablePhosphorus &&
                     b.getUserData() instanceof Player;
+        }
+    }
+
+    private boolean isPhosphorusContactingCollectablePhosphorus(Body a, Body b) {
+        if (
+            a.getUserData() instanceof Phosphorus &&
+            b.getUserData() instanceof CollectablePhosphorus
+            ) {
+            return true;
+        } else {
+            return  a.getUserData() instanceof CollectablePhosphorus &&
+                    b.getUserData() instanceof Phosphorus;
         }
     }
 

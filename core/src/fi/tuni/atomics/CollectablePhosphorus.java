@@ -52,6 +52,7 @@ class CollectablePhosphorus extends GameObject {
         fixtureDef.density = 10f;
         fixtureDef.restitution = 0f;
         fixtureDef.friction = 0f;
+        fixtureDef.isSensor = true;
 
         shape = new PolygonShape();
 
