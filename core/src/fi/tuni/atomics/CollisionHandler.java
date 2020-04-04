@@ -63,14 +63,6 @@ public class CollisionHandler implements ContactListener {
                 bodyB.setUserData("dead");
             }
         }
-
-        if (isPhosphorusContactingCollectablePhosphorus(bodyA, bodyB)) {
-            if (bodyA.getUserData() instanceof CollectablePhosphorus) {
-                bodyA.getFixtureList().get(0).getFilterData().groupIndex = -3;
-            } else {
-                bodyB.getFixtureList().get(0).getFilterData().groupIndex = -3;
-            }
-        }
     }
 
     @Override
@@ -82,14 +74,6 @@ public class CollisionHandler implements ContactListener {
             ((Pipe) bodyA.getUserData()).isTouched = false;
         } else if (bodyB.getUserData() instanceof Pipe) {
             ((Pipe) bodyB.getUserData()).isTouched = false;
-        }
-
-        if (isPhosphorusContactingCollectablePhosphorus(bodyA, bodyB)) {
-            if (bodyA.getUserData() instanceof CollectablePhosphorus) {
-                bodyA.getFixtureList().get(0).getFilterData().groupIndex = -2;
-            } else {
-                bodyB.getFixtureList().get(0).getFilterData().groupIndex = -2;
-            }
         }
     }
 
@@ -147,18 +131,6 @@ public class CollisionHandler implements ContactListener {
         } else {
             return  a.getUserData() instanceof CollectablePhosphorus &&
                     b.getUserData() instanceof Player;
-        }
-    }
-
-    private boolean isPhosphorusContactingCollectablePhosphorus(Body a, Body b) {
-        if (
-            a.getUserData() instanceof Phosphorus &&
-            b.getUserData() instanceof CollectablePhosphorus
-            ) {
-            return true;
-        } else {
-            return  a.getUserData() instanceof CollectablePhosphorus &&
-                    b.getUserData() instanceof Phosphorus;
         }
     }
 
