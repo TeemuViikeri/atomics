@@ -58,7 +58,6 @@ class CollisionHandler implements ContactListener {
 
         if (isPlayerContactingCollectablePhosphorus(bodyA, bodyB)) {
             if (bodyA.getUserData() instanceof CollectablePhosphorus) {
-                bodyA.getFixtureList().get(0).setSensor(false);
                 Score.collectPhosphorus();
                 bodyA.setUserData("dead");
             } else {
