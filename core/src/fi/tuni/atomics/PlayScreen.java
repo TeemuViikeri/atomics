@@ -90,7 +90,6 @@ public class PlayScreen implements Screen {
         microbe = new Microbe(new Vector2((ROOM_WIDTH_PIXELS * 2  + PIPE_HORIZONTAL_PIXELS * 2 + 100f) * scale, 5));
         pipes = new Pipe();
         pipes.createPipes();
-        System.out.println(WORLD_HEIGHT_PIXELS);
     }
 
     @Override

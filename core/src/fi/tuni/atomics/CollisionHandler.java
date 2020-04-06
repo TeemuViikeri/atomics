@@ -77,6 +77,14 @@ class CollisionHandler implements ContactListener {
         } else if (bodyB.getUserData() instanceof Pipe) {
             ((Pipe) bodyB.getUserData()).isTouched = false;
         }
+
+        if (isItemContactingWall(bodyA, bodyB)) {
+            if (bodyA.getUserData() instanceof Item) {
+                bodyA.getFixtureList().get(0).setSensor(false);
+            } else {
+                bodyB.getFixtureList().get(0).setSensor(false);
+            }
+        }
     }
 
     @Override
@@ -133,6 +141,18 @@ class CollisionHandler implements ContactListener {
         } else {
             return  a.getUserData() instanceof CollectablePhosphorus &&
                     b.getUserData() instanceof Player;
+        }
+    }
+
+    private boolean isItemContactingWall(Body a, Body b) {
+        if (
+            a.getUserData() instanceof Item &&
+            b.getUserData() instanceof Wall
+            ) {
+            return true;
+        } else {
+            return  a.getUserData() instanceof Wall &&
+                    b.getUserData() instanceof Item;
         }
     }
 

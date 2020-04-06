@@ -44,12 +44,11 @@ class Item extends GameObject {
     private FixtureDef getFixtureDefinition() {
         fixtureDef = new FixtureDef();
 
-        fixtureDef.filter.groupIndex = -2;
-
         // CHECK CORRECT VALUES
         fixtureDef.density = 10f;
         fixtureDef.restitution = 0f;
         fixtureDef.friction = 0f;
+        fixtureDef.isSensor = true;
 
         shape = new PolygonShape();
 
