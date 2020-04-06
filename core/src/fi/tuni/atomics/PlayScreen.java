@@ -26,15 +26,15 @@ public class PlayScreen implements Screen {
     private Array<Body> bodiesToBeDestroyed;
     private CollisionHandler collisionHandler;
     private GameUtil gameUtil;
+    private PauseWindow pause;
+    private Item item;
     private Phosphorus phosphorus;
     private Score score;
-    private PauseWindow pause;
-    static float HUD_Y;
     private Microbe microbe;
     private Pipe pipes;
+    static float HUD_Y;
 
     static float scale = 1/100f;
-    static boolean spawnCollectablePhosphorus = false;
     static float TILE_LENGTH_PIXELS = 32;
     static float TILES_AMOUNT_WIDTH = 106;
     static float TILES_AMOUNT_HEIGHT = 20;
@@ -83,12 +83,14 @@ public class PlayScreen implements Screen {
                 WORLD_HEIGHT_PIXELS / 2 * scale);
         bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
+        item = new Item();
         phosphorus = new Phosphorus();
         score = new Score();
         new Wall(tiledMap, "wall-rectangles");
         microbe = new Microbe(new Vector2((ROOM_WIDTH_PIXELS * 2  + PIPE_HORIZONTAL_PIXELS * 2 + 100f) * scale, 5));
         pipes = new Pipe();
         pipes.createPipes();
+        System.out.println(WORLD_HEIGHT_PIXELS);
     }
 
     @Override
@@ -128,9 +130,10 @@ public class PlayScreen implements Screen {
 
         // Spawn and draw
         Atomics.batch.begin();
-        pipes.draw(Atomics.batch);
+        item.spawnItem();
         phosphorus.spawnPhosphorus();
         gameUtil.drawBodies(bodies, Atomics.batch, player);
+        pipes.draw(Atomics.batch);
         Atomics.batch.end();
 
         // HUD render
@@ -141,7 +144,7 @@ public class PlayScreen implements Screen {
 
         // Fixed step and destroy bodies
         gameUtil.doPhysicsStep(Gdx.graphics.getDeltaTime());
-        collisionHandler.clearBodies(bodiesToBeDestroyed);
+        collisionHandler.clearBodies(bodiesToBeDestroyed );
 
         // Debuggers
 //        debugRenderer.render(world, camera.combined);

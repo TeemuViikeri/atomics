@@ -11,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 class CollectablePhosphorus extends GameObject {
     private final int sheetRows = 2;
     private final int sheetCols = 6;
-    private static final float width = 0.5f;
     static private Texture animationSheet = new Texture("kerattavasequence.png");
     private Animation<TextureRegion> animation;
     private float stateTime;
@@ -19,6 +18,7 @@ class CollectablePhosphorus extends GameObject {
 
     CollectablePhosphorus(float x, float y) {
         stateTime = 1f;
+        width = 0.5f;
         TextureRegion[] frames;
         TextureRegion[][] temp =  TextureRegion.split(
                 animationSheet,

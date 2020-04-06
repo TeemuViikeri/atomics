@@ -19,7 +19,6 @@ import static fi.tuni.atomics.PlayScreen.scale;
 public class Pipe extends GameObject {
     private final int sheetRows = 2;
     private final int sheetCols = 4;
-    static final float width = 0.5f;
     static private Texture animationSheet = new Texture("bubbleSequence.png");
     private Animation<TextureRegion> animation;
     private Vector2 spawnPoint;
@@ -33,6 +32,7 @@ public class Pipe extends GameObject {
 
     private Pipe(Vector2 position) {
         this.spawnPoint = position;
+        width = 0.5f;
         stateTime = 1f;
         TextureRegion[] frames;
         TextureRegion[][] temp = TextureRegion.split(

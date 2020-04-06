@@ -15,12 +15,10 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 public class Microbe extends GameObject {
     private final int sheetRows = 1;
     private final int sheetCols = 2;
-    final float width = 0.5f;
     static private Texture animationSheet = new Texture("happyMicrobe.png");
     private Animation<TextureRegion> animation;
     private Vector2 spawnPoint;
     private float stateTime;
-    private float speed = 2;
     private float forceX = 1.5f;
     private float forceY = -1f;
     private GameUtil gameUtil = new GameUtil();
@@ -28,6 +26,8 @@ public class Microbe extends GameObject {
     Microbe(Vector2 spawnPoint) {
         this.spawnPoint = spawnPoint;
         stateTime = 1f;
+        width = 0.5f;
+        speed = 2;
         TextureRegion[] frames;
         TextureRegion[][] temp =  TextureRegion.split(
                 animationSheet,
