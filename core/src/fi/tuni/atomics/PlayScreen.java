@@ -26,13 +26,13 @@ public class PlayScreen implements Screen {
     private Array<Body> bodiesToBeDestroyed;
     private CollisionHandler collisionHandler;
     private GameUtil gameUtil;
-    private PauseWindow pause;
     private Item item;
     private Phosphorus phosphorus;
     private Score score;
     private Microbe microbe;
     private Pipe pipes;
     static float HUD_Y;
+    private Pause pause;
 
     static float scale = 1/100f;
     static float TILE_LENGTH_PIXELS = 32;
@@ -54,6 +54,7 @@ public class PlayScreen implements Screen {
     static float SECOND_SCREEN_LEFT_SPAWN_POINT = 38 * TILE_LENGTH_PIXELS * scale;
     static float SECOND_SCREEN_RIGHT_SPAWN_POINT = 68 * TILE_LENGTH_PIXELS * scale;
     static float THIRD_SCREEN_SPAWN_POINT = 76 * TILE_LENGTH_PIXELS * scale;
+    static boolean Game_paused = false;
 
     PlayScreen(Atomics game) {
         this.game = game;
@@ -90,6 +91,7 @@ public class PlayScreen implements Screen {
         microbe = new Microbe(new Vector2((ROOM_WIDTH_PIXELS * 2  + PIPE_HORIZONTAL_PIXELS * 2 + 100f) * scale, 5));
         pipes = new Pipe();
         pipes.createPipes();
+        pause = new Pause(game);
     }
 
     @Override
@@ -99,54 +101,56 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // Render setup
-        gameUtil.clearScreen();
-        Atomics.batch.setProjectionMatrix(camera.combined);
-        tiledMapRenderer.render();
-        tiledMapRenderer.setView(camera);
-        gameUtil.moveCamera(camera);
-        gameUtil.checkIfChangeRoom(
-                player.getBody(),
-                player.getBody().getPosition().x,
-                player.getDesiredAngle()
-        );
 
-        // Check destroyable bodies
-        world.getBodies(bodies);
-        collisionHandler.sendBodiesToBeDestroyed(bodies, bodiesToBeDestroyed);
+        if (!Game_paused) {
+            // Render setup
+            gameUtil.clearScreen();
+            Atomics.batch.setProjectionMatrix(camera.combined);
+            tiledMapRenderer.render();
+            tiledMapRenderer.setView(camera);
+            gameUtil.moveCamera(camera);
+            gameUtil.checkIfChangeRoom(
+                    player.getBody(),
+                    player.getBody().getPosition().x,
+                    player.getDesiredAngle()
+            );
 
-        // Player input
-        player.submarineMove();
-        Controls.getStage().act(Gdx.graphics.getDeltaTime());
-        Controls.getStage().draw();
+            // Check destroyable bodies
+            world.getBodies(bodies);
+            collisionHandler.sendBodiesToBeDestroyed(bodies, bodiesToBeDestroyed);
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            pause = new PauseWindow();
-        }
+            // Player input
+            player.submarineMove();
+            Controls.getStage().addActor(pause.getPauseButton());
+            Controls.getStage().act(Gdx.graphics.getDeltaTime());
+            Controls.getStage().draw();
 
-        // Updates.
-        pipes.update();
+            // Updates.
+            pipes.update();
 
-        // Spawn and draw
-        Atomics.batch.begin();
-        item.spawnItem();
-        phosphorus.spawnPhosphorus();
-        gameUtil.drawBodies(bodies, Atomics.batch, player);
-        pipes.draw(Atomics.batch);
-        Atomics.batch.end();
+            // Spawn and draw
+            Atomics.batch.begin();
+            item.spawnItem();
+            phosphorus.spawnPhosphorus();
+            gameUtil.drawBodies(bodies, Atomics.batch, player);
+            pipes.draw(Atomics.batch);
+            Atomics.batch.end();
 
-        // HUD render
-        Atomics.HUDBatch.begin();
-        player.drawHitpoints(Atomics.HUDBatch);
-        score.draw(Atomics.HUDBatch);
-        Atomics.HUDBatch.end();
+            // HUD render
+            Atomics.HUDBatch.begin();
+            player.drawHitpoints(Atomics.HUDBatch);
+            score.draw(Atomics.HUDBatch);
+            Atomics.HUDBatch.end();
 
-        // Fixed step and destroy bodies
-        gameUtil.doPhysicsStep(Gdx.graphics.getDeltaTime());
-        collisionHandler.clearBodies(bodiesToBeDestroyed );
+            // Fixed step and destroy bodies
+            gameUtil.doPhysicsStep(Gdx.graphics.getDeltaTime());
+            collisionHandler.clearBodies(bodiesToBeDestroyed);
 
-        // Debuggers
+            // Debuggers
 //        debugRenderer.render(world, camera.combined);
+        }
+        pause.pauseScreen();
+
     }
 
     @Override
@@ -158,12 +162,12 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
-
+        Game_paused = true;
     }
 
     @Override
     public void resume() {
-
+        Game_paused = false;
     }
 
     @Override
