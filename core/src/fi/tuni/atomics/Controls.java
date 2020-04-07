@@ -2,6 +2,8 @@ package fi.tuni.atomics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -13,6 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+import static fi.tuni.atomics.PlayScreen.ROOM_HEIGHT_PIXELS;
+import static fi.tuni.atomics.PlayScreen.ROOM_WIDTH_PIXELS;
+import static fi.tuni.atomics.PlayScreen.scale;
 
 class Controls {
     private static Stage stage;
@@ -23,7 +31,8 @@ class Controls {
     //private Button pauseButton;
 
     void createButtons(final Player player) {
-        stage = new Stage();
+        stage = new Stage(new FitViewport(ROOM_WIDTH_PIXELS,
+                ROOM_HEIGHT_PIXELS), Atomics.HUDBatch);
         touchpad = new Touchpad(10, getTouchpadStyle());
         Table joystickTable = new Table();
         Table speedButtonTable = new Table();
