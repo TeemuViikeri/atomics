@@ -93,6 +93,20 @@ class GameUtil {
                     false,
                     false
                 );
+            } else if (temp instanceof Item) {
+                batch.draw(
+                    temp.getTexture(),
+                    body.getPosition().x - temp.getWidth() / 2,
+                    body.getPosition().y - temp.getHeight() / 2,
+                    temp.getWidth(),
+                    temp.getHeight(),
+                    0,
+                    0,
+                    temp.getTexture().getWidth(),
+                    temp.getTexture().getHeight(),
+                    false,
+                    false
+                );
             }
         }
     }

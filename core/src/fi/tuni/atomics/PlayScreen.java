@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
 
@@ -22,22 +20,21 @@ public class PlayScreen implements Screen {
     private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
     static World world;
-    static boolean Game_paused = false;
     private Box2DDebugRenderer debugRenderer;
     private Player player;
     private Array<Body> bodies;
     private Array<Body> bodiesToBeDestroyed;
     private CollisionHandler collisionHandler;
     private GameUtil gameUtil;
+    private PauseWindow pause;
+    private Item item;
     private Phosphorus phosphorus;
     private Score score;
-    static float HUD_Y;
     private Microbe microbe;
     private Pipe pipes;
-    private Pause pause;
+    static float HUD_Y;
 
     static float scale = 1/100f;
-    static boolean spawnCollectablePhosphorus = false;
     static float TILE_LENGTH_PIXELS = 32;
     static float TILES_AMOUNT_WIDTH = 106;
     static float TILES_AMOUNT_HEIGHT = 20;
@@ -86,13 +83,13 @@ public class PlayScreen implements Screen {
                 WORLD_HEIGHT_PIXELS / 2 * scale);
         bodies = new Array<>();
         bodiesToBeDestroyed = new Array<>();
+        item = new Item();
         phosphorus = new Phosphorus();
         score = new Score();
         new Wall(tiledMap, "wall-rectangles");
         microbe = new Microbe(new Vector2((ROOM_WIDTH_PIXELS * 2  + PIPE_HORIZONTAL_PIXELS * 2 + 100f) * scale, 5));
         pipes = new Pipe();
         pipes.createPipes();
-        pause = new Pause(game);
     }
 
     @Override
@@ -102,56 +99,54 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        // Render setup
+        gameUtil.clearScreen();
+        Atomics.batch.setProjectionMatrix(camera.combined);
+        tiledMapRenderer.render();
+        tiledMapRenderer.setView(camera);
+        gameUtil.moveCamera(camera);
+        gameUtil.checkIfChangeRoom(
+                player.getBody(),
+                player.getBody().getPosition().x,
+                player.getDesiredAngle()
+        );
 
-        if (!Game_paused) {
-            // Render setup
-            gameUtil.clearScreen();
-            Atomics.batch.setProjectionMatrix(camera.combined);
-            tiledMapRenderer.render();
-            tiledMapRenderer.setView(camera);
-            gameUtil.moveCamera(camera);
-            gameUtil.checkIfChangeRoom(
-                    player.getBody(),
-                    player.getBody().getPosition().x,
-                    player.getDesiredAngle()
-            );
+        // Check destroyable bodies
+        world.getBodies(bodies);
+        collisionHandler.sendBodiesToBeDestroyed(bodies, bodiesToBeDestroyed);
 
-            // Check destroyable bodies
-            world.getBodies(bodies);
-            collisionHandler.sendBodiesToBeDestroyed(bodies, bodiesToBeDestroyed);
+        // Player input
+        player.submarineMove();
+        Controls.getStage().act(Gdx.graphics.getDeltaTime());
+        Controls.getStage().draw();
 
-            // Player input
-            player.submarineMove();
-            Controls.getStage().addActor(pause.getPauseButton());
-            Controls.getStage().act(Gdx.graphics.getDeltaTime());
-
-            // Updates.
-            pipes.update();
-
-            // Spawn and draw
-            Atomics.batch.begin();
-            pipes.draw(Atomics.batch);
-            phosphorus.spawnPhosphorus();
-            gameUtil.drawBodies(bodies, Atomics.batch, player);
-            Atomics.batch.end();
-
-            // HUD render
-            Atomics.HUDBatch.begin();
-            player.drawHitpoints(Atomics.HUDBatch);
-            score.draw(Atomics.HUDBatch);
-            Atomics.HUDBatch.end();
-            Controls.getStage().draw();
-
-            // Fixed step and destroy bodies
-            gameUtil.doPhysicsStep(Gdx.graphics.getDeltaTime());
-            collisionHandler.clearBodies(bodiesToBeDestroyed);
-
-            // Debuggers
-//        debugRenderer.render(world, camera.combined);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            pause = new PauseWindow();
         }
 
-        pause.pauseScreen();
+        // Updates.
+        pipes.update();
 
+        // Spawn and draw
+        Atomics.batch.begin();
+        item.spawnItem();
+        phosphorus.spawnPhosphorus();
+        gameUtil.drawBodies(bodies, Atomics.batch, player);
+        pipes.draw(Atomics.batch);
+        Atomics.batch.end();
+
+        // HUD render
+        Atomics.HUDBatch.begin();
+        player.drawHitpoints(Atomics.HUDBatch);
+        score.draw(Atomics.HUDBatch);
+        Atomics.HUDBatch.end();
+
+        // Fixed step and destroy bodies
+        gameUtil.doPhysicsStep(Gdx.graphics.getDeltaTime());
+        collisionHandler.clearBodies(bodiesToBeDestroyed );
+
+        // Debuggers
+//        debugRenderer.render(world, camera.combined);
     }
 
     @Override
@@ -163,12 +158,12 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
-        Game_paused = true;
+
     }
 
     @Override
     public void resume() {
-        Game_paused = false;
+
     }
 
     @Override
