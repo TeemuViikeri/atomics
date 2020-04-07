@@ -104,6 +104,7 @@ public class PlayScreen implements Screen {
 
         if (!Game_paused) {
             // Render setup
+            Gdx.input.setInputProcessor(Controls.getStage());
             gameUtil.clearScreen();
             Atomics.batch.setProjectionMatrix(camera.combined);
             tiledMapRenderer.render();

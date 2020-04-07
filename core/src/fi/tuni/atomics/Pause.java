@@ -20,8 +20,8 @@ public class Pause {
     Pause(Atomics atomics) {
         this.atomics = atomics;
         pauseBackground = new Texture("badlogic.jpg");
-        pauseStage = new Stage(new FitViewport(ROOM_WIDTH_PIXELS,
-                ROOM_HEIGHT_PIXELS), Atomics.HUDBatch);
+        pauseStage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
+                Gdx.graphics.getHeight()), Atomics.HUDBatch);
 
         float pauseWidth = 50f * Gdx.graphics.getWidth() / 960;
         pauseButton = new MenuButton(pauseWidth, pauseWidth, 0,
@@ -53,7 +53,6 @@ public class Pause {
             resume.setVisible(false);
             exit.setVisible(false);
             PlayScreen.Game_paused = false;
-            Gdx.input.setInputProcessor(Controls.getStage());
         }
 
         if (exit.isTouched()) {

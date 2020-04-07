@@ -31,8 +31,8 @@ class Controls {
     //private Button pauseButton;
 
     void createButtons(final Player player) {
-        stage = new Stage(new FitViewport(ROOM_WIDTH_PIXELS,
-                ROOM_HEIGHT_PIXELS), Atomics.HUDBatch);
+        stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
+                Gdx.graphics.getHeight()), Atomics.HUDBatch);
         touchpad = new Touchpad(10, getTouchpadStyle());
         Table joystickTable = new Table();
         Table speedButtonTable = new Table();
