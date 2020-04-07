@@ -174,17 +174,17 @@ class Player extends GameObject {
             batch.draw(hp3, (float) Gdx.graphics.getWidth() * 3/4,
                     PlayScreen.HUD_Y,
                     (float) hp3.getWidth() * Gdx.graphics.getWidth() / 960,
-                    (float) hp3.getHeight() * Gdx.graphics.getWidth() / 960);
+                    (float) hp3.getHeight() * Gdx.graphics.getHeight() / 640);
         } else if (hitpoints == 2) {
             batch.draw(hp2, (float) Gdx.graphics.getWidth() * 3/4,
                     PlayScreen.HUD_Y,
                     (float) hp3.getWidth() * Gdx.graphics.getWidth() / 960,
-                    (float) hp3.getHeight() * Gdx.graphics.getWidth() / 960);
+                    (float) hp3.getHeight() * Gdx.graphics.getHeight() / 640);
         } else if (hitpoints == 1) {
             batch.draw(hp1, (float) Gdx.graphics.getWidth() * 3/4,
                     PlayScreen.HUD_Y,
                     (float) hp3.getWidth() * Gdx.graphics.getWidth() / 960,
-                    (float) hp3.getHeight() * Gdx.graphics.getWidth() / 960);
+                    (float) hp3.getHeight() * Gdx.graphics.getHeight() / 640);
         }
     }
 

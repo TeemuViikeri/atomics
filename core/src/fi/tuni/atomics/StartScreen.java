@@ -33,7 +33,7 @@ public class StartScreen implements Screen {
         gameUtil = new GameUtil();
         stage = new Stage();
         float startWidth = 500f * Gdx.graphics.getWidth() / 960;
-        float startHeight = 100f * Gdx.graphics.getWidth() / 960;
+        float startHeight = 100f * Gdx.graphics.getHeight() / 640;
         startButton = new MenuButton(startWidth, startHeight,
                 Gdx.graphics.getWidth() / 2f - startWidth / 2,
                 Gdx.graphics.getHeight() * 7f/8f - startHeight,

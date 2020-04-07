@@ -24,12 +24,13 @@ public class Pause {
                 Gdx.graphics.getHeight()), Atomics.HUDBatch);
 
         float pauseWidth = 50f * Gdx.graphics.getWidth() / 960;
-        pauseButton = new MenuButton(pauseWidth, pauseWidth, 0,
-                Gdx.graphics.getHeight() - (pauseWidth),
+        float pauseHeight = 50f * Gdx.graphics.getHeight() / 640;
+        pauseButton = new MenuButton(pauseWidth, pauseHeight, 0,
+                Gdx.graphics.getHeight() - (pauseHeight),
                 new Texture("badlogic.jpg"));
 
         float resumeWidth = 200f * Gdx.graphics.getWidth() / 960;
-        float resumeHeight = 50f * Gdx.graphics.getWidth() / 960;
+        float resumeHeight = 50f * Gdx.graphics.getHeight() / 640;
         resume = new MenuButton(resumeWidth, resumeHeight,
                 Gdx.graphics.getWidth() / 2f - resumeWidth / 2,
                 Gdx.graphics.getHeight() * 2.5f/4f,
@@ -72,11 +73,12 @@ public class Pause {
             resume.setVisible(true);
             exit.setVisible(true);
             float width = 500f * Gdx.graphics.getWidth() / 960;
+            float height = 500f * Gdx.graphics.getHeight() / 640;
             Atomics.HUDBatch.draw(pauseBackground,
                     Gdx.graphics.getWidth() / 2f - width / 2,
-                    Gdx.graphics.getHeight() / 2f - width / 2,
+                    Gdx.graphics.getHeight() / 2f - height / 2,
                     width,
-                    width);
+                    height);
             PlayScreen.Game_paused = true;
         }
         Atomics.HUDBatch.end();
