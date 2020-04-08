@@ -25,6 +25,7 @@ class GameUtil {
             }
 
             GameObject temp = (GameObject) body.getUserData();
+
             if (temp instanceof Bullet) {
                 Bullet bulletTemp = (Bullet) temp;
                 batch.draw(
@@ -56,7 +57,7 @@ class GameUtil {
                 0.5f
                 );
             } else if (temp instanceof CollectablePhosphorus) {
-                batch.  draw(((CollectablePhosphorus) temp)
+                batch.draw(((CollectablePhosphorus) temp)
                         .getAnimation()
                         .getKeyFrame(((CollectablePhosphorus)temp)
                                 .setStateTime(), true),
@@ -94,6 +95,7 @@ class GameUtil {
                     false
                 );
             } else if (temp instanceof Item) {
+                scaleItems(temp);
                 batch.draw(
                     temp.getTexture(),
                     body.getPosition().x - temp.getWidth() / 2,
@@ -108,6 +110,17 @@ class GameUtil {
                     false
                 );
             }
+        }
+    }
+
+    void scaleItems(GameObject item) {
+        if (item.width < 0.5) {
+            item.width += 0.005f;
+            item.height += 0.005f;
+        }
+
+        if (item.width >= 0.5) {
+            item.body.getFixtureList().get(0).setSensor(false);
         }
     }
 
