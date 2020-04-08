@@ -24,7 +24,7 @@ public class Microbe extends GameObject {
     private float forceX = 3f;
     private float forceY = -2f;
     private GameUtil gameUtil = new GameUtil();
-    private Array<Microbe> microbes = new Array<>();
+    static Array<Microbe> microbes = new Array<>();
 
     Microbe(Vector2 spawnPoint) {
         this.spawnPoint = spawnPoint;

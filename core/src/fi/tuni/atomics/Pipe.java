@@ -31,7 +31,7 @@ public class Pipe extends GameObject {
     private float fixTimer; // how long the pipe has been in repair.
     public boolean isTouched = false; // is the pipe being touched.
     private float timeAlive;
-    private Microbe microbe = new Microbe();;
+    private Microbe microbe = new Microbe();
 
     private Pipe(Vector2 position) {
         this.spawnPoint = position;
