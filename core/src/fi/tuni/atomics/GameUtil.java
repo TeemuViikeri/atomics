@@ -116,7 +116,7 @@ class GameUtil {
     void scaleItems(GameObject item) {
         if (item.width < 0.5) {
             item.width += 0.005f;
-            item.height += 0.005f;
+            item.height += 0.005f * (0.034/0.1);
         }
 
         if (item.width >= 0.5) {

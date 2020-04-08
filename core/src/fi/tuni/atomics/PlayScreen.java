@@ -130,7 +130,7 @@ public class PlayScreen implements Screen {
 
             // Spawn and draw
             Atomics.batch.begin();
-            //item.spawnItem();
+            item.spawnItem();
             phosphorus.spawnPhosphorus();
             gameUtil.drawBodies(bodies, Atomics.batch, player);
             pipes.draw(Atomics.batch);

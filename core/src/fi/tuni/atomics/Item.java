@@ -9,14 +9,13 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 class Item extends GameObject {
     private float spawnTimer = 0;
-
     private Vector2 spawnPoint;
 
     private Item(Vector2 spawnPoint) {
         this.spawnPoint = spawnPoint;
-        texture = new Texture("badlogic.jpg"); // What texture to insert?
+        texture = new Texture("cropped-tekarit.png");
         width = 0.1f;
-        height = 0.1f;
+        height = 0.034f;
     }
 
     Item() {
@@ -49,7 +48,7 @@ class Item extends GameObject {
 
         shape = new PolygonShape();
 
-        ((PolygonShape) shape).setAsBox(0.25f, 0.25f);
+        ((PolygonShape) shape).setAsBox(0.034f * 5 / 2, 0.25f);
         fixtureDef.shape = shape;
 
         return fixtureDef;
