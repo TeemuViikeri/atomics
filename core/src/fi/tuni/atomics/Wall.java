@@ -11,11 +11,11 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 
 class Wall extends GameObject {
-    Wall(TiledMap tiledMap, String layer) {
-        transformWallsToBodies(tiledMap, layer);
+    Wall(TiledMap tiledMap, String layer, short filterIndex) {
+        transformWallsToBodies(tiledMap, layer, filterIndex);
     }
 
-    private void createStaticBody(Rectangle rect) {
+    private void createStaticBody(Rectangle rect, short filterIndex) {
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
@@ -37,7 +37,7 @@ class Wall extends GameObject {
         fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
 
-        fixtureDef.filter.groupIndex = -2;
+        fixtureDef.filter.groupIndex = filterIndex;
         body.createFixture(fixtureDef);
     }
 
@@ -50,14 +50,14 @@ class Wall extends GameObject {
         return rectangle;
     }
 
-    private void transformWallsToBodies(TiledMap tiledMap, String layer) {
+    private void transformWallsToBodies(TiledMap tiledMap, String layer, short filterIndex) {
         MapLayer collisionObjectLayer = tiledMap.getLayers().get(layer);
         MapObjects mapObjects = collisionObjectLayer.getObjects();
         Array<RectangleMapObject> rectangleObjects = mapObjects.getByType(RectangleMapObject.class);
         for (RectangleMapObject rectangleObject : rectangleObjects) {
             Rectangle tmp = rectangleObject.getRectangle();
             Rectangle rectangle = scaleRect(tmp);
-            createStaticBody(rectangle);
+            createStaticBody(rectangle, filterIndex);
         }
     }
 }

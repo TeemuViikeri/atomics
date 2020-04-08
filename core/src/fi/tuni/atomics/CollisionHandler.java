@@ -15,7 +15,7 @@ class CollisionHandler implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
         Body bodyA = contact.getFixtureA().getBody();
-        Body bodyB = contact.getFixtureB().getBody();;
+        Body bodyB = contact.getFixtureB().getBody();
 
         if (isBulletContactingWall(bodyA, bodyB)) {
             if (bodyA.getUserData() instanceof Bullet) {
@@ -65,6 +65,11 @@ class CollisionHandler implements ContactListener {
                 bodyB.setUserData("dead");
             }
         }
+
+        if (isPlayerContactingMicrobe(bodyA, bodyB)) {
+            Player.loseHitpoint();
+        }
+
     }
 
     @Override
@@ -119,6 +124,12 @@ class CollisionHandler implements ContactListener {
         if (a.getUserData() instanceof Microbe && b.getUserData() instanceof Wall) {
             return true;
         } else return a.getUserData() instanceof Wall && b.getUserData() instanceof Microbe;
+    }
+
+    private boolean isPlayerContactingMicrobe(Body a, Body b) {
+        if (a.getUserData() instanceof Player && b.getUserData() instanceof Microbe) {
+            return true;
+        } else return a.getUserData() instanceof Microbe && b.getUserData() instanceof Player;
     }
 
     private boolean isBulletContactingPhosphorus(Body a, Body b) {

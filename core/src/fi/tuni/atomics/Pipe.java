@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -29,11 +30,14 @@ public class Pipe extends GameObject {
     private float aliveTimer; // how long the pipe has been alive.
     private float fixTimer; // how long the pipe has been in repair.
     public boolean isTouched = false; // is the pipe being touched.
+    private float timeAlive;
+    private Microbe microbe = new Microbe();
 
     private Pipe(Vector2 position) {
         this.spawnPoint = position;
         width = 0.5f;
         stateTime = 1f;
+        timeAlive = MathUtils.random(60,180);
         TextureRegion[] frames;
         TextureRegion[][] temp = TextureRegion.split(
                 animationSheet,
@@ -42,6 +46,7 @@ public class Pipe extends GameObject {
         frames = gameUtil.to1d(temp, sheetRows, sheetCols, this);
         animation = new Animation<>(1 / 10f, frames);
         createBody();
+        microbe.spawnMicrobes();
     }
 
     Pipe() {
@@ -67,8 +72,9 @@ public class Pipe extends GameObject {
             i.aliveTimer += Gdx.graphics.getDeltaTime();
 
             // if pipe has been alive over 10s
-            if (i.aliveTimer > 10) {
+            if (i.aliveTimer > i.timeAlive && !i.dead) {
                 i.dead = true;
+                microbe.deSpawnMicrobes();
             }
 
             i.fixPipe();
@@ -119,9 +125,11 @@ public class Pipe extends GameObject {
             fixTimer+=Gdx.graphics.getDeltaTime();
 
             // Player has been fixing the pipe for over 1s.
-            if (fixTimer > 1) {
+            if (fixTimer > 1 && dead) {
+                timeAlive = MathUtils.random(60,180);
                 aliveTimer = 0;
                 dead = false;
+                microbe.spawnMicrobes();
             }
         }
 
