@@ -22,7 +22,7 @@ public class PlayScreen implements Screen {
     static World world;
     private Box2DDebugRenderer debugRenderer;
     private Player player;
-    private Array<Body> bodies;
+    static Array<Body> bodies;
     private Array<Body> bodiesToBeDestroyed;
     private CollisionHandler collisionHandler;
     private GameUtil gameUtil;
