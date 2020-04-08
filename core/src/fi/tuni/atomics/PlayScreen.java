@@ -29,7 +29,6 @@ public class PlayScreen implements Screen {
     private Item item;
     private Phosphorus phosphorus;
     private Score score;
-    private Microbe microbe;
     private Pipe pipes;
     static float HUD_Y;
     private Pause pause;
@@ -63,8 +62,8 @@ public class PlayScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(
                 false,
-                ROOM_WIDTH_PIXELS * scale,
-                ROOM_HEIGHT_PIXELS * scale);
+                ROOM_WIDTH_PIXELS * 1/20,
+                ROOM_HEIGHT_PIXELS * 1/20);
         HUD_Y = Gdx.graphics.getHeight() - TILE_LENGTH_PIXELS * 4;
 
         // TiledMap
@@ -72,7 +71,7 @@ public class PlayScreen implements Screen {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
 
         // Box2D
-        world = new World(new Vector2(0, -1f), true);
+        world = new World(new Vector2(0, -0.5f), true);
         debugRenderer = new Box2DDebugRenderer();
         world.setContactListener(new CollisionHandler());
         collisionHandler = new CollisionHandler();
@@ -87,8 +86,8 @@ public class PlayScreen implements Screen {
         item = new Item();
         phosphorus = new Phosphorus();
         score = new Score();
-        new Wall(tiledMap, "wall-rectangles");
-        microbe = new Microbe(new Vector2((ROOM_WIDTH_PIXELS * 2  + PIPE_HORIZONTAL_PIXELS * 2 + 100f) * scale, 5));
+        new Wall(tiledMap, "wall-rectangles", (short) -2);
+        new Wall(tiledMap, "microbeBlock", (short) -1);
         pipes = new Pipe();
         pipes.createPipes();
         pause = new Pause(game);
@@ -131,7 +130,7 @@ public class PlayScreen implements Screen {
 
             // Spawn and draw
             Atomics.batch.begin();
-            item.spawnItem();
+            //item.spawnItem();
             phosphorus.spawnPhosphorus();
             gameUtil.drawBodies(bodies, Atomics.batch, player);
             pipes.draw(Atomics.batch);

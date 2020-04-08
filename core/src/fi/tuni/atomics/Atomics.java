@@ -9,13 +9,11 @@ public class Atomics extends Game {
 	static SpriteBatch batch;
 	static SpriteBatch HUDBatch;
     private StartScreen startScreen;
-    private PlayScreen playScreen;
 
 	@Override
 	public void create () {
         batch = new SpriteBatch();
         HUDBatch = new SpriteBatch();
-        playScreen = new PlayScreen(this);
         startScreen = new StartScreen(this);
         setScreen(startScreen);
     }
