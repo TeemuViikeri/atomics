@@ -31,11 +31,20 @@ public class Score {
     }
 
     void draw(SpriteBatch batch) {
-        font.draw(batch, "Score " + score, PlayScreen.TILE_LENGTH_PIXELS * 2,
+        font.draw(batch, "Score: " + score + "    " + getScoreMultiplier() + "x",
+                PlayScreen.TILE_LENGTH_PIXELS * 2,
                 PlayScreen.HUD_Y + layout.height);
     }
 
+    float getScore() {
+        return score;
+    }
+
+    static int getScoreMultiplier() {
+        return Microbe.microbes.size + 1;
+    }
+
     static void collectPhosphorus() {
-        score += 5;
+        score += 5 * getScoreMultiplier();
     }
 }

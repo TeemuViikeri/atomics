@@ -21,8 +21,8 @@ public class Microbe extends GameObject {
     private Animation<TextureRegion> animation;
     private Vector2 spawnPoint;
     private float stateTime;
-    private float forceX = 3f;
-    private float forceY = -2f;
+    private float forceX = 1.5f;
+    private float forceY = -1f;
     private GameUtil gameUtil = new GameUtil();
     static Array<Microbe> microbes = new Array<>();
 
