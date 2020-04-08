@@ -27,7 +27,7 @@ public class Pause {
         float pauseHeight = 50f * Gdx.graphics.getHeight() / 640;
         pauseButton = new MenuButton(pauseWidth, pauseHeight, 0,
                 Gdx.graphics.getHeight() - (pauseHeight),
-                new Texture("badlogic.jpg"));
+                new Texture("pausebutton.png"));
 
         float resumeWidth = 200f * Gdx.graphics.getWidth() / 960;
         float resumeHeight = 50f * Gdx.graphics.getHeight() / 640;
