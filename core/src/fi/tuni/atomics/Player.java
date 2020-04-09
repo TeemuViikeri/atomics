@@ -27,7 +27,7 @@ class Player extends GameObject {
     private GameUtil gameUtil;
 
     Player(float x, float y) {
-        texture = new Texture("cropped-subbi.png");
+        texture = new Texture("highResSubbi.png");
         hp3 = new Texture("hp3.png");
         hp2 = new Texture("hp2.png");
         hp1 = new Texture("hp1.png");
