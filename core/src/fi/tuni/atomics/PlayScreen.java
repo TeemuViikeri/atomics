@@ -87,7 +87,8 @@ public class PlayScreen implements Screen {
         phosphorus = new Phosphorus();
         score = new Score();
         new Wall(tiledMap, "wall-rectangles", (short) -2);
-        new Wall(tiledMap, "microbeBlock", (short) -1);
+        new Wall(tiledMap, "blocks", (short) -1);
+        new Wall(tiledMap, "cleaner-area", (short) -2);
         pipes = new Pipe();
         pipes.createPipes();
         pause = new Pause(game);
@@ -147,7 +148,7 @@ public class PlayScreen implements Screen {
             collisionHandler.clearBodies(bodiesToBeDestroyed);
 
             // Debuggers
-//        debugRenderer.render(world, camera.combined);
+            debugRenderer.render(world, camera.combined);
         }
         pause.pauseScreen();
 

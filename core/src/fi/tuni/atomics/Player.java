@@ -145,15 +145,13 @@ class Player extends GameObject {
     }
 
     private void fireBullet() {
-        Bullet bulletObj = new Bullet(
-            body
-        );
+        Bullet bulletObj = new Bullet(body);
 
-        Vector2 force = new Vector2((float) Math.cos(bulletObj.getBody().getAngle())
+        Vector2 force = new Vector2(
+            (float) Math.cos(bulletObj.getBody().getAngle())
             * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime(),
             (float) Math.sin(bulletObj.getBody().getAngle())
                     * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime());
-
 
         Body bulletBody = bulletObj.getBody();
 

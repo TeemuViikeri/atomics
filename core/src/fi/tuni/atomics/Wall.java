@@ -11,6 +11,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 
 class Wall extends GameObject {
+    MapLayer thisLayer;
+
     Wall(TiledMap tiledMap, String layer, short filterIndex) {
         transformWallsToBodies(tiledMap, layer, filterIndex);
     }
@@ -52,6 +54,7 @@ class Wall extends GameObject {
 
     private void transformWallsToBodies(TiledMap tiledMap, String layer, short filterIndex) {
         MapLayer collisionObjectLayer = tiledMap.getLayers().get(layer);
+        thisLayer = collisionObjectLayer;
         MapObjects mapObjects = collisionObjectLayer.getObjects();
         Array<RectangleMapObject> rectangleObjects = mapObjects.getByType(RectangleMapObject.class);
         for (RectangleMapObject rectangleObject : rectangleObjects) {

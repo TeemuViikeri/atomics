@@ -48,7 +48,7 @@ class Item extends GameObject {
 
         shape = new PolygonShape();
 
-        ((PolygonShape) shape).setAsBox(0.034f * 5 / 2, 0.25f);
+        ((PolygonShape) shape).setAsBox(0.25f, 0.034f * 5 / 2);
         fixtureDef.shape = shape;
 
         return fixtureDef;

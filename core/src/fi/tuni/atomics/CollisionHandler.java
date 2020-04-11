@@ -10,8 +10,6 @@ import com.badlogic.gdx.utils.Array;
 import java.util.Iterator;
 
 class CollisionHandler implements ContactListener {
-    boolean flag;
-
     @Override
     public void beginContact(Contact contact) {
         Body bodyA = contact.getFixtureA().getBody();
@@ -70,6 +68,22 @@ class CollisionHandler implements ContactListener {
             Player.loseHitpoint();
         }
 
+        if (isItemContactingWall(bodyA, bodyB)) {
+
+            System.out.println("here");
+
+            if (bodyA.getUserData() instanceof Wall) {
+                Wall wall = (Wall) bodyA.getUserData();
+                if (wall.thisLayer.getName().equals("cleaner-area")) {
+                    bodyB.setUserData("dead");
+                }
+            } else if (bodyB.getUserData() instanceof Wall) {
+                Wall wall = (Wall) bodyB.getUserData();
+                if (wall.thisLayer.getName().equals("cleaner-area")) {
+                    bodyA.setUserData("dead");
+                }
+            }
+        }
     }
 
     @Override
@@ -81,14 +95,6 @@ class CollisionHandler implements ContactListener {
             ((Pipe) bodyA.getUserData()).isTouched = false;
         } else if (bodyB.getUserData() instanceof Pipe) {
             ((Pipe) bodyB.getUserData()).isTouched = false;
-        }
-
-        if (isItemContactingWall(bodyA, bodyB)) {
-            if (bodyA.getUserData() instanceof Item) {
-                bodyA.getFixtureList().get(0).setSensor(false);
-            } else {
-                bodyB.getFixtureList().get(0).setSensor(false);
-            }
         }
     }
 
@@ -167,6 +173,8 @@ class CollisionHandler implements ContactListener {
         }
     }
 
+
+
     void sendBodiesToBeDestroyed(Array<Body> bodies, Array<Body> bodiesToBeDestroyed) {
         for (Body body: bodies) {
             if (body.getPosition().y >= PlayScreen.WORLD_HEIGHT_PIXELS * PlayScreen.scale
@@ -187,12 +195,20 @@ class CollisionHandler implements ContactListener {
             Body body = i.next();
 
             if (body.getFixtureList().get(0).getFilterData().groupIndex == -2
-                && !Player.playerLostHitPoint) {
+                    && !Player.playerLostHitPoint) {
                 new CollectablePhosphorus(body.getPosition().x, body.getPosition().y);
             } else {
                 Player.playerLostHitPoint = false;
             }
 
+            PlayScreen.world.destroyBody(body);
+            i.remove();
+        }
+    }
+
+    void clearBodies2(Array<Body> bodiesToBeDestroyed) {
+        for (Iterator<Body> i = bodiesToBeDestroyed.iterator(); i.hasNext();) {
+            Body body = i.next();
             PlayScreen.world.destroyBody(body);
             i.remove();
         }
