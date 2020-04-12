@@ -23,10 +23,13 @@ public class Microbe extends GameObject {
     private float stateTime;
     private float forceX = 1.5f;
     private float forceY = -1f;
+    private float nitrogenTimer = 0;
+    private float nitrogenFrequency = 2;
     private GameUtil gameUtil = new GameUtil();
     static Array<Microbe> microbes = new Array<>();
+    private static Nitrogen nitrogen = new Nitrogen();
 
-    Microbe(Vector2 spawnPoint) {
+    private Microbe(Vector2 spawnPoint) {
         this.spawnPoint = spawnPoint;
         stateTime = 1f;
         width = 0.5f;
@@ -44,7 +47,6 @@ public class Microbe extends GameObject {
     }
 
     Microbe() {
-
     }
 
     float setStateTime() {
@@ -124,6 +126,19 @@ public class Microbe extends GameObject {
         } else {
             body.applyLinearImpulse(new Vector2(-forceX, -forceY), body.getWorldCenter(),
                     true);
+        }
+    }
+
+    static void update() {
+        for (Microbe microbe : microbes) {
+            microbe.nitrogenTimer += Gdx.graphics.getDeltaTime();
+
+            if (microbe.nitrogenTimer >= microbe.nitrogenFrequency &&
+                    microbe.getBody().getPosition().y <=
+                            PlayScreen.ROOM_HEIGHT_PIXELS * PlayScreen.scale - 1.92f) {
+                Microbe.nitrogen.createNitrogen(microbe.body.getPosition());
+                microbe.nitrogenTimer = 0;
+            }
         }
     }
 

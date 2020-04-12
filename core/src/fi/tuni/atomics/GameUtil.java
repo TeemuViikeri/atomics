@@ -109,6 +109,7 @@ class GameUtil {
                     false,
                     false
                 );
+            } else if (temp instanceof Nitrogen) {
             }
         }
     }

@@ -23,6 +23,15 @@ class CollisionHandler implements ContactListener {
             }
         }
 
+        if (isNitrogenContactingWall(bodyA, bodyB)) {
+                if (bodyA.getUserData() instanceof Nitrogen) {
+                    bodyA.setUserData("dead");
+                } else if (bodyB.getUserData() instanceof Nitrogen) {
+                    bodyB.setUserData("dead");
+                }
+
+        }
+
         if (isPlayerContactingPipe(bodyA, bodyB)) {
             if (bodyA.getUserData() instanceof Pipe) {
                 ((Pipe) bodyA.getUserData()).isTouched = true;
@@ -136,6 +145,12 @@ class CollisionHandler implements ContactListener {
         if (a.getUserData() instanceof Player && b.getUserData() instanceof Microbe) {
             return true;
         } else return a.getUserData() instanceof Microbe && b.getUserData() instanceof Player;
+    }
+
+    private boolean isNitrogenContactingWall(Body a, Body b) {
+        if (a.getUserData() instanceof Nitrogen && b.getUserData() instanceof Wall) {
+            return true;
+        } else return a.getUserData() instanceof Wall && b.getUserData() instanceof Nitrogen;
     }
 
     private boolean isBulletContactingPhosphorus(Body a, Body b) {

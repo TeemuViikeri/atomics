@@ -32,6 +32,7 @@ public class PlayScreen implements Screen {
     private Pipe pipes;
     static float HUD_Y;
     private Pause pause;
+    private Nitrogen nit = new Nitrogen();
 
     static float scale = 1/100f;
     static float TILE_LENGTH_PIXELS = 32;
@@ -128,6 +129,7 @@ public class PlayScreen implements Screen {
 
             // Updates.
             pipes.update();
+            Microbe.update();
 
             // Spawn and draw
             Atomics.batch.begin();
