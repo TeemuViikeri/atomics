@@ -102,14 +102,28 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        Atomics.batch.setProjectionMatrix(camera.combined);
+        gameUtil.clearScreen();
+        tiledMapRenderer.render();
+        tiledMapRenderer.setView(camera);
+        world.getBodies(bodies);
+
+        Atomics.batch.begin();
+        gameUtil.drawBodies(bodies, Atomics.batch, player);
+        pipes.draw(Atomics.batch);
+        Atomics.batch.end();
+
+        // HUD render
+        Atomics.HUDBatch.begin();
+        player.drawHitpoints(Atomics.HUDBatch);
+        score.draw(Atomics.HUDBatch);
+        Atomics.HUDBatch.end();
+
+        Controls.getStage().draw();
 
         if (!Game_paused) {
             // Render setup
             Gdx.input.setInputProcessor(Controls.getStage());
-            gameUtil.clearScreen();
-            Atomics.batch.setProjectionMatrix(camera.combined);
-            tiledMapRenderer.render();
-            tiledMapRenderer.setView(camera);
             gameUtil.moveCamera(camera);
             gameUtil.checkIfChangeRoom(
                     player.getBody(),
@@ -118,32 +132,26 @@ public class PlayScreen implements Screen {
             );
 
             // Check destroyable bodies
-            world.getBodies(bodies);
             collisionHandler.sendBodiesToBeDestroyed(bodies, bodiesToBeDestroyed);
 
             // Player input
             player.submarineMove();
             Controls.getStage().addActor(pause.getPauseButton());
             Controls.getStage().act(Gdx.graphics.getDeltaTime());
-            Controls.getStage().draw();
 
             // Updates.
             pipes.update();
             Microbe.update();
 
-            // Spawn and draw
-            Atomics.batch.begin();
+            if (player.checkIfDead()) {
+                game.setScreen(new EndScreen(game));
+            }
+
+            //spawns
             item.spawnItem();
             phosphorus.spawnPhosphorus();
-            gameUtil.drawBodies(bodies, Atomics.batch, player);
-            pipes.draw(Atomics.batch);
-            Atomics.batch.end();
 
-            // HUD render
-            Atomics.HUDBatch.begin();
-            player.drawHitpoints(Atomics.HUDBatch);
-            score.draw(Atomics.HUDBatch);
-            Atomics.HUDBatch.end();
+            // Spawn and draw
 
             // Fixed step and destroy bodies
             gameUtil.doPhysicsStep(Gdx.graphics.getDeltaTime());
@@ -152,6 +160,7 @@ public class PlayScreen implements Screen {
             // Debuggers
             debugRenderer.render(world, camera.combined);
         }
+
         pause.pauseScreen();
 
     }

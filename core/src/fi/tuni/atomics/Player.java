@@ -186,6 +186,13 @@ class Player extends GameObject {
         }
     }
 
+    public boolean checkIfDead() {
+        if (hitpoints == 0) {
+            return true;
+        }
+        return false;
+    }
+
     // Getters and setters
     float getDesiredAngle() {
         return desiredAngle;

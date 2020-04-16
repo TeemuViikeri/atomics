@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import javax.xml.bind.SchemaOutputResolver;
+
 import static fi.tuni.atomics.PlayScreen.ROOM_HEIGHT_PIXELS;
 import static fi.tuni.atomics.PlayScreen.ROOM_WIDTH_PIXELS;
 
@@ -72,8 +74,8 @@ public class Pause {
             Gdx.input.setInputProcessor(pauseStage);
             resume.setVisible(true);
             exit.setVisible(true);
-            float width = 500f * Gdx.graphics.getWidth() / 960;
-            float height = 500f * Gdx.graphics.getHeight() / 640;
+            float width = 500f * Gdx.graphics.getWidth() / 960f;
+            float height = 500f * Gdx.graphics.getHeight() / 640f;
             Atomics.HUDBatch.draw(pauseBackground,
                     Gdx.graphics.getWidth() / 2f - width / 2,
                     Gdx.graphics.getHeight() / 2f - height / 2,
