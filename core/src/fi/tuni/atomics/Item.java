@@ -12,12 +12,11 @@ class Item extends GameObject {
     private Vector2 spawnPoint;
     private int rotation;
 
-    private Item(Vector2 spawnPoint, int rotation) {
+    private Item(Vector2 spawnPoint) {
         this.spawnPoint = spawnPoint;
-        this.rotation = MathUtils.random(0, 360);
-        texture = new Texture("cropped-tekarit.png");
-        width = 0.1f;
-        height = 0.034f;
+        getRandomTexture();
+        width = texture.getWidth() / 100f;
+        height = texture.getHeight() / 100f;
     }
 
     Item() {
@@ -34,7 +33,7 @@ class Item extends GameObject {
         bodyDef = new BodyDef();
 
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(spawnPoint); // Set correct spawnPoint for items
+        bodyDef.position.set(spawnPoint); //
 
         return bodyDef;
     }
@@ -42,7 +41,6 @@ class Item extends GameObject {
     private FixtureDef getFixtureDefinition() {
         fixtureDef = new FixtureDef();
 
-        // CHECK CORRECT VALUES
         fixtureDef.density = 10f;
         fixtureDef.restitution = 0f;
         fixtureDef.friction = 0f;
@@ -50,7 +48,7 @@ class Item extends GameObject {
 
         shape = new PolygonShape();
 
-        ((PolygonShape) shape).setAsBox(0.25f, 0.034f * 5 / 2);
+        ((PolygonShape) shape).setAsBox(this.width / 2,this.height / 2);
         fixtureDef.shape = shape;
 
         return fixtureDef;
@@ -62,7 +60,7 @@ class Item extends GameObject {
 
         if (spawnTimer >= spawnFrequency) {
             spawnPoint = getItemSpawnPoint();
-            Item item = new Item(spawnPoint, rotation);
+            Item item = new Item(spawnPoint);
             item.createBody();
             rotation = MathUtils.random(0, 360);
             item.body.setTransform(spawnPoint, rotation);
@@ -84,7 +82,18 @@ class Item extends GameObject {
         return new Vector2(x, y);
     }
 
-    int getRotation() {
-        return this.rotation;
+    private void getRandomTexture() {
+        int kortsu = 1, lasit = 2, lusikka = 3, ruuvi = 4,
+            sormus = 5, sukka = 6, tekarit = 7, tutti = 8;
+        int itemInt = MathUtils.random(1, 8);
+
+        if (itemInt == kortsu) this.texture = new Texture("kortsu.png");
+        else if (itemInt == lasit) this.texture = new Texture("lasit.png");
+        else if (itemInt == lusikka) this.texture = new Texture("lusikka.png");
+        else if (itemInt == ruuvi) this.texture = new Texture("ruuvi.png");
+        else if (itemInt == sormus) this.texture = new Texture("sormus.png");
+        else if (itemInt == sukka) this.texture = new Texture("sukka.png");
+        else if (itemInt == tekarit) this.texture = new Texture("cropped-tekarit.png");
+        else if (itemInt == tutti) this.texture = new Texture("tutti.png");
     }
 }
