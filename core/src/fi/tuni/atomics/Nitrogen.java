@@ -15,12 +15,13 @@ class Nitrogen extends GameObject {
     private float targetY;
 
     private Nitrogen(Vector2 pos) {
-        texture = new Texture("badlogic.jpg");
+        texture = new Texture("typpi.png");
         targetX = (PlayScreen.ROOM_WIDTH_PIXELS * 2.5f + PlayScreen.PIPE_HORIZONTAL_PIXELS * 2)
                 * PlayScreen.scale;
         targetY = PlayScreen.ROOM_HEIGHT_PIXELS * PlayScreen.scale - 0.64f;
         spawnPoint = pos;
         width = 0.25f;
+        height = 0.25f;
         speed = 100;
         createBody();
         applyForce();

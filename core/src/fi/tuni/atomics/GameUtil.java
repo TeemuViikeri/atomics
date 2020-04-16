@@ -117,7 +117,24 @@ class GameUtil {
                     false
                 );
             } else if (temp instanceof Nitrogen) {
-
+                batch.draw(
+                        temp.getTexture(),
+                        body.getPosition().x - temp.getWidth() / 2,
+                        body.getPosition().y - temp.getHeight() / 2,
+                        temp.getWidth() / 2,
+                        temp.getHeight() / 2,
+                        temp.getWidth(),
+                        temp.getHeight(),
+                        1.0f,
+                        1.0f,
+                        body.getAngle() * MathUtils.radiansToDegrees,
+                        0,
+                        0,
+                        temp.getTexture().getWidth(),
+                        temp.getTexture().getHeight(),
+                        false,
+                        false
+                );
             }
         }
     }
