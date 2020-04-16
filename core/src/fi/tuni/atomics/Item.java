@@ -10,9 +10,11 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 class Item extends GameObject {
     private float spawnTimer = 0;
     private Vector2 spawnPoint;
+    private int rotation;
 
-    private Item(Vector2 spawnPoint) {
+    private Item(Vector2 spawnPoint, int rotation) {
         this.spawnPoint = spawnPoint;
+        this.rotation = MathUtils.random(0, 360);
         texture = new Texture("cropped-tekarit.png");
         width = 0.1f;
         height = 0.034f;
@@ -60,8 +62,10 @@ class Item extends GameObject {
 
         if (spawnTimer >= spawnFrequency) {
             spawnPoint = getItemSpawnPoint();
-            Item item = new Item(spawnPoint);
+            Item item = new Item(spawnPoint, rotation);
             item.createBody();
+            rotation = MathUtils.random(0, 360);
+            item.body.setTransform(spawnPoint, rotation);
             spawnTimer = 0;
         }
     }
@@ -78,5 +82,9 @@ class Item extends GameObject {
                 PlayScreen.WORLD_HEIGHT_PIXELS * 5/6 * PlayScreen.scale);
 
         return new Vector2(x, y);
+    }
+
+    int getRotation() {
+        return this.rotation;
     }
 }

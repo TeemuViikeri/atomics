@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 
+import sun.nio.cs.ext.MacThai;
+
 class GameUtil {
     private double accumulator = 0;
     private static int room = 2;
@@ -100,8 +102,13 @@ class GameUtil {
                     temp.getTexture(),
                     body.getPosition().x - temp.getWidth() / 2,
                     body.getPosition().y - temp.getHeight() / 2,
+                    temp.getWidth() / 2,
+                    temp.getHeight() / 2,
                     temp.getWidth(),
                     temp.getHeight(),
+                    1.0f,
+                    1.0f,
+                    body.getAngle() * MathUtils.radiansToDegrees,
                     0,
                     0,
                     temp.getTexture().getWidth(),
@@ -110,6 +117,7 @@ class GameUtil {
                     false
                 );
             } else if (temp instanceof Nitrogen) {
+
             }
         }
     }

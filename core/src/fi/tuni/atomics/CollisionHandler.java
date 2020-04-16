@@ -78,9 +78,6 @@ class CollisionHandler implements ContactListener {
         }
 
         if (isItemContactingWall(bodyA, bodyB)) {
-
-            System.out.println("here");
-
             if (bodyA.getUserData() instanceof Wall) {
                 Wall wall = (Wall) bodyA.getUserData();
                 if (wall.thisLayer.getName().equals("cleaner-area")) {
@@ -216,14 +213,6 @@ class CollisionHandler implements ContactListener {
                 Player.playerLostHitPoint = false;
             }
 
-            PlayScreen.world.destroyBody(body);
-            i.remove();
-        }
-    }
-
-    void clearBodies2(Array<Body> bodiesToBeDestroyed) {
-        for (Iterator<Body> i = bodiesToBeDestroyed.iterator(); i.hasNext();) {
-            Body body = i.next();
             PlayScreen.world.destroyBody(body);
             i.remove();
         }
