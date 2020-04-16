@@ -10,13 +10,12 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 class Item extends GameObject {
     private float spawnTimer = 0;
     private Vector2 spawnPoint;
-    private int rotation;
 
     private Item(Vector2 spawnPoint) {
         this.spawnPoint = spawnPoint;
         getRandomTexture();
-        width = texture.getWidth() / 100f;
-        height = texture.getHeight() / 100f;
+        width = texture.getWidth() / 1000f;
+        height = texture.getHeight() / 1000f;
     }
 
     Item() {
@@ -48,21 +47,21 @@ class Item extends GameObject {
 
         shape = new PolygonShape();
 
-        ((PolygonShape) shape).setAsBox(this.width / 2,this.height / 2);
+        ((PolygonShape) shape).setAsBox(this.width * 10 / 2,this.height * 10 / 2);
         fixtureDef.shape = shape;
 
         return fixtureDef;
     }
 
     void spawnItem() {
-        float spawnFrequency = 120;
+        float spawnFrequency = 480;
         spawnTimer++;
 
         if (spawnTimer >= spawnFrequency) {
             spawnPoint = getItemSpawnPoint();
             Item item = new Item(spawnPoint);
             item.createBody();
-            rotation = MathUtils.random(0, 360);
+            int rotation = MathUtils.random(0, 360);
             item.body.setTransform(spawnPoint, rotation);
             spawnTimer = 0;
         }

@@ -8,12 +8,12 @@
  </layer>
  <layer id="9" name="vertical-bars" width="106" height="20">
   <data encoding="base64" compression="zlib">
-   eAHtkjEOgCAQwPiA//+uMToDsZ2qLAx3aWh1jPsczz27Vjur+cXe2Zm94euznX6rndX8/078LzMaGwxu0iYYjQ1GuzK3MxobDG7SJhiNDUa7MrczGhsMbtImGI0NRrsytzMaGwxu0iYYjQ1GuzK3MxobDG7SJhiNDUa7MrczGhsMbtImGI0NRrsytzMaGwxu0iYYjQ1GuzK3MxobDG7SJhiNDUa7MrczGhsMbtImGI0NRrvye7sT16sEEQ==
+   eAHlkbENwEAQwm6B7L9uMkFM5cYvfQUScL67e75Pz/RQl6puMliyqhxo93I700N9q7rJYMmqcqDdy+1MD/Wt6iaDJavKgXYvtzM91LeqmwyWrCoH2r3czvRQ36puMliyqhxo93I700N9q7rJYMmqcqDdy+1MD/Wt6iaDJavKgXYvtzM91LeqmwyWrCoH2r3czvRQ36puMliyqhxo93I700N9q7rJYMmqcvjb/QLfywQR
   </data>
  </layer>
  <layer id="8" name="horizontal-bars" width="106" height="20">
   <data encoding="base64" compression="zlib">
-   eAHtkTEKADAMhDLl/09u+wSXuhjIeAi6M7Of/+I6aOB3o8fruIE6cWfGok6Gdc6sE3dmLOpkWOfMOnFnxqJOhnXOrBN3ZizqZFjnzDpxZ8aiToZ1zqwTd2Ys6mRY58w6cWfGok6Gdc6sE3dmLOpkWOfMOnFnxqJOhnXOPJznDZk=
+   eAHtkbEJADAQhK7K/iMnM1jExocvD0G37Xz+h+uAgToBacKkToJ0gKwTkCZM6iRIB8g6AWnCpE6CdICsE5AmTOokSAfIOgFpwqROgnSArBOQJkzqJEgHyDoBacKkToJ0gKwTkCZM6iRIB8g6AWnCpE6CdICsE5D2eXIBdY8NIQ==
   </data>
  </layer>
  <layer id="1" name="walls" width="106" height="20">

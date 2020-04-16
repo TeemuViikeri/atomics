@@ -140,12 +140,12 @@ class GameUtil {
     }
 
     void scaleItems(GameObject item) {
-        if (item.width < 0.5) {
+        if (item.width < item.texture.getWidth() / 100f) {
             item.width += 0.005f;
-            item.height += 0.005f * (0.034/0.1);
+            item.height += 0.005f * (item.height / item.width);
         }
 
-        if (item.width >= 0.5) {
+        if (item.width >= item.texture.getWidth() / 100f) {
             item.body.getFixtureList().get(0).setSensor(false);
         }
     }
