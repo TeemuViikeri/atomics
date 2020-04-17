@@ -62,9 +62,6 @@ class Nitrogen extends GameObject {
         shape = new PolygonShape();
 
         ((PolygonShape) shape).setAsBox(width / 2, width / 2);
-        //shape = new CircleShape();
-
-        //shape.setRadius(width / 2);
         fixtureDef.shape = shape;
 
         return fixtureDef;

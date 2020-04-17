@@ -72,7 +72,8 @@ public class Pipe extends GameObject {
         for (Pipe i : pipes) {
             i.aliveTimer += Gdx.graphics.getDeltaTime();
 
-            // if pipe has been alive over 10s
+            System.out.println(i.aliveTimer);
+
             if (i.aliveTimer > i.timeAlive && !i.dead) {
                 i.dead = true;
                 microbe.deSpawnMicrobes();
