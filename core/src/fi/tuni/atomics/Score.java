@@ -31,7 +31,8 @@ public class Score {
     }
 
     void draw(SpriteBatch batch) {
-        font.draw(batch, "Score: " + score + "    " + getScoreMultiplier() + "x",
+        font.draw(batch, Localization.getBundle().get("score") +
+                        score + "    " + getScoreMultiplier() + "x",
                 PlayScreen.TILE_LENGTH_PIXELS * 2,
                 PlayScreen.HUD_Y + layout.height);
     }

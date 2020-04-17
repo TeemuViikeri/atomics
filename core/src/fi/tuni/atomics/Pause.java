@@ -18,6 +18,8 @@ public class Pause {
     private Texture pauseBackground;
     private Stage pauseStage;
     private Atomics atomics;
+    float pauseScreenWidth = 500f * Gdx.graphics.getWidth() / 960f;
+    float pauseScreenHeight = 500f * Gdx.graphics.getHeight() / 640f;
 
     Pause(Atomics atomics) {
         this.atomics = atomics;
@@ -31,16 +33,16 @@ public class Pause {
                 Gdx.graphics.getHeight() - (pauseHeight),
                 new Texture("pausebutton.png"));
 
-        float resumeWidth = 200f * Gdx.graphics.getWidth() / 960;
-        float resumeHeight = 50f * Gdx.graphics.getHeight() / 640;
+        float resumeWidth = 400f * Gdx.graphics.getWidth() / 960;
+        float resumeHeight = 100f * Gdx.graphics.getHeight() / 640;
         resume = new MenuButton(resumeWidth, resumeHeight,
                 Gdx.graphics.getWidth() / 2f - resumeWidth / 2,
-                Gdx.graphics.getHeight() * 2.5f/4f,
+                Gdx.graphics.getHeight() / 2f - pauseScreenHeight / 2 + pauseScreenHeight - resumeHeight * 2,
                 new Texture("RESUME.jpg"));
 
         exit = new MenuButton(resumeWidth, resumeHeight,
                 Gdx.graphics.getWidth() / 2f - resumeWidth / 2,
-                Gdx.graphics.getHeight() * 1.5f/4f,
+                Gdx.graphics.getHeight() / 2f - pauseScreenHeight / 2 + resumeHeight,
                 new Texture("EXIT.jpg"));
 
         resume.setVisible(false);
@@ -74,13 +76,11 @@ public class Pause {
             Gdx.input.setInputProcessor(pauseStage);
             resume.setVisible(true);
             exit.setVisible(true);
-            float width = 500f * Gdx.graphics.getWidth() / 960f;
-            float height = 500f * Gdx.graphics.getHeight() / 640f;
             Atomics.HUDBatch.draw(pauseBackground,
-                    Gdx.graphics.getWidth() / 2f - width / 2,
-                    Gdx.graphics.getHeight() / 2f - height / 2,
-                    width,
-                    height);
+                    Gdx.graphics.getWidth() / 2f - pauseScreenWidth / 2,
+                    Gdx.graphics.getHeight() / 2f - pauseScreenHeight / 2,
+                    pauseScreenWidth,
+                    pauseScreenHeight);
             PlayScreen.Game_paused = true;
         }
         Atomics.HUDBatch.end();

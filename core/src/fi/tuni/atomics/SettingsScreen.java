@@ -68,6 +68,15 @@ public class SettingsScreen implements Screen {
         if (soundsButton.isTouched()) {
         }
         if (languageButton.isTouched()) {
+
+            if (Localization.getBundle().getLocale().toString().equals("fi")) {
+                Localization.setLocale("en");
+                System.out.println(Localization.getBundle().getLocale());
+            } else {
+                Localization.setLocale("fi");
+                System.out.println(Localization.getBundle().getLocale());
+            }
+            languageButton.setTouched(false);
         }
         if (exitButton.isTouched()) {
             atomics.setScreen(new StartScreen(atomics));
