@@ -14,11 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 class Player extends GameObject {
     private static int hitpoints;
+    public static boolean immortal = false;
     private Controls controls;
     private float desiredAngle;
     private float deltaX;
     private float deltaY;
     private boolean moving;
+    private float immortalTimer;
     private Texture hp3;
     private Texture hp2;
     private Texture hp1;
@@ -183,6 +185,16 @@ class Player extends GameObject {
                     PlayScreen.HUD_Y,
                     (float) hp3.getWidth() * Gdx.graphics.getWidth() / 960,
                     (float) hp3.getHeight() * Gdx.graphics.getHeight() / 640);
+        }
+    }
+
+    public void update() {
+        if (immortal) {
+            immortalTimer+=Gdx.graphics.getDeltaTime();
+        }
+        if (immortalTimer >= 1) {
+            immortalTimer = 0;
+            immortal = false;
         }
     }
 

@@ -142,6 +142,7 @@ public class PlayScreen implements Screen {
             // Updates.
             pipes.update();
             Microbe.update();
+            player.update();
 
             if (player.checkIfDead()) {
                 game.setScreen(new EndScreen(game));

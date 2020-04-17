@@ -29,7 +29,7 @@ public class Microbe extends GameObject {
     static Array<Microbe> microbes = new Array<>();
     private static Nitrogen nitrogen = new Nitrogen();
 
-    private Microbe(Vector2 spawnPoint) {
+    Microbe(Vector2 spawnPoint) {
         this.spawnPoint = spawnPoint;
         stateTime = 1f;
         width = 0.5f;
@@ -98,7 +98,7 @@ public class Microbe extends GameObject {
                                 PlayScreen.TILE_LENGTH_PIXELS * 2 * PlayScreen.scale,
                         PlayScreen.THIRD_SCREEN_LEFT_SIDE + PlayScreen.ROOM_WIDTH_PIXELS
                                 * PlayScreen.scale - width * 2),
-                MathUtils.random(1, (PlayScreen.ROOM_HEIGHT_PIXELS
+                MathUtils.random(3.5f, (PlayScreen.ROOM_HEIGHT_PIXELS
                         - PlayScreen.TILE_LENGTH_PIXELS * 2) * PlayScreen.scale))));
 
         /*

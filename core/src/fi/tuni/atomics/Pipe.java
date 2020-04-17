@@ -22,6 +22,10 @@ public class Pipe extends GameObject {
     private final int sheetCols = 4;
     static private Texture animationSheet = new Texture("bubbleSequence.png");
     private Animation<TextureRegion> animation;
+    private TextureRegion[] frames;
+    static private Texture animationSheet2 = new Texture("bubble2.png");
+    private Animation<TextureRegion> animation2;
+    private TextureRegion[] frames2;
     private Vector2 spawnPoint;
     private float stateTime;
     private GameUtil gameUtil = new GameUtil();
@@ -32,19 +36,25 @@ public class Pipe extends GameObject {
     public boolean isTouched = false; // is the pipe being touched.
     private float timeAlive;
     private Microbe microbe = new Microbe();
+    private float amountOfPipesAlive = 0;
 
     private Pipe(Vector2 position) {
         this.spawnPoint = position;
         width = 0.5f;
         stateTime = 1f;
         timeAlive = MathUtils.random(60,180);
-        TextureRegion[] frames;
         TextureRegion[][] temp = TextureRegion.split(
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
                 animationSheet.getHeight() / sheetRows);
+        TextureRegion[][] temp2 = TextureRegion.split(
+                animationSheet2,
+                animationSheet2.getWidth() / sheetCols,
+                animationSheet2.getHeight() / sheetRows);
         frames = gameUtil.to1d(temp, sheetRows, sheetCols, this);
         animation = new Animation<>(1 / 10f, frames);
+        frames2 = gameUtil.to1d(temp2, sheetRows, sheetCols, this);
+        animation2 = new Animation<>(1 / 10f, frames2);
         createBody();
         microbe.spawnMicrobes();
     }
@@ -60,8 +70,13 @@ public class Pipe extends GameObject {
         return animation;
     }
 
+    private Animation<TextureRegion> getAnimation2() {
+        return animation2;
+    }
+
     void createPipes() {
         Microbe.microbes.clear();
+        amountOfPipesAlive = 4;
         pipes.add(new Pipe(new Vector2((ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2 + TILE_LENGTH_PIXELS * 5) * scale, (TILE_LENGTH_PIXELS * 3) * scale)));
         pipes.add(new Pipe(new Vector2((ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2 + TILE_LENGTH_PIXELS * 11) * scale, (TILE_LENGTH_PIXELS * 3) * scale)));
         pipes.add(new Pipe(new Vector2((ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2 + TILE_LENGTH_PIXELS * 18) * scale, (TILE_LENGTH_PIXELS * 3) * scale)));
@@ -69,6 +84,7 @@ public class Pipe extends GameObject {
     }
 
     void update() {
+        System.out.println(amountOfPipesAlive);
         for (Pipe i : pipes) {
             i.aliveTimer += Gdx.graphics.getDeltaTime();
 
@@ -76,6 +92,7 @@ public class Pipe extends GameObject {
 
             if (i.aliveTimer > i.timeAlive && !i.dead) {
                 i.dead = true;
+                amountOfPipesAlive--;
                 microbe.deSpawnMicrobes();
             }
 
@@ -88,6 +105,8 @@ public class Pipe extends GameObject {
             if (!i.dead) {
                 batch.draw(i.getAnimation().getKeyFrame((i).setStateTime(), true),
                         i.spawnPoint.x, i.spawnPoint.y,0.32f,0.32f);
+                batch.draw(i.getAnimation2().getKeyFrame((i).setStateTime(), true),
+                        i.spawnPoint.x, i.spawnPoint.y + 0.32f,0.32f,0.32f);
             }
         }
     }
@@ -131,6 +150,7 @@ public class Pipe extends GameObject {
                 timeAlive = MathUtils.random(60,180);
                 aliveTimer = 0;
                 dead = false;
+                amountOfPipesAlive++;
                 microbe.spawnMicrobes();
             }
         }

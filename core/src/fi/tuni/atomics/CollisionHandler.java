@@ -1,5 +1,7 @@
 package fi.tuni.atomics;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -54,7 +56,9 @@ class CollisionHandler implements ContactListener {
         }
 
         if (isPlayerContactingPhosphorus(bodyA, bodyB)) {
-            Player.loseHitpoint();
+            if (!Player.immortal) {
+                Player.loseHitpoint();
+            }
 
             if (bodyA.getUserData() instanceof Phosphorus) {
                 bodyA.setUserData("dead");
@@ -74,7 +78,17 @@ class CollisionHandler implements ContactListener {
         }
 
         if (isPlayerContactingMicrobe(bodyA, bodyB)) {
-            Player.loseHitpoint();
+            if (!Player.immortal) {
+                Player.loseHitpoint();
+            }
+
+            if (bodyA.getUserData() instanceof Microbe) {
+                bodyA.setUserData("dead");
+            } else {
+                bodyB.setUserData("dead");
+            }
+
+
         }
 
         if (isItemContactingWall(bodyA, bodyB)) {
@@ -211,6 +225,17 @@ class CollisionHandler implements ContactListener {
                 new CollectablePhosphorus(body.getPosition().x, body.getPosition().y);
             } else {
                 Player.playerLostHitPoint = false;
+            }
+
+            if (body.getFixtureList().get(0).getFilterData().groupIndex == -10) {
+                System.out.println("dflsdp");
+                Microbe.microbes.add(new Microbe(new Vector2(
+                        MathUtils.random(PlayScreen.THIRD_SCREEN_LEFT_SIDE +
+                                        PlayScreen.TILE_LENGTH_PIXELS * 2 * PlayScreen.scale,
+                                PlayScreen.THIRD_SCREEN_LEFT_SIDE + PlayScreen.ROOM_WIDTH_PIXELS
+                                        * PlayScreen.scale - 0.5f * 2),
+                        MathUtils.random(3.5f, (PlayScreen.ROOM_HEIGHT_PIXELS
+                                - PlayScreen.TILE_LENGTH_PIXELS * 2) * PlayScreen.scale))));
             }
 
             PlayScreen.world.destroyBody(body);

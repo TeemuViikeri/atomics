@@ -186,24 +186,28 @@ class GameUtil {
                    playerBody.getPosition().y,
                     desiredAngle
             );
+           Player.immortal = true;
         } else if (position <= PlayScreen.SECOND_SCREEN_LEFT_SIDE && room == 2) {
            playerBody.setTransform(
                    PlayScreen.FIRST_SCREEN_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
             );
+           Player.immortal = true;
         } else if (position >= PlayScreen.SECOND_SCREEN_RIGHT_SIDE && room == 2) {
            playerBody.setTransform(
                    PlayScreen.THIRD_SCREEN_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
             );
+           Player.immortal = true;
         } else if (position <= PlayScreen.THIRD_SCREEN_LEFT_SIDE && room == 3) {
            playerBody.setTransform(
                    PlayScreen.SECOND_SCREEN_RIGHT_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
             );
+           Player.immortal = true;
         }
     }
 
