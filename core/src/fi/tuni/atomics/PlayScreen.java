@@ -34,7 +34,8 @@ public class PlayScreen implements Screen {
     private Pause pause;
 
     static float scale = 1/100f;
-    static float dt = 0;
+    static int levelMultiplier = 1;
+    private static int breakpoint = 250;
     static float TILE_LENGTH_PIXELS = 32;
     static float TILES_AMOUNT_WIDTH = 106;
     static float TILES_AMOUNT_HEIGHT = 20;
@@ -144,12 +145,15 @@ public class PlayScreen implements Screen {
             Microbe.update();
             player.update();
 
+            if (score.getScore() >= breakpoint) {
+                levelMultiplier++;
+                System.out.println(levelMultiplier);
+                breakpoint += 250;
+            }
+
             if (player.checkIfDead()) {
                 game.setScreen(new EndScreen(game));
             }
-
-            dt += Gdx.graphics.getDeltaTime();
-            System.out.println(dt);
 
             // Spawns
             item.spawnItem();

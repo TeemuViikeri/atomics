@@ -84,7 +84,6 @@ public class Pipe extends GameObject {
     }
 
     void update() {
-        System.out.println(amountOfPipesAlive);
         for (Pipe i : pipes) {
             i.aliveTimer += Gdx.graphics.getDeltaTime();
 
