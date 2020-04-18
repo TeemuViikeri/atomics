@@ -16,6 +16,8 @@ class Item extends GameObject {
         getRandomTexture();
         width = texture.getWidth() / 1000f;
         height = texture.getHeight() / 1000f;
+        targetWidth = width * 10;
+        targetHeight = height * 10;
     }
 
     Item() {
@@ -42,12 +44,12 @@ class Item extends GameObject {
 
         fixtureDef.density = 10f;
         fixtureDef.restitution = 0f;
-        fixtureDef.friction = 0f;
+        fixtureDef.friction = 10f;
         fixtureDef.isSensor = true;
 
         shape = new PolygonShape();
 
-        ((PolygonShape) shape).setAsBox(this.width * 10 / 2,this.height * 10 / 2);
+        ((PolygonShape) shape).setAsBox(this.targetWidth / 2,this.targetHeight / 2);
         fixtureDef.shape = shape;
 
         return fixtureDef;

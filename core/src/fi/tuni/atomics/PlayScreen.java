@@ -34,6 +34,7 @@ public class PlayScreen implements Screen {
     private Pause pause;
 
     static float scale = 1/100f;
+    static float dt = 0;
     static float TILE_LENGTH_PIXELS = 32;
     static float TILES_AMOUNT_WIDTH = 106;
     static float TILES_AMOUNT_HEIGHT = 20;
@@ -138,7 +139,7 @@ public class PlayScreen implements Screen {
             Controls.getStage().addActor(pause.getPauseButton());
             Controls.getStage().act(Gdx.graphics.getDeltaTime());
 
-            // Updates.
+            // Updates
             pipes.update();
             Microbe.update();
             player.update();
@@ -147,18 +148,19 @@ public class PlayScreen implements Screen {
                 game.setScreen(new EndScreen(game));
             }
 
-            //spawns
+            dt += Gdx.graphics.getDeltaTime();
+            System.out.println(dt);
+
+            // Spawns
             item.spawnItem();
             phosphorus.spawnPhosphorus();
-
-            // Spawn and draw
 
             // Fixed step and destroy bodies
             gameUtil.doPhysicsStep(Gdx.graphics.getDeltaTime());
             collisionHandler.clearBodies(bodiesToBeDestroyed);
 
             // Debuggers
-            debugRenderer.render(world, camera.combined);
+//            debugRenderer.render(world, camera.combined);
         }
 
         pause.pauseScreen();

@@ -42,7 +42,7 @@ public class Score {
     }
 
     static int getScoreMultiplier() {
-        return Microbe.microbes.size + 1;
+        return Microbe.microbes.size;
     }
 
     static void collectPhosphorus() {

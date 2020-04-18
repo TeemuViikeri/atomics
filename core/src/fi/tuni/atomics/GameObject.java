@@ -14,6 +14,8 @@ abstract class GameObject {
     Texture texture;
     float width;
     float height;
+    float targetWidth;
+    float targetHeight;
     float speed;
 
     Body getBody() {
@@ -70,6 +72,22 @@ abstract class GameObject {
 
     void setHeight(float height) {
         this.height = height;
+    }
+
+    public float getTargetWidth() {
+        return targetWidth;
+    }
+
+    public void setTargetWidth(float targetWidth) {
+        this.targetWidth = targetWidth;
+    }
+
+    public float getTargetHeight() {
+        return targetHeight;
+    }
+
+    public void setTargetHeight(float targetHeight) {
+        this.targetHeight = targetHeight;
     }
 
     float getSpeed() {

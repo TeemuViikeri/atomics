@@ -228,7 +228,6 @@ class CollisionHandler implements ContactListener {
             }
 
             if (body.getFixtureList().get(0).getFilterData().groupIndex == -10) {
-                System.out.println("dflsdp");
                 Microbe.microbes.add(new Microbe(new Vector2(
                         MathUtils.random(PlayScreen.THIRD_SCREEN_LEFT_SIDE +
                                         PlayScreen.TILE_LENGTH_PIXELS * 2 * PlayScreen.scale,

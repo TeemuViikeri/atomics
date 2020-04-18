@@ -18,7 +18,7 @@ class Phosphorus extends GameObject{
     static final float width = 0.5f;
     static private Texture animationSheet = new Texture("phosphorus2.png");
     private float spawnTimer = 0;
-    private float spawnFrequency = 180;
+    private float spawnFrequency = 120;
     private Animation<TextureRegion> animation;
     private Vector2 spawnPoint;
     private int spawnside;

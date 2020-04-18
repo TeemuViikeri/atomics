@@ -69,14 +69,16 @@ class GameUtil {
                 0.35f
                 );
             } else if (temp instanceof Microbe) {
-                batch.draw(((Microbe) temp)
-                                .getAnimation()
-                                .getKeyFrame(((Microbe)temp)
-                                        .setStateTime(), true),
-                        body.getPosition().x - 0.25f,
-                        body.getPosition().y - 0.25f,
-                        0.5f,
-                        0.5f);
+                scaleObjects(temp, 0.005f);
+                batch.draw(
+                    ((Microbe) temp)
+                        .getAnimation()
+                        .getKeyFrame(((Microbe)temp)
+                        .setStateTime(), true),
+                    body.getPosition().x - 0.25f,
+                    body.getPosition().y - 0.25f,
+                    temp.getWidth(),
+                    temp.getWidth());
             } else if (temp instanceof Player) {
                 batch.draw(
                     player.getTexture(),
@@ -97,7 +99,7 @@ class GameUtil {
                     false
                 );
             } else if (temp instanceof Item) {
-                scaleItems(temp);
+                scaleObjects(temp, 0.0075f);
                 batch.draw(
                     temp.getTexture(),
                     body.getPosition().x - temp.getWidth() / 2,
@@ -118,35 +120,35 @@ class GameUtil {
                 );
             } else if (temp instanceof Nitrogen) {
                 batch.draw(
-                        temp.getTexture(),
-                        body.getPosition().x - temp.getWidth() / 2,
-                        body.getPosition().y - temp.getHeight() / 2,
-                        temp.getWidth() / 2,
-                        temp.getHeight() / 2,
-                        temp.getWidth(),
-                        temp.getHeight(),
-                        1.0f,
-                        1.0f,
-                        body.getAngle() * MathUtils.radiansToDegrees,
-                        0,
-                        0,
-                        temp.getTexture().getWidth(),
-                        temp.getTexture().getHeight(),
-                        false,
-                        false
+                    temp.getTexture(),
+                    body.getPosition().x - temp.getWidth() / 2,
+                    body.getPosition().y - temp.getHeight() / 2,
+                    temp.getWidth() / 2,
+                    temp.getHeight() / 2,
+                    temp.getWidth(),
+                    temp.getHeight(),
+                    1.0f,
+                    1.0f,
+                    body.getAngle() * MathUtils.radiansToDegrees,
+                    0,
+                    0,
+                    temp.getTexture().getWidth(),
+                    temp.getTexture().getHeight(),
+                    false,
+                    false
                 );
             }
         }
     }
 
-    void scaleItems(GameObject item) {
-        if (item.width < item.texture.getWidth() / 100f) {
-            item.width += 0.005f;
-            item.height += 0.005f * (item.height / item.width);
+    void scaleObjects(GameObject gameObject, float scaleUp) {
+        if (gameObject.width < gameObject.getTargetWidth()) {
+            gameObject.width += scaleUp;
+            gameObject.height += scaleUp * (gameObject.height / gameObject.width);
         }
 
-        if (item.width >= item.texture.getWidth() / 100f) {
-            item.body.getFixtureList().get(0).setSensor(false);
+        if (gameObject.width >= gameObject.getTargetWidth()) {
+            gameObject.body.getFixtureList().get(0).setSensor(false);
         }
     }
 

@@ -32,8 +32,10 @@ public class Microbe extends GameObject {
     Microbe(Vector2 spawnPoint) {
         this.spawnPoint = spawnPoint;
         stateTime = 1f;
-        width = 0.5f;
-        height = 0.5f;
+        width = 0.5f / 10;
+        height = 0.5f / 10;
+        targetWidth = width * 10;
+        targetHeight = height * 10;
         speed = 2;
         TextureRegion[] frames;
         TextureRegion[][] temp =  TextureRegion.split(
@@ -82,10 +84,7 @@ public class Microbe extends GameObject {
 
         shape = new PolygonShape();
 
-        ((PolygonShape) shape).setAsBox(width / 2, width / 2);
-        //shape = new CircleShape();
-
-        //shape.setRadius(width / 2);
+        ((PolygonShape) shape).setAsBox(targetWidth / 2, targetHeight / 2);
         fixtureDef.shape = shape;
 
         return fixtureDef;
@@ -100,17 +99,6 @@ public class Microbe extends GameObject {
                                 * PlayScreen.scale - width * 2),
                 MathUtils.random(3.5f, (PlayScreen.ROOM_HEIGHT_PIXELS
                         - PlayScreen.TILE_LENGTH_PIXELS * 2) * PlayScreen.scale))));
-
-        /*
-        Microbe microbe2 = new Microbe(new Vector2(
-                MathUtils.random(PlayScreen.THIRD_SCREEN_LEFT_SIDE +
-                                PlayScreen.TILE_LENGTH_PIXELS * 2 * PlayScreen.scale,
-                        PlayScreen.THIRD_SCREEN_LEFT_SIDE + PlayScreen.ROOM_WIDTH_PIXELS
-                                * PlayScreen.scale - width * 2),
-                MathUtils.random(1, (PlayScreen.ROOM_HEIGHT_PIXELS
-                        - PlayScreen.TILE_LENGTH_PIXELS * 2) * PlayScreen.scale)));
-
-         */
     }
 
     public void deSpawnMicrobes() {
@@ -141,5 +129,4 @@ public class Microbe extends GameObject {
             }
         }
     }
-
 }

@@ -88,8 +88,6 @@ public class Pipe extends GameObject {
         for (Pipe i : pipes) {
             i.aliveTimer += Gdx.graphics.getDeltaTime();
 
-            System.out.println(i.aliveTimer);
-
             if (i.aliveTimer > i.timeAlive && !i.dead) {
                 i.dead = true;
                 amountOfPipesAlive--;
