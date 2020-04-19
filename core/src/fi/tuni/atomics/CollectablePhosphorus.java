@@ -29,6 +29,9 @@ class CollectablePhosphorus extends GameObject {
         createBody(x, y);
     }
 
+    public CollectablePhosphorus() {
+    }
+
     private void createBody(float x, float y) {
         body = PlayScreen.world.createBody(getDefinitionOfBody(x, y));
         body.setGravityScale(0);

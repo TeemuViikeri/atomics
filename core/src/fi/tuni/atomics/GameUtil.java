@@ -57,6 +57,7 @@ class GameUtil {
                 0.5f
                 );
             } else if (temp instanceof CollectablePhosphorus) {
+                clearCollectables(temp, 5);
                 batch.draw(((CollectablePhosphorus) temp)
                         .getAnimation()
                         .getKeyFrame(((CollectablePhosphorus)temp)
@@ -147,6 +148,14 @@ class GameUtil {
 
         if (gameObject.width >= gameObject.getTargetWidth()) {
             gameObject.body.getFixtureList().get(0).setSensor(false);
+        }
+    }
+
+    void clearCollectables(GameObject collectable, float timer) {
+        if (collectable.timeAlive >= timer) {
+            collectable.body.setUserData("dead");
+        } else {
+            collectable.timeAlive += Gdx.graphics.getDeltaTime();
         }
     }
 

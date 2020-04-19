@@ -17,6 +17,7 @@ abstract class GameObject {
     float targetWidth;
     float targetHeight;
     float speed;
+    float timeAlive;
 
     Body getBody() {
         return body;
@@ -96,5 +97,13 @@ abstract class GameObject {
 
     void setSpeed(float speed) {
         this.speed = speed;
+    }
+
+    public float getTimeAlive() {
+        return timeAlive;
+    }
+
+    public void setTimeAlive(float timeAlive) {
+        this.timeAlive = timeAlive;
     }
 }
