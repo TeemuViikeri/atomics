@@ -64,8 +64,8 @@ public class PlayScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(
                 false,
-                ROOM_WIDTH_PIXELS * 1/30 ,
-                ROOM_HEIGHT_PIXELS * 1/30);
+                ROOM_WIDTH_PIXELS * scale ,
+                ROOM_HEIGHT_PIXELS * scale);
         HUD_Y = Gdx.graphics.getHeight() - TILE_LENGTH_PIXELS * 4;
 
         // TiledMap
