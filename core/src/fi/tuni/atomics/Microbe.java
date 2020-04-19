@@ -98,7 +98,7 @@ public class Microbe extends GameObject {
                         PlayScreen.THIRD_SCREEN_LEFT_SIDE + PlayScreen.ROOM_WIDTH_PIXELS
                                 * PlayScreen.scale - width * 2),
                 MathUtils.random(3.5f, (PlayScreen.ROOM_HEIGHT_PIXELS
-                        - PlayScreen.TILE_LENGTH_PIXELS * 2) * PlayScreen.scale))));
+                        - PlayScreen.TILE_LENGTH_PIXELS * 3) * PlayScreen.scale))));
     }
 
     public void deSpawnMicrobes() {
