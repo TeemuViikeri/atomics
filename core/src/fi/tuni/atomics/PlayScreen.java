@@ -147,11 +147,12 @@ public class PlayScreen implements Screen {
 
             if (score.getScore() >= breakpoint) {
                 levelMultiplier++;
-                System.out.println(levelMultiplier);
                 breakpoint += 250;
             }
 
             if (player.checkIfDead()) {
+                levelMultiplier = 1;
+                breakpoint = 250;
                 game.setScreen(new EndScreen(game));
             }
 

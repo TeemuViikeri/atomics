@@ -34,7 +34,6 @@ public class Pipe extends GameObject {
     private float aliveTimer; // how long the pipe has been alive.
     private float fixTimer; // how long the pipe has been in repair.
     public boolean isTouched = false; // is the pipe being touched.
-    private float timeAlive;
     private Microbe microbe = new Microbe();
     private float amountOfPipesAlive = 0;
 
@@ -42,7 +41,7 @@ public class Pipe extends GameObject {
         this.spawnPoint = position;
         width = 0.5f;
         stateTime = 1f;
-        timeAlive = MathUtils.random(60,180);
+        timeAlive = MathUtils.random(60,180) - (20 * (PlayScreen.levelMultiplier - 1));
         TextureRegion[][] temp = TextureRegion.split(
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
