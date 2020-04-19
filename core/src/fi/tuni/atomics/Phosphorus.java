@@ -75,7 +75,7 @@ class Phosphorus extends GameObject{
     }
 
     void spawnPhosphorus() {
-        spawnFrequency = 120 - (120 * (PlayScreen.levelMultiplier - 1));
+        spawnFrequency = 120 - (10 * (PlayScreen.levelMultiplier - 1));
 
         spawnTimer++;
         spawnside =  MathUtils.random(1,6);

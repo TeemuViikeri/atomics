@@ -151,7 +151,7 @@ class GameUtil {
         }
     }
 
-    void clearCollectables(GameObject collectable, float timer) {
+    private void clearCollectables(GameObject collectable, float timer) {
         if (collectable.timeAlive >= timer) {
             collectable.body.setUserData("dead");
         } else {

@@ -1,5 +1,6 @@
 package fi.tuni.atomics;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -56,8 +57,8 @@ class Item extends GameObject {
     }
 
     void spawnItem() {
-        float spawnFrequency = 480;
-        spawnTimer++;
+        float spawnFrequency = 480 - (40 * (PlayScreen.levelMultiplier - 1));
+        spawnTimer += Gdx.graphics.getDeltaTime();
 
         if (spawnTimer >= spawnFrequency) {
             spawnPoint = getItemSpawnPoint();

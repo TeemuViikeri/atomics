@@ -41,7 +41,7 @@ public class Pipe extends GameObject {
         this.spawnPoint = position;
         width = 0.5f;
         stateTime = 1f;
-        timeAlive = MathUtils.random(60,180) - (20 * (PlayScreen.levelMultiplier - 1));
+        timeAlive = MathUtils.random(60,180) - (5 * (PlayScreen.levelMultiplier - 1));
         TextureRegion[][] temp = TextureRegion.split(
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
