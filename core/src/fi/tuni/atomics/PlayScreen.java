@@ -105,6 +105,7 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         Atomics.batch.setProjectionMatrix(camera.combined);
         gameUtil.clearScreen();
+        Controls.getStage().draw();
         tiledMapRenderer.render();
         tiledMapRenderer.setView(camera);
         world.getBodies(bodies);
@@ -117,10 +118,8 @@ public class PlayScreen implements Screen {
         // HUD render
         Atomics.HUDBatch.begin();
         player.drawHitpoints(Atomics.HUDBatch);
-        score.draw(Atomics.HUDBatch);
+        //score.draw(Atomics.HUDBatch);
         Atomics.HUDBatch.end();
-
-        Controls.getStage().draw();
 
         if (!Game_paused) {
             // Render setup
@@ -168,7 +167,7 @@ public class PlayScreen implements Screen {
 //            debugRenderer.render(world, camera.combined);
         }
 
-        pause.pauseScreen();
+        //pause.pauseScreen();
 
     }
 

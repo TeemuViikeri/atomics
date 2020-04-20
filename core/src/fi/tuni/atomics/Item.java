@@ -57,7 +57,7 @@ class Item extends GameObject {
     }
 
     void spawnItem() {
-        float spawnFrequency = 480 - (40 * (PlayScreen.levelMultiplier - 1));
+        float spawnFrequency = 7 - (7f/12f * (PlayScreen.levelMultiplier - 1));
         spawnTimer += Gdx.graphics.getDeltaTime();
 
         if (spawnTimer >= spawnFrequency) {
