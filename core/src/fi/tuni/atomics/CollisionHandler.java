@@ -83,9 +83,11 @@ class CollisionHandler implements ContactListener {
             }
 
             if (bodyA.getUserData() instanceof Microbe) {
-                bodyA.setUserData("dead");
+                ((Microbe) bodyA.getUserData()).die();
+                bodyA.setUserData("microbe");
             } else {
-                bodyB.setUserData("dead");
+                ((Microbe) bodyB.getUserData()).die();
+                bodyB.setUserData("microbe");
             }
 
 
@@ -213,6 +215,10 @@ class CollisionHandler implements ContactListener {
             if (body.getUserData().equals("dead")) {
                 bodiesToBeDestroyed.add(body);
             }
+
+            if (body.getUserData().equals("microbe")) {
+                bodiesToBeDestroyed.add(body);
+            }
         }
     }
 
@@ -227,7 +233,7 @@ class CollisionHandler implements ContactListener {
                 Player.playerLostHitPoint = false;
             }
 
-            if (body.getFixtureList().get(0).getFilterData().groupIndex == -10) {
+            if (body.getUserData().equals("microbe")) {
                 Microbe.microbes.add(new Microbe(new Vector2(
                         MathUtils.random(PlayScreen.THIRD_SCREEN_LEFT_SIDE +
                                         PlayScreen.TILE_LENGTH_PIXELS * 2 * PlayScreen.scale,

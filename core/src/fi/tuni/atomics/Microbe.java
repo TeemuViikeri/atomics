@@ -25,6 +25,7 @@ public class Microbe extends GameObject {
     private float forceY = -1f;
     private float nitrogenTimer = 0;
     private float nitrogenFrequency = 2;
+    private boolean dead = false;
     private GameUtil gameUtil = new GameUtil();
     static Array<Microbe> microbes = new Array<>();
     private static Nitrogen nitrogen = new Nitrogen();
@@ -106,6 +107,10 @@ public class Microbe extends GameObject {
         microbes.removeIndex(microbes.size - 1);
     }
 
+    public void die() {
+        dead = true;
+    }
+
     private void applyForce() {
         int forceDecider = MathUtils.random(1,2);
 
@@ -118,14 +123,18 @@ public class Microbe extends GameObject {
     }
 
     static void update() {
-        for (Microbe microbe : microbes) {
-            microbe.nitrogenTimer += Gdx.graphics.getDeltaTime();
+        for (int i = 0; i < microbes.size; i++) {
+            microbes.get(i).nitrogenTimer += Gdx.graphics.getDeltaTime();
 
-            if (microbe.nitrogenTimer >= microbe.nitrogenFrequency &&
-                    microbe.getBody().getPosition().y <=
+            if (microbes.get(i).nitrogenTimer >= microbes.get(i).nitrogenFrequency &&
+                    microbes.get(i).getBody().getPosition().y <=
                             PlayScreen.ROOM_HEIGHT_PIXELS * PlayScreen.scale - 1.92f) {
-                Microbe.nitrogen.createNitrogen(microbe.body.getPosition());
-                microbe.nitrogenTimer = 0;
+                Microbe.nitrogen.createNitrogen(microbes.get(i).body.getPosition());
+                microbes.get(i).nitrogenTimer = 0;
+            }
+
+            if (microbes.get(i).dead) {
+                microbes.removeIndex(i);
             }
         }
     }

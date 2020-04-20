@@ -199,7 +199,7 @@ class Player extends GameObject {
     }
 
     public boolean checkIfDead() {
-        if (hitpoints == 0) {
+        if (hitpoints <= 0) {
             return true;
         }
         return false;

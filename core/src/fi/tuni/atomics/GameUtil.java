@@ -20,7 +20,7 @@ class GameUtil {
 
     void drawBodies(Array<Body> bodies, SpriteBatch batch, Player player) {
         for (Body body: bodies) {
-            if (body.getUserData().equals("dead")) {
+            if (body.getUserData().equals("dead") || body.getUserData().equals("microbe")) {
                 continue;
             }
 
