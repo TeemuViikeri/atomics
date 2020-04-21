@@ -89,19 +89,23 @@ class CollisionHandler implements ContactListener {
                 ((Microbe) bodyB.getUserData()).die();
                 bodyB.setUserData("dead");
             }
-
-
         }
 
         if (isItemContactingWall(bodyA, bodyB)) {
             if (bodyA.getUserData() instanceof Wall) {
                 Wall wall = (Wall) bodyA.getUserData();
                 if (wall.thisLayer.getName().equals("cleaner-area")) {
+                    if (bodyB.getUserData() instanceof RareItem) {
+                        Score.collectRareItem();
+                    }
                     bodyB.setUserData("dead");
                 }
             } else if (bodyB.getUserData() instanceof Wall) {
                 Wall wall = (Wall) bodyB.getUserData();
                 if (wall.thisLayer.getName().equals("cleaner-area")) {
+                    if (bodyA.getUserData() instanceof RareItem) {
+                        Score.collectRareItem();
+                    }
                     bodyA.setUserData("dead");
                 }
             }

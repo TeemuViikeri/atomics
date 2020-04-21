@@ -4,17 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 
-public class Microbe extends GameObject {
+class Microbe extends GameObject {
     private final int sheetRows = 1;
     private final int sheetCols = 2;
     static private Texture animationSheet = new Texture("happyMicrobe.png");
@@ -91,8 +88,7 @@ public class Microbe extends GameObject {
         return fixtureDef;
     }
 
-    public void spawnMicrobes() {
-
+    void spawnMicrobes() {
         microbes.add(new Microbe(new Vector2(
                 MathUtils.random(PlayScreen.THIRD_SCREEN_LEFT_SIDE +
                                 PlayScreen.TILE_LENGTH_PIXELS * 2 * PlayScreen.scale,
@@ -102,7 +98,7 @@ public class Microbe extends GameObject {
                         - PlayScreen.TILE_LENGTH_PIXELS * 4) * PlayScreen.scale))));
     }
 
-    public void deSpawnMicrobes() {
+    void deSpawnMicrobes() {
         microbes.get(microbes.size - 1).getBody().setUserData("dead");
         microbes.removeIndex(microbes.size - 1);
     }

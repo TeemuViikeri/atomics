@@ -10,11 +10,11 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 class Item extends GameObject {
     private float spawnTimer = 0;
-    private Vector2 spawnPoint;
+    Vector2 spawnPoint;
 
-    private Item(Vector2 spawnPoint) {
+    private Item(Vector2 spawnPoint, int itemInt) {
         this.spawnPoint = spawnPoint;
-        getRandomTexture();
+        getRandomTexture(itemInt);
         width = texture.getWidth() / 1000f;
         height = texture.getHeight() / 1000f;
         targetWidth = width * 10;
@@ -24,7 +24,7 @@ class Item extends GameObject {
     Item() {
     }
 
-    private void createBody() {
+    void createBody() {
         body = PlayScreen.world.createBody(getDefinitionOfBody());
         body.setGravityScale(0);
         body.createFixture(getFixtureDefinition());
@@ -35,7 +35,7 @@ class Item extends GameObject {
         bodyDef = new BodyDef();
 
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(spawnPoint); //
+        bodyDef.position.set(spawnPoint);
 
         return bodyDef;
     }
@@ -57,15 +57,25 @@ class Item extends GameObject {
     }
 
     void spawnItem() {
-        float spawnFrequency = 7 - (7f/12f * (PlayScreen.levelMultiplier - 1));
+        float spawnFrequency = 3 - (7f/12f * (PlayScreen.levelMultiplier - 1));
         spawnTimer += Gdx.graphics.getDeltaTime();
 
         if (spawnTimer >= spawnFrequency) {
             spawnPoint = getItemSpawnPoint();
-            Item item = new Item(spawnPoint);
-            item.createBody();
+
+            int itemInt = MathUtils.random(1, 8);
             int rotation = MathUtils.random(0, 360);
-            item.body.setTransform(spawnPoint, rotation);
+
+            if (itemInt < 7) {
+                Item item = new Item(spawnPoint, itemInt);
+                item.createBody();
+                item.body.setTransform(spawnPoint, rotation);
+            } else {
+                RareItem rareItem = new RareItem(spawnPoint, itemInt);
+                rareItem.createBody();
+                rareItem.body.setTransform(spawnPoint, rotation);
+            }
+
             spawnTimer = 0;
         }
     }
@@ -84,18 +94,17 @@ class Item extends GameObject {
         return new Vector2(x, y);
     }
 
-    private void getRandomTexture() {
-        int kortsu = 1, lasit = 2, lusikka = 3, ruuvi = 4,
-            sormus = 5, sukka = 6, tekarit = 7, tutti = 8;
-        int itemInt = MathUtils.random(1, 8);
+    void getRandomTexture(int itemInt) {
+        int kortsu = 1, lasit = 2, lusikka = 3, ruuvi = 4, sukka = 5, tutti = 6,
+            sormus = 7, tekarit = 8;
 
         if (itemInt == kortsu) this.texture = new Texture("kortsu.png");
         else if (itemInt == lasit) this.texture = new Texture("lasit.png");
         else if (itemInt == lusikka) this.texture = new Texture("lusikka.png");
         else if (itemInt == ruuvi) this.texture = new Texture("ruuvi.png");
-        else if (itemInt == sormus) this.texture = new Texture("sormus.png");
         else if (itemInt == sukka) this.texture = new Texture("sukka.png");
-        else if (itemInt == tekarit) this.texture = new Texture("cropped-tekarit.png");
         else if (itemInt == tutti) this.texture = new Texture("tutti.png");
+        else if (itemInt == sormus) this.texture = new Texture("sormus.png");
+        else if (itemInt == tekarit) this.texture = new Texture("cropped-tekarit.png");
     }
 }

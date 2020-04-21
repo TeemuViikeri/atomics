@@ -48,4 +48,6 @@ public class Score {
     static void collectPhosphorus() {
         score += 5 * getScoreMultiplier();
     }
+
+    static void collectRareItem() { score += 250; }
 }

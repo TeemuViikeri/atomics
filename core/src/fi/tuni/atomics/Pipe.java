@@ -36,6 +36,7 @@ public class Pipe extends GameObject {
     private GameUtil gameUtil = new GameUtil();
     private Array<Pipe> pipes = new Array<>();
     private boolean dead = false; // is the pipe dead.
+    private float timeAlive;
     private float aliveTimer; // how long the pipe has been alive.
     private float fixTimer; // how long the pipe has been in repair.
     public boolean isTouched = false; // is the pipe being touched.
@@ -45,7 +46,7 @@ public class Pipe extends GameObject {
         this.spawnPoint = position;
         width = 0.5f;
         stateTime = 1f;
-        timeAlive = MathUtils.random(60,180) - (5 * (PlayScreen.levelMultiplier - 1));
+        timeAlive = MathUtils.random(60, 180) - (5 * (PlayScreen.levelMultiplier - 1));
         TextureRegion[][] temp = TextureRegion.split(
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
