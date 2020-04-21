@@ -135,6 +135,13 @@ public class Microbe extends GameObject {
 
             if (microbes.get(i).dead) {
                 microbes.removeIndex(i);
+                microbes.add(new Microbe(new Vector2(
+                        MathUtils.random(PlayScreen.THIRD_SCREEN_LEFT_SIDE +
+                                        PlayScreen.TILE_LENGTH_PIXELS * 2 * PlayScreen.scale,
+                                PlayScreen.THIRD_SCREEN_LEFT_SIDE + PlayScreen.ROOM_WIDTH_PIXELS
+                                        * PlayScreen.scale - 0.5f * 2),
+                        MathUtils.random(3.5f, (PlayScreen.ROOM_HEIGHT_PIXELS
+                                - PlayScreen.TILE_LENGTH_PIXELS * 4) * PlayScreen.scale))));
             }
         }
     }

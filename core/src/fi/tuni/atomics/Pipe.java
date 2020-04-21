@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -16,14 +18,17 @@ import static fi.tuni.atomics.PlayScreen.PIPE_HORIZONTAL_PIXELS;
 import static fi.tuni.atomics.PlayScreen.ROOM_WIDTH_PIXELS;
 import static fi.tuni.atomics.PlayScreen.TILE_LENGTH_PIXELS;
 import static fi.tuni.atomics.PlayScreen.scale;
+import static fi.tuni.atomics.PlayScreen.tiledMap;
 
 public class Pipe extends GameObject {
     private final int sheetRows = 2;
     private final int sheetCols = 4;
-    static private Texture animationSheet = new Texture("bubbleSequence.png");
+    private static Texture animationSheet = new Texture("bubbleSequence.png");
+    private static TiledMapTileLayer tiledMapTileLayer =
+            (TiledMapTileLayer) PlayScreen.tiledMap.getLayers().get("airpipes");
+    private static Texture animationSheet2 = new Texture("bubble2.png");
     private Animation<TextureRegion> animation;
     private TextureRegion[] frames;
-    static private Texture animationSheet2 = new Texture("bubble2.png");
     private Animation<TextureRegion> animation2;
     private TextureRegion[] frames2;
     private Vector2 spawnPoint;
@@ -35,7 +40,6 @@ public class Pipe extends GameObject {
     private float fixTimer; // how long the pipe has been in repair.
     public boolean isTouched = false; // is the pipe being touched.
     private Microbe microbe = new Microbe();
-    private float amountOfPipesAlive = 0;
 
     private Pipe(Vector2 position) {
         this.spawnPoint = position;
@@ -75,24 +79,34 @@ public class Pipe extends GameObject {
 
     void createPipes() {
         Microbe.microbes.clear();
-        amountOfPipesAlive = 4;
-        pipes.add(new Pipe(new Vector2((ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2 + TILE_LENGTH_PIXELS * 5) * scale, (TILE_LENGTH_PIXELS * 3) * scale)));
-        pipes.add(new Pipe(new Vector2((ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2 + TILE_LENGTH_PIXELS * 11) * scale, (TILE_LENGTH_PIXELS * 3) * scale)));
-        pipes.add(new Pipe(new Vector2((ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2 + TILE_LENGTH_PIXELS * 18) * scale, (TILE_LENGTH_PIXELS * 3) * scale)));
-        pipes.add(new Pipe(new Vector2((ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2 + TILE_LENGTH_PIXELS * 24) * scale, (TILE_LENGTH_PIXELS * 3) * scale)));
+        pipes.add(new Pipe(new Vector2((ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2 +
+                TILE_LENGTH_PIXELS * 5) * scale, (TILE_LENGTH_PIXELS * 3) * scale)));
+        pipes.add(new Pipe(new Vector2((ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2 +
+                TILE_LENGTH_PIXELS * 11) * scale, (TILE_LENGTH_PIXELS * 3) * scale)));
+        pipes.add(new Pipe(new Vector2((ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2 +
+                TILE_LENGTH_PIXELS * 18) * scale, (TILE_LENGTH_PIXELS * 3) * scale)));
+        pipes.add(new Pipe(new Vector2((ROOM_WIDTH_PIXELS * 2 + PIPE_HORIZONTAL_PIXELS * 2 +
+                TILE_LENGTH_PIXELS * 24) * scale, (TILE_LENGTH_PIXELS * 3) * scale)));
     }
 
     void update() {
         for (Pipe i : pipes) {
             i.aliveTimer += Gdx.graphics.getDeltaTime();
+            float tileXPosition = i.spawnPoint.x / 0.32f;
+            System.out.println(tileXPosition);
 
             if (i.aliveTimer > i.timeAlive && !i.dead) {
+                tiledMapTileLayer.getCell((int) tileXPosition, 0)
+                        .setTile(tiledMap.getTileSets().getTile(24));
+                tiledMapTileLayer.getCell((int) tileXPosition, 1)
+                        .setTile(tiledMap.getTileSets().getTile(24));
+                tiledMapTileLayer.getCell((int) tileXPosition, 2)
+                        .setTile(tiledMap.getTileSets().getTile(16));
                 i.dead = true;
-                amountOfPipesAlive--;
                 microbe.deSpawnMicrobes();
             }
 
-            i.fixPipe();
+            i.fixPipe((int)tileXPosition);
         }
     }
 
@@ -131,13 +145,14 @@ public class Pipe extends GameObject {
 
         shape = new PolygonShape();
 
-        ((PolygonShape) shape).setAsBox(TILE_LENGTH_PIXELS / 2 * scale, (TILE_LENGTH_PIXELS * 1.25f) * scale);
+        ((PolygonShape) shape).setAsBox(TILE_LENGTH_PIXELS / 2 * scale,
+                (TILE_LENGTH_PIXELS * 1.25f) * scale);
         fixtureDef.shape = shape;
 
         return fixtureDef;
     }
 
-    private void fixPipe() {
+    private void fixPipe(int tileXPosition) {
         if (Controls.shootButton.isPressed() && isTouched) {
             fixTimer+=Gdx.graphics.getDeltaTime();
 
@@ -146,8 +161,13 @@ public class Pipe extends GameObject {
                 timeAlive = MathUtils.random(60,180);
                 aliveTimer = 0;
                 dead = false;
-                amountOfPipesAlive++;
                 microbe.spawnMicrobes();
+                tiledMapTileLayer.getCell(tileXPosition, 0)
+                        .setTile(tiledMap.getTileSets().getTile(13));
+                tiledMapTileLayer.getCell(tileXPosition, 1)
+                        .setTile(tiledMap.getTileSets().getTile(13));
+                tiledMapTileLayer.getCell(tileXPosition, 2)
+                        .setTile(tiledMap.getTileSets().getTile(5));
             }
         }
 

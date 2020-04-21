@@ -19,6 +19,7 @@ public class PlayScreen implements Screen {
     private Atomics game;
     private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
+    static TiledMap tiledMap;
     static World world;
     private Box2DDebugRenderer debugRenderer;
     private Player player;
@@ -69,7 +70,7 @@ public class PlayScreen implements Screen {
         HUD_Y = Gdx.graphics.getHeight() - TILE_LENGTH_PIXELS * 4;
 
         // TiledMap
-        TiledMap tiledMap = new TmxMapLoader().load("atomics.tmx");
+        tiledMap = new TmxMapLoader().load("atomics.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
 
         // Box2D
@@ -105,7 +106,6 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         Atomics.batch.setProjectionMatrix(camera.combined);
         gameUtil.clearScreen();
-        Controls.getStage().draw();
         tiledMapRenderer.render();
         tiledMapRenderer.setView(camera);
         world.getBodies(bodies);
@@ -120,6 +120,8 @@ public class PlayScreen implements Screen {
         player.drawHitpoints(Atomics.HUDBatch);
         score.draw(Atomics.HUDBatch);
         Atomics.HUDBatch.end();
+
+        Controls.getStage().draw();
 
         if (!Game_paused) {
             // Render setup
@@ -164,10 +166,10 @@ public class PlayScreen implements Screen {
             collisionHandler.clearBodies(bodiesToBeDestroyed);
 
             // Debuggers
-//            debugRenderer.render(world, camera.combined);
+            debugRenderer.render(world, camera.combined);
         }
 
-        //pause.pauseScreen();
+        pause.pauseScreen();
 
     }
 

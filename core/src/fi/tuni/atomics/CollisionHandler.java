@@ -84,10 +84,10 @@ class CollisionHandler implements ContactListener {
 
             if (bodyA.getUserData() instanceof Microbe) {
                 ((Microbe) bodyA.getUserData()).die();
-                bodyA.setUserData("microbe");
+                bodyA.setUserData("dead");
             } else {
                 ((Microbe) bodyB.getUserData()).die();
-                bodyB.setUserData("microbe");
+                bodyB.setUserData("dead");
             }
 
 
@@ -215,10 +215,6 @@ class CollisionHandler implements ContactListener {
             if (body.getUserData().equals("dead")) {
                 bodiesToBeDestroyed.add(body);
             }
-
-            if (body.getUserData().equals("microbe")) {
-                bodiesToBeDestroyed.add(body);
-            }
         }
     }
 
@@ -231,16 +227,6 @@ class CollisionHandler implements ContactListener {
                 new CollectablePhosphorus(body.getPosition().x, body.getPosition().y);
             } else {
                 Player.playerLostHitPoint = false;
-            }
-
-            if (body.getUserData().equals("microbe")) {
-                Microbe.microbes.add(new Microbe(new Vector2(
-                        MathUtils.random(PlayScreen.THIRD_SCREEN_LEFT_SIDE +
-                                        PlayScreen.TILE_LENGTH_PIXELS * 2 * PlayScreen.scale,
-                                PlayScreen.THIRD_SCREEN_LEFT_SIDE + PlayScreen.ROOM_WIDTH_PIXELS
-                                        * PlayScreen.scale - 0.5f * 2),
-                        MathUtils.random(3.5f, (PlayScreen.ROOM_HEIGHT_PIXELS
-                                - PlayScreen.TILE_LENGTH_PIXELS * 2) * PlayScreen.scale))));
             }
 
             PlayScreen.world.destroyBody(body);
