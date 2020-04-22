@@ -46,7 +46,7 @@ public class Pipe extends GameObject {
         this.spawnPoint = position;
         width = 0.5f;
         stateTime = 1f;
-        timeAlive = MathUtils.random(60, 180) - (5 * (PlayScreen.levelMultiplier - 1));
+        timeAlive = MathUtils.random(20, 60) - (5 * (PlayScreen.levelMultiplier - 1));
         TextureRegion[][] temp = TextureRegion.split(
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
@@ -104,6 +104,7 @@ public class Pipe extends GameObject {
                 tiledMapTileLayer.getCell((int) tileXPosition, 2)
                         .setTile(tiledMap.getTileSets().getTile(16));
                 i.dead = true;
+                GameAudio.playPipeBrokenSound();
                 microbe.deSpawnMicrobes();
             }
 
@@ -162,7 +163,9 @@ public class Pipe extends GameObject {
                 timeAlive = MathUtils.random(60,180);
                 aliveTimer = 0;
                 dead = false;
+                GameAudio.playPipeFixedSound();
                 microbe.spawnMicrobes();
+                GameAudio.playMicrobeSpawnSound();
                 tiledMapTileLayer.getCell(tileXPosition, 0)
                         .setTile(tiledMap.getTileSets().getTile(13));
                 tiledMapTileLayer.getCell(tileXPosition, 1)

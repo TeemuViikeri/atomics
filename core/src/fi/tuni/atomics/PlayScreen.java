@@ -26,6 +26,7 @@ public class PlayScreen implements Screen {
     static Array<Body> bodies;
     private Array<Body> bodiesToBeDestroyed;
     private CollisionHandler collisionHandler;
+    private GameAudio gameAudio;
     private GameUtil gameUtil;
     private Item item;
     private Phosphorus phosphorus;
@@ -78,6 +79,8 @@ public class PlayScreen implements Screen {
         debugRenderer = new Box2DDebugRenderer();
         world.setContactListener(new CollisionHandler());
         collisionHandler = new CollisionHandler();
+        gameAudio = new GameAudio();
+        gameAudio.playBackgroundMusic();
         gameUtil = new GameUtil();
 
         // Game objects
@@ -154,6 +157,8 @@ public class PlayScreen implements Screen {
             if (player.checkIfDead()) {
                 levelMultiplier = 1;
                 breakpoint = 250;
+                gameAudio.backgroundMusic.stop();
+                gameAudio.playGameOverSound();
                 game.setScreen(new EndScreen(game));
             }
 
@@ -197,6 +202,6 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        gameAudio.dispose();
     }
 }

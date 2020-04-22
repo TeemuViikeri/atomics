@@ -162,6 +162,8 @@ class Player extends GameObject {
             bulletBody.getWorldCenter(),
             true
         );
+
+        GameAudio.playShootingSound();
     }
 
     public static void loseHitpoint() {

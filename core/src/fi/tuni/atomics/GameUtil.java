@@ -27,7 +27,7 @@ class GameUtil {
             GameObject temp = (GameObject) body.getUserData();
 
             if (temp instanceof Bullet) {
-                Bullet bulletTemp = (Bullet) temp;
+                    Bullet bulletTemp = (Bullet) temp;
                 batch.draw(
                     bulletTemp.getTexture(),
                     body.getPosition().x - bulletTemp.getWidth() / 2,
@@ -140,7 +140,7 @@ class GameUtil {
         }
     }
 
-    void scaleObjects(GameObject gameObject, float scaleUp) {
+    private void scaleObjects(GameObject gameObject, float scaleUp) {
         if (gameObject.width < gameObject.getTargetWidth()) {
             gameObject.width += scaleUp;
             gameObject.height += scaleUp * (gameObject.height / gameObject.width);
@@ -194,28 +194,28 @@ class GameUtil {
                     PlayScreen.SECOND_SCREEN_LEFT_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
-            );
+           );
            Player.immortal = true;
         } else if (position <= PlayScreen.SECOND_SCREEN_LEFT_SIDE && room == 2) {
            playerBody.setTransform(
                    PlayScreen.FIRST_SCREEN_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
-            );
+           );
            Player.immortal = true;
         } else if (position >= PlayScreen.SECOND_SCREEN_RIGHT_SIDE && room == 2) {
            playerBody.setTransform(
                    PlayScreen.THIRD_SCREEN_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
-            );
+           );
            Player.immortal = true;
         } else if (position <= PlayScreen.THIRD_SCREEN_LEFT_SIDE && room == 3) {
            playerBody.setTransform(
                    PlayScreen.SECOND_SCREEN_RIGHT_SPAWN_POINT,
                    playerBody.getPosition().y,
                     desiredAngle
-            );
+           );
            Player.immortal = true;
         }
     }

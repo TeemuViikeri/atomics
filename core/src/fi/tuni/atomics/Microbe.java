@@ -1,5 +1,6 @@
 package fi.tuni.atomics;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -138,6 +139,7 @@ class Microbe extends GameObject {
                                         * PlayScreen.scale - 0.5f * 2),
                         MathUtils.random(3.5f, (PlayScreen.ROOM_HEIGHT_PIXELS
                                 - PlayScreen.TILE_LENGTH_PIXELS * 4) * PlayScreen.scale))));
+                GameAudio.playMicrobeSpawnSound();
             }
         }
     }

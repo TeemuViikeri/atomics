@@ -43,6 +43,7 @@ class CollisionHandler implements ContactListener {
         }
 
         if (isBulletContactingPhosphorus(bodyA, bodyB)) {
+            GameAudio.playBondingSound();
             bodyA.setUserData("dead");
             bodyB.setUserData("dead");
             }
@@ -97,6 +98,7 @@ class CollisionHandler implements ContactListener {
                 if (wall.thisLayer.getName().equals("cleaner-area")) {
                     if (bodyB.getUserData() instanceof RareItem) {
                         Score.collectRareItem();
+                        GameAudio.playRareItemPickedSound();
                     }
                     bodyB.setUserData("dead");
                 }
@@ -105,6 +107,7 @@ class CollisionHandler implements ContactListener {
                 if (wall.thisLayer.getName().equals("cleaner-area")) {
                     if (bodyA.getUserData() instanceof RareItem) {
                         Score.collectRareItem();
+                        GameAudio.playRareItemPickedSound();
                     }
                     bodyA.setUserData("dead");
                 }
