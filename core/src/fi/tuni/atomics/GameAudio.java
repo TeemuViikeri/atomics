@@ -6,6 +6,13 @@ import com.badlogic.gdx.audio.Sound;
 
 class GameAudio {
     Music backgroundMusic;
+    Sound gameOverSound = Gdx.audio.newSound(Gdx.files.internal("gameover.ogg"));
+    static Sound bondingSound = Gdx.audio.newSound(Gdx.files.internal("phosphorusbonding.ogg"));
+    static Sound shootingSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
+    static Sound microbeSpawnSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
+    static Sound playPipeBrokenSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
+    static Sound playPipeFixedSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
+    static Sound rareItemPicked = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
 
     void playBackgroundMusic() {
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("water_bgmusic.ogg"));
@@ -15,37 +22,30 @@ class GameAudio {
     }
 
     void playGameOverSound() {
-        Sound gameOverSound = Gdx.audio.newSound(Gdx.files.internal("gameover.ogg"));
         gameOverSound.play();
     }
 
     static void playBondingSound() {
-        Sound bondingSound = Gdx.audio.newSound(Gdx.files.internal("phosphorusbonding.ogg"));
         bondingSound.play();
     }
 
     static void playShootingSound() {
-        Sound shootingSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
         shootingSound.play();
     }
 
     static void playMicrobeSpawnSound() {
-        Sound microbeSpawnSound = Gdx.audio.newSound(Gdx.files.internal("microbespawn.ogg"));
         microbeSpawnSound.play();
     }
 
     static void playPipeBrokenSound() {
-        Sound playPipeBrokenSound = Gdx.audio.newSound(Gdx.files.internal("pipebroken.ogg"));
         playPipeBrokenSound.play();
     }
 
     static void playPipeFixedSound() {
-        Sound playPipeFixedSound = Gdx.audio.newSound(Gdx.files.internal("pipefixed.ogg"));
         playPipeFixedSound.play();
     }
 
     static void playRareItemPickedSound() {
-        Sound rareItemPicked = Gdx.audio.newSound(Gdx.files.internal("rareitempicked.ogg"));
         rareItemPicked.play();
     }
 
