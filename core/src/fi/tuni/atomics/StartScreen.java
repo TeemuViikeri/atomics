@@ -24,13 +24,11 @@ public class StartScreen implements Screen {
     private MenuButton settingsButton;
     private MenuButton exitButton;
     private Atomics atomics;
-    private GameAudio gameAudio;
 
     StartScreen(Atomics atomics) {
         this.atomics = atomics;
         batch = Atomics.batch;
         camera = new OrthographicCamera();
-        gameAudio = new GameAudio();
         camera.setToOrtho(false,
                 ROOM_WIDTH_PIXELS * scale,
                 ROOM_HEIGHT_PIXELS * scale);

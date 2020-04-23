@@ -60,7 +60,7 @@ class Controls {
                 .padRight(-Gdx.graphics.getWidth() / 3f)
                 .fill();
 
-        shootButton = new Button(getButtonStyle());
+        shootButton = new Button(getShootButtonStyle());
         shootButtonTable.add(shootButton).width((float) Gdx.graphics.getHeight() / 5.0f)
                 .height((float) Gdx.graphics.getHeight() / 5.0f)
                 .padLeft((float) Gdx.graphics.getWidth() / 3f)
@@ -92,6 +92,23 @@ class Controls {
 
         buttonSkin.add("down", new Texture("down.png"));
         buttonSkin.add("up", new Texture("up.png"));
+
+        Drawable up = buttonSkin.getDrawable("up");
+        Drawable down = buttonSkin.getDrawable("down");
+
+        speedButtonStyle.up = up;
+        speedButtonStyle.down = down;
+
+        return speedButtonStyle;
+    }
+
+    private Button.ButtonStyle getShootButtonStyle() {
+        Skin buttonSkin = new Skin();
+
+        Button.ButtonStyle speedButtonStyle = new Button.ButtonStyle();
+
+        buttonSkin.add("down", new Texture("shootdown.png"));
+        buttonSkin.add("up", new Texture("shootup.png"));
 
         Drawable up = buttonSkin.getDrawable("up");
         Drawable down = buttonSkin.getDrawable("down");
