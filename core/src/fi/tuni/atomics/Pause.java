@@ -58,6 +58,7 @@ public class Pause {
             resume.setVisible(false);
             exit.setVisible(false);
             PlayScreen.Game_paused = false;
+            GameAudio.playBackgroundMusic();
         }
 
         if (exit.isTouched()) {
@@ -76,6 +77,7 @@ public class Pause {
             Gdx.input.setInputProcessor(pauseStage);
             resume.setVisible(true);
             exit.setVisible(true);
+            GameAudio.backgroundMusic.stop();
             Atomics.HUDBatch.draw(pauseBackground,
                     Gdx.graphics.getWidth() / 2f - pauseScreenWidth / 2,
                     Gdx.graphics.getHeight() / 2f - pauseScreenHeight / 2,

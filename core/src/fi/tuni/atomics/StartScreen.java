@@ -24,11 +24,13 @@ public class StartScreen implements Screen {
     private MenuButton settingsButton;
     private MenuButton exitButton;
     private Atomics atomics;
+    private GameAudio gameAudio;
 
     StartScreen(Atomics atomics) {
         this.atomics = atomics;
         batch = Atomics.batch;
         camera = new OrthographicCamera();
+        gameAudio = new GameAudio();
         camera.setToOrtho(false,
                 ROOM_WIDTH_PIXELS * scale,
                 ROOM_HEIGHT_PIXELS * scale);
@@ -53,6 +55,16 @@ public class StartScreen implements Screen {
         stage.addActor(settingsButton);
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
+        System.out.println(Memory.getFirstStartup());
+        if (!Memory.getFirstStartup()) {
+            Memory.setVolume(0.1f);
+            Memory.setLanguage("en");
+            Memory.setFirstStartup();
+        }
+
+        Localization.setLocale(Memory.getLanguage());
+        GameAudio.masterVolume = Memory.getVolume();
+        System.out.println(GameAudio.masterVolume);
     }
 
     @Override

@@ -94,7 +94,6 @@ public class Pipe extends GameObject {
         for (Pipe i : pipes) {
             i.aliveTimer += Gdx.graphics.getDeltaTime();
             float tileXPosition = i.spawnPoint.x / 0.32f;
-            System.out.println(tileXPosition);
 
             if (i.aliveTimer > i.timeAlive && !i.dead) {
                 tiledMapTileLayer.getCell((int) tileXPosition, 0)

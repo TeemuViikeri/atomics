@@ -66,13 +66,23 @@ public class SettingsScreen implements Screen {
         stage.act();
         stage.draw();
         if (soundsButton.isTouched()) {
+
+            if (Memory.getVolume() == 0) {
+                Memory.setVolume(0.1f);
+            } else {
+                Memory.setVolume(0);
+            }
+
+            soundsButton.setTouched(false);
         }
         if (languageButton.isTouched()) {
 
             if (Localization.getBundle().getLocale().toString().equals("fi")) {
+                Memory.setLanguage("en");
                 Localization.setLocale("en");
                 System.out.println(Localization.getBundle().getLocale());
             } else {
+                Memory.setLanguage("fi");
                 Localization.setLocale("fi");
                 System.out.println(Localization.getBundle().getLocale());
             }

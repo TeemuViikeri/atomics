@@ -49,5 +49,5 @@ public class Score {
         score += 5 * getScoreMultiplier();
     }
 
-    static void collectRareItem() { score += 250; }
+    static void collectRareItem() { score += 20; }
 }

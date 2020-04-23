@@ -5,8 +5,9 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
 class GameAudio {
-    Music backgroundMusic;
+    static Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("water_bgmusic.ogg"));
     Sound gameOverSound = Gdx.audio.newSound(Gdx.files.internal("gameover.ogg"));
+    static float masterVolume = 0.1f;
     static Sound bondingSound = Gdx.audio.newSound(Gdx.files.internal("phosphorusbonding.ogg"));
     static Sound shootingSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
     static Sound microbeSpawnSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
@@ -14,39 +15,42 @@ class GameAudio {
     static Sound playPipeFixedSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
     static Sound rareItemPicked = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
 
-    void playBackgroundMusic() {
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("water_bgmusic.ogg"));
-        backgroundMusic.setVolume(0.1f);
+    GameAudio() {
+
+    }
+
+    static void playBackgroundMusic() {
+        backgroundMusic.setVolume(masterVolume);
         backgroundMusic.setLooping(true);
         backgroundMusic.play();
     }
 
     void playGameOverSound() {
-        gameOverSound.play();
+        gameOverSound.play(masterVolume);
     }
 
     static void playBondingSound() {
-        bondingSound.play();
+        bondingSound.play(masterVolume);
     }
 
     static void playShootingSound() {
-        shootingSound.play();
+        shootingSound.play(masterVolume);
     }
 
     static void playMicrobeSpawnSound() {
-        microbeSpawnSound.play();
+        microbeSpawnSound.play(masterVolume);
     }
 
     static void playPipeBrokenSound() {
-        playPipeBrokenSound.play();
+        playPipeBrokenSound.play(masterVolume);
     }
 
     static void playPipeFixedSound() {
-        playPipeFixedSound.play();
+        playPipeFixedSound.play(masterVolume);
     }
 
     static void playRareItemPickedSound() {
-        rareItemPicked.play();
+        rareItemPicked.play(masterVolume);
     }
 
     void dispose() {

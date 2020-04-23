@@ -51,6 +51,7 @@ public class EndScreen implements Screen {
         stage.addActor(languageButton);
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
+        GameAudio.backgroundMusic.stop();
     }
 
     @Override

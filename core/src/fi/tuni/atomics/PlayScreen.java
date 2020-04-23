@@ -171,7 +171,7 @@ public class PlayScreen implements Screen {
             collisionHandler.clearBodies(bodiesToBeDestroyed);
 
             // Debuggers
-            debugRenderer.render(world, camera.combined);
+            //debugRenderer.render(world, camera.combined);
         }
 
         pause.pauseScreen();
