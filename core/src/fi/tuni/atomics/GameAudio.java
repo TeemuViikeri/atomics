@@ -10,14 +10,14 @@ class GameAudio {
     static float masterVolume = 0.1f;
     static Sound bondingSound = Gdx.audio.newSound(Gdx.files.internal("phosphorusbonding.ogg"));
     static Sound shootingSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
-    static Sound microbeSpawnSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
-    static Sound playPipeBrokenSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
-    static Sound playPipeFixedSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
-    static Sound rareItemPicked = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
+    static Sound microbeSpawnSound = Gdx.audio.newSound(Gdx.files.internal("microbedespawn.ogg"));
+    static Sound playPipeBrokenSound = Gdx.audio.newSound(Gdx.files.internal("pipebroken.ogg"));
+    static Sound playPipeFixedSound = Gdx.audio.newSound(Gdx.files.internal("pipefixed.ogg"));
+    static Sound rareItemPicked = Gdx.audio.newSound(Gdx.files.internal("rareitempicked.ogg"));
 
     static void playBackgroundMusic() {
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("water_bgmusic.ogg"));
-        backgroundMusic.setVolume(0.1f);
+        backgroundMusic.setVolume(masterVolume);
         backgroundMusic.setLooping(true);
         backgroundMusic.play();
     }
