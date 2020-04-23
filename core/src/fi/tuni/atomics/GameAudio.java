@@ -15,12 +15,9 @@ class GameAudio {
     static Sound playPipeFixedSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
     static Sound rareItemPicked = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
 
-    GameAudio() {
-
-    }
-
     static void playBackgroundMusic() {
-        backgroundMusic.setVolume(masterVolume);
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("water_bgmusic.ogg"));
+        backgroundMusic.setVolume(0.1f);
         backgroundMusic.setLooping(true);
         backgroundMusic.play();
     }

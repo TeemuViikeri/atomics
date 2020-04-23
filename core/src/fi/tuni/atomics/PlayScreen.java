@@ -154,10 +154,10 @@ public class PlayScreen implements Screen {
                 breakpoint += 250;
             }
 
-            if (player.checkIfDead()) {
+            if (player.checkIfDead() || gameUtil.getItemCount() >= 30) {
                 levelMultiplier = 1;
                 breakpoint = 250;
-                gameAudio.backgroundMusic.stop();
+                GameAudio.backgroundMusic.stop();
                 gameAudio.playGameOverSound();
                 game.setScreen(new EndScreen(game));
             }

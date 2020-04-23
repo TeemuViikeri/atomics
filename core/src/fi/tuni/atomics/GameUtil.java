@@ -151,6 +151,16 @@ class GameUtil {
         }
     }
 
+    int getItemCount() {
+        int count = 0;
+
+        for (Body body: PlayScreen.bodies) {
+            if (body.getUserData() instanceof Item) count++;
+        }
+
+        return count;
+    }
+
     private void clearCollectables(GameObject collectable, float timer) {
         if (collectable.timeAlive >= timer) {
             collectable.body.setUserData("dead");
@@ -257,7 +267,7 @@ class GameUtil {
     }
 
     void clearScreen() {
-        Gdx.gl.glClearColor((float) 0.38039216, (float) 0.5254902, (float) 0.41568628, 0);
+        Gdx.gl.glClearColor((float) 0.38039216, (float) 0.5254902, (float) 0.41568628, 0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
