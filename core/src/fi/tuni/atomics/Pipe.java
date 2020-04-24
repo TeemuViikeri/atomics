@@ -178,6 +178,10 @@ public class Pipe extends GameObject {
             fixTimer = 0;
         }
     }
+
+    public boolean isDead() {
+        return dead;
+    }
 }
 
 

@@ -63,7 +63,7 @@ class Item extends GameObject {
         if (spawnTimer >= spawnFrequency) {
             spawnPoint = getItemSpawnPoint();
 
-            int itemInt = MathUtils.random(1, 8);
+            int itemInt = MathUtils.random(1, 10);
             int rotation = MathUtils.random(0, 360);
 
             if (itemInt < 7) {
@@ -84,8 +84,8 @@ class Item extends GameObject {
         float x, y;
 
         x = MathUtils.random(
-            PlayScreen.ROOM_WIDTH_PIXELS * 1/10 * PlayScreen.scale,
-            PlayScreen.ROOM_WIDTH_PIXELS * 5/6 * PlayScreen.scale);
+            PlayScreen.ROOM_WIDTH_PIXELS * 2/10 * PlayScreen.scale,
+            PlayScreen.ROOM_WIDTH_PIXELS * 9/10 * PlayScreen.scale);
 
         y = MathUtils.random(
                 PlayScreen.WORLD_HEIGHT_PIXELS * 1/6 * PlayScreen.scale,
@@ -96,7 +96,7 @@ class Item extends GameObject {
 
     void getRandomTexture(int itemInt) {
         int kortsu = 1, lasit = 2, lusikka = 3, ruuvi = 4, sukka = 5, tutti = 6,
-            sormus = 7, tekarit = 8;
+            kello = 7, puhelin = 8, sormus = 9, tekarit = 10;
 
         if (itemInt == kortsu) this.texture = new Texture("kortsu.png");
         else if (itemInt == lasit) this.texture = new Texture("lasit.png");
@@ -104,6 +104,8 @@ class Item extends GameObject {
         else if (itemInt == ruuvi) this.texture = new Texture("ruuvi.png");
         else if (itemInt == sukka) this.texture = new Texture("sukka.png");
         else if (itemInt == tutti) this.texture = new Texture("tutti.png");
+        else if (itemInt == kello) this.texture = new Texture("kello.png");
+        else if (itemInt == puhelin) this.texture = new Texture("puhelin.png");
         else if (itemInt == sormus) this.texture = new Texture("sormus.png");
         else if (itemInt == tekarit) this.texture = new Texture("cropped-tekarit.png");
     }

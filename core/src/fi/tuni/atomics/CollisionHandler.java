@@ -27,8 +27,16 @@ class CollisionHandler implements ContactListener {
 
         if (isNitrogenContactingWall(bodyA, bodyB)) {
                 if (bodyA.getUserData() instanceof Nitrogen) {
+                    if (GameUtil.room == 3) {
+                        GameAudio.playVacuumSound(0.2f);
+                    }
+
                     bodyA.setUserData("dead");
                 } else if (bodyB.getUserData() instanceof Nitrogen) {
+                    if (GameUtil.room == 3) {
+                        GameAudio.playVacuumSound(0.2f);
+                    }
+
                     bodyB.setUserData("dead");
                 }
 
@@ -59,6 +67,7 @@ class CollisionHandler implements ContactListener {
         if (isPlayerContactingPhosphorus(bodyA, bodyB)) {
             if (!Player.immortal) {
                 Player.loseHitpoint();
+                GameAudio.playLoseLifeSound();
             }
 
             if (bodyA.getUserData() instanceof Phosphorus) {
@@ -71,9 +80,11 @@ class CollisionHandler implements ContactListener {
         if (isPlayerContactingCollectablePhosphorus(bodyA, bodyB)) {
             if (bodyA.getUserData() instanceof CollectablePhosphorus) {
                 Score.collectPhosphorus();
+                GameAudio.playCollectablePhosphorusPickedSound();
                 bodyA.setUserData("dead");
             } else {
                 Score.collectPhosphorus();
+                GameAudio.playCollectablePhosphorusPickedSound();
                 bodyB.setUserData("dead");
             }
         }
@@ -81,6 +92,7 @@ class CollisionHandler implements ContactListener {
         if (isPlayerContactingMicrobe(bodyA, bodyB)) {
             if (!Player.immortal) {
                 Player.loseHitpoint();
+                GameAudio.playLoseLifeSound();
             }
 
             if (bodyA.getUserData() instanceof Microbe) {
@@ -96,22 +108,36 @@ class CollisionHandler implements ContactListener {
             if (bodyA.getUserData() instanceof Wall) {
                 Wall wall = (Wall) bodyA.getUserData();
                 if (wall.thisLayer.getName().equals("cleaner-area")) {
+                    if (GameUtil.room == 1) {
+                        GameAudio.playVacuumSound(0.5f);
+                    }
+
                     if (bodyB.getUserData() instanceof RareItem) {
                         Score.collectRareItem();
                         GameAudio.playRareItemPickedSound();
                     }
+
                     bodyB.setUserData("dead");
                 }
             } else if (bodyB.getUserData() instanceof Wall) {
                 Wall wall = (Wall) bodyB.getUserData();
                 if (wall.thisLayer.getName().equals("cleaner-area")) {
+                    if (GameUtil.room == 1) {
+                        GameAudio.playVacuumSound(0.5f);
+                    }
+
                     if (bodyA.getUserData() instanceof RareItem) {
                         Score.collectRareItem();
                         GameAudio.playRareItemPickedSound();
                     }
+
                     bodyA.setUserData("dead");
                 }
             }
+        }
+
+        if (isPlayerContactingItem(bodyA, bodyB)) {
+            GameAudio.playHitItemSound();
         }
     }
 
@@ -205,6 +231,18 @@ class CollisionHandler implements ContactListener {
         } else {
             return  a.getUserData() instanceof Wall &&
                     b.getUserData() instanceof Item;
+        }
+    }
+
+    private boolean isPlayerContactingItem(Body a, Body b) {
+        if (
+            a.getUserData() instanceof Player &&
+            b.getUserData() instanceof Item
+            ) {
+            return true;
+        } else {
+            return  a.getUserData() instanceof Item &&
+                    b.getUserData() instanceof Player;
         }
     }
 

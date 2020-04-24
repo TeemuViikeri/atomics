@@ -1,5 +1,6 @@
 package fi.tuni.atomics;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,7 +15,7 @@ import com.badlogic.gdx.utils.Array;
 
 class GameUtil {
     private double accumulator = 0;
-    private static int room = 2;
+    static int room = 2;
     private final int TOP = 1, TOPLEFT = 2, TOPRIGHT = 3, BOTTOM = 4, BOTTOMLEFT = 5,
             BOTTOMRIGHT = 6;
 
@@ -169,6 +170,33 @@ class GameUtil {
         }
     }
 
+    void destroyBullets() {
+        for (Body body: PlayScreen.bodies) {
+            if (body.getUserData() instanceof Bullet) {
+                if (body.getPosition().x < PlayScreen.SECOND_SCREEN_LEFT_SIDE ||
+                    body.getPosition().x > PlayScreen.SECOND_SCREEN_RIGHT_SIDE) {
+                    body.setUserData("dead");
+                }
+            }
+        }
+    }
+
+    int getAmountOfDeadPipes() {
+        int amountOfDeadPipes = 0;
+
+        for (Body body: PlayScreen.bodies) {
+            if (body.getUserData() instanceof Pipe) {
+                Pipe pipe = (Pipe) body.getUserData();
+
+                if (pipe.isDead()) {
+                    amountOfDeadPipes++;
+                }
+            }
+        }
+
+        return amountOfDeadPipes;
+    }
+
     void doPhysicsStep(float deltaTime) {
         float frameTime = deltaTime;
 
@@ -313,5 +341,19 @@ class GameUtil {
         } else {
             throw new RuntimeException("Couldn't get a real phosphorus spawnpoint");
         }
+    }
+
+    void endGame(Atomics game) {
+        if (PlayScreen.clockPlaying) {
+            PlayScreen.clockPlaying = false;
+            PlayScreen.gameOverTimer = 0;
+            GameAudio.clock.stop();
+        }
+
+        PlayScreen.levelMultiplier = 1;
+        PlayScreen.breakpoint = 250;
+        GameAudio.backgroundMusic.stop();
+        GameAudio.playGameOverSound();
+        game.setScreen(new EndScreen(game));
     }
 }

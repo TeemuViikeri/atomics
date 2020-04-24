@@ -3,6 +3,9 @@ package fi.tuni.atomics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -34,10 +37,13 @@ public class PlayScreen implements Screen {
     private Pipe pipes;
     static float HUD_Y;
     private Pause pause;
+    private AssetManager assetManager;
+    static float gameOverTimer;
+    static boolean clockPlaying;
 
     static float scale = 1/100f;
     static int levelMultiplier = 1;
-    private static int breakpoint = 250;
+    static int breakpoint = 250;
     static float TILE_LENGTH_PIXELS = 32;
     static float TILES_AMOUNT_WIDTH = 106;
     static float TILES_AMOUNT_HEIGHT = 20;
@@ -69,18 +75,20 @@ public class PlayScreen implements Screen {
                 ROOM_WIDTH_PIXELS * scale ,
                 ROOM_HEIGHT_PIXELS * scale);
         HUD_Y = Gdx.graphics.getHeight() - TILE_LENGTH_PIXELS * 4;
+        assetManager = new AssetManager();
+        assetManager.load("pipefixed.ogg", Sound.class);
 
         // TiledMap
+        gameAudio = new GameAudio();
+        gameAudio.playBackgroundMusic();
         tiledMap = new TmxMapLoader().load("atomics.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
 
         // Box2D
         world = new World(new Vector2(0, -0.5f), true);
         debugRenderer = new Box2DDebugRenderer();
-        world.setContactListener(new CollisionHandler());
         collisionHandler = new CollisionHandler();
-        gameAudio = new GameAudio();
-        gameAudio.playBackgroundMusic();
+        world.setContactListener(collisionHandler);
         gameUtil = new GameUtil();
 
         // Game objects
@@ -98,6 +106,7 @@ public class PlayScreen implements Screen {
         pipes = new Pipe();
         pipes.createPipes();
         pause = new Pause(game);
+        clockPlaying = false;
     }
 
     @Override
@@ -137,6 +146,7 @@ public class PlayScreen implements Screen {
             );
 
             // Check destroyable bodies
+            gameUtil.destroyBullets();
             collisionHandler.sendBodiesToBeDestroyed(bodies, bodiesToBeDestroyed);
 
             // Player input
@@ -154,12 +164,23 @@ public class PlayScreen implements Screen {
                 breakpoint += 250;
             }
 
-            if (player.checkIfDead() || gameUtil.getItemCount() >= 30) {
-                levelMultiplier = 1;
-                breakpoint = 250;
-                GameAudio.backgroundMusic.stop();
-                gameAudio.playGameOverSound();
-                game.setScreen(new EndScreen(game));
+            if (player.checkIfDead()) {
+                gameUtil.endGame(game);
+            }
+
+            if (gameUtil.getItemCount() >= 40 || gameUtil.getAmountOfDeadPipes() == 4) {
+                System.out.println("here");
+
+                if (!clockPlaying) {
+                    GameAudio.playClock();
+                    clockPlaying = true;
+                } else {
+                    gameOverTimer += Gdx.graphics.getDeltaTime();
+                }
+
+                if (gameOverTimer >= 10f) {
+                    gameUtil.endGame(game);
+                }
             }
 
             // Spawns

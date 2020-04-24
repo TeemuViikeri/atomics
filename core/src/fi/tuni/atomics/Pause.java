@@ -20,6 +20,7 @@ public class Pause {
     private Atomics atomics;
     float pauseScreenWidth = 500f * Gdx.graphics.getWidth() / 960f;
     float pauseScreenHeight = 500f * Gdx.graphics.getHeight() / 640f;
+    private boolean pauseSoundPlayed;
 
     Pause(Atomics atomics) {
         this.atomics = atomics;
@@ -49,6 +50,7 @@ public class Pause {
         exit.setVisible(false);
         pauseStage.addActor(resume);
         pauseStage.addActor(exit);
+        pauseSoundPlayed = false;
     }
 
     void pauseScreen() {
@@ -57,6 +59,7 @@ public class Pause {
             resume.setTouched(false);
             resume.setVisible(false);
             exit.setVisible(false);
+            pauseSoundPlayed = false;
             PlayScreen.Game_paused = false;
             GameAudio.playBackgroundMusic();
         }
@@ -68,12 +71,19 @@ public class Pause {
             resume.setTouched(false);
             resume.setVisible(false);
             exit.setVisible(false);
+            System.out.println("here");
+            pauseSoundPlayed = false;
             PlayScreen.Game_paused = false;
         }
 
         pauseStage.act();
         Atomics.HUDBatch.begin();
         if (pauseButton.isTouched()) {
+            if (!pauseSoundPlayed) {
+                pauseSoundPlayed = true;
+                GameAudio.playPauseSound();
+            }
+
             Gdx.input.setInputProcessor(pauseStage);
             resume.setVisible(true);
             exit.setVisible(true);
