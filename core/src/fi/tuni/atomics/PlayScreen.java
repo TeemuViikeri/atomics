@@ -169,11 +169,9 @@ public class PlayScreen implements Screen {
             }
 
             if (gameUtil.getItemCount() >= 40 || gameUtil.getAmountOfDeadPipes() == 4) {
-                System.out.println("here");
-
                 if (!clockPlaying) {
-                    GameAudio.playClock();
                     clockPlaying = true;
+                    GameAudio.playClock();
                 } else {
                     gameOverTimer += Gdx.graphics.getDeltaTime();
                 }
@@ -181,6 +179,11 @@ public class PlayScreen implements Screen {
                 if (gameOverTimer >= 10f) {
                     gameUtil.endGame(game);
                 }
+            }
+
+            if (gameUtil.getAmountOfDeadPipes() < 40 && gameUtil.getAmountOfDeadPipes() < 4) {
+                clockPlaying = false;
+                GameAudio.clock.stop();
             }
 
             // Spawns
