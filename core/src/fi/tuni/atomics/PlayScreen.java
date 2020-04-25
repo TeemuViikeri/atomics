@@ -3,7 +3,6 @@ package fi.tuni.atomics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -37,7 +36,6 @@ public class PlayScreen implements Screen {
     private Pipe pipes;
     static float HUD_Y;
     private Pause pause;
-    private AssetManager assetManager;
     static float gameOverTimer;
     static boolean clockPlaying;
 
@@ -75,12 +73,10 @@ public class PlayScreen implements Screen {
                 ROOM_WIDTH_PIXELS * scale ,
                 ROOM_HEIGHT_PIXELS * scale);
         HUD_Y = Gdx.graphics.getHeight() - TILE_LENGTH_PIXELS * 4;
-        assetManager = new AssetManager();
-        assetManager.load("pipefixed.ogg", Sound.class);
 
         // TiledMap
         gameAudio = new GameAudio();
-        gameAudio.playBackgroundMusic();
+        GameAudio.playBackgroundMusic();
         tiledMap = new TmxMapLoader().load("atomics.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
 
@@ -165,6 +161,7 @@ public class PlayScreen implements Screen {
             }
 
             if (player.checkIfDead()) {
+                GameAudio.clock.stop();
                 gameUtil.endGame(game);
             }
 
@@ -177,6 +174,7 @@ public class PlayScreen implements Screen {
                 }
 
                 if (gameOverTimer >= 10f) {
+                    GameAudio.clock.stop();
                     gameUtil.endGame(game);
                 }
             }

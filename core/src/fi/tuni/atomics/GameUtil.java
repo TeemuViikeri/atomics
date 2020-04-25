@@ -345,9 +345,9 @@ class GameUtil {
 
     void endGame(Atomics game) {
         if (PlayScreen.clockPlaying) {
+            GameAudio.clock.stop();
             PlayScreen.clockPlaying = false;
             PlayScreen.gameOverTimer = 0;
-            GameAudio.clock.stop();
         }
 
         PlayScreen.levelMultiplier = 1;

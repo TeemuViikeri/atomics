@@ -28,13 +28,13 @@ class CollisionHandler implements ContactListener {
         if (isNitrogenContactingWall(bodyA, bodyB)) {
                 if (bodyA.getUserData() instanceof Nitrogen) {
                     if (GameUtil.room == 3) {
-                        GameAudio.playVacuumSound(0.2f);
+                        GameAudio.playVacuumSound(0.08f);
                     }
 
                     bodyA.setUserData("dead");
                 } else if (bodyB.getUserData() instanceof Nitrogen) {
                     if (GameUtil.room == 3) {
-                        GameAudio.playVacuumSound(0.2f);
+                        GameAudio.playVacuumSound(0.08f);
                     }
 
                     bodyB.setUserData("dead");

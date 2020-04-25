@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 class Bullet extends GameObject {
     Bullet(Body playerBody) {
-        speed = 3f;
+        speed = 0.05f;
         texture = new Texture("bullet.png");
         createBulletBody(playerBody);
         width = fixtureDef.shape.getRadius() * 2;

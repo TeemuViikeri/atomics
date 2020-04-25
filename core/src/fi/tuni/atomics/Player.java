@@ -152,9 +152,9 @@ class Player extends GameObject {
 
         Vector2 force = new Vector2(
             (float) Math.cos(bulletObj.getBody().getAngle())
-            * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime(),
+            * bulletObj.getSpeed(),
             (float) Math.sin(bulletObj.getBody().getAngle())
-                    * bulletObj.getSpeed() * Gdx.graphics.getDeltaTime());
+                    * bulletObj.getSpeed());
 
         Body bulletBody = bulletObj.getBody();
 

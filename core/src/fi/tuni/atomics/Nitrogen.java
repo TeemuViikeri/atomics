@@ -22,7 +22,7 @@ class Nitrogen extends GameObject {
         spawnPoint = pos;
         width = 0.25f;
         height = 0.25f;
-        speed = 100;
+        speed = 1.6f;
         createBody();
         applyForce();
     }
@@ -70,10 +70,9 @@ class Nitrogen extends GameObject {
     private void applyForce() {
         float angle = (float) Math.atan2(targetY - spawnPoint.y, targetX - spawnPoint.x);
         body.setTransform(spawnPoint, angle);
-        Vector2 force = new Vector2((float) Math.cos(body.getAngle())
-                * speed * Gdx.graphics.getDeltaTime(),
-                (float) Math.sin(body.getAngle())
-                        * speed * Gdx.graphics.getDeltaTime());
+        Vector2 force = new Vector2(
+                (float) Math.cos(body.getAngle()) * speed,
+                (float) Math.sin(body.getAngle()) * speed);
 
         body.setLinearVelocity(force);
     }

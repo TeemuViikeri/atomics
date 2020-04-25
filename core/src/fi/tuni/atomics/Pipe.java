@@ -20,11 +20,11 @@ import static fi.tuni.atomics.PlayScreen.TILE_LENGTH_PIXELS;
 import static fi.tuni.atomics.PlayScreen.scale;
 import static fi.tuni.atomics.PlayScreen.tiledMap;
 
-public class Pipe extends GameObject {
+class Pipe extends GameObject {
     private final int sheetRows = 2;
     private final int sheetCols = 4;
     private static Texture animationSheet = new Texture("bubbleSequence.png");
-    private static TiledMapTileLayer tiledMapTileLayer =
+    private TiledMapTileLayer tiledMapTileLayer =
             (TiledMapTileLayer) PlayScreen.tiledMap.getLayers().get("airpipes");
     private static Texture animationSheet2 = new Texture("bubble2.png");
     private Animation<TextureRegion> animation;
@@ -39,10 +39,10 @@ public class Pipe extends GameObject {
     private float timeAlive;
     private float aliveTimer; // how long the pipe has been alive.
     private float fixTimer; // how long the pipe has been in repair.
-    public boolean isTouched = false; // is the pipe being touched.
+    boolean isTouched = false; // is the pipe being touched.
     private Microbe microbe = new Microbe();
 
-    private Pipe(Vector2 position) {
+        private Pipe(Vector2 position) {
         this.spawnPoint = position;
         width = 0.5f;
         stateTime = 1f;
@@ -64,18 +64,6 @@ public class Pipe extends GameObject {
     }
 
     Pipe() {
-    }
-
-    private float setStateTime() {
-        return stateTime += Gdx.graphics.getDeltaTime();
-    }
-
-    private Animation<TextureRegion> getAnimation() {
-        return animation;
-    }
-
-    private Animation<TextureRegion> getAnimation2() {
-        return animation2;
     }
 
     void createPipes() {
@@ -111,6 +99,32 @@ public class Pipe extends GameObject {
         }
     }
 
+    private void fixPipe(int tileXPosition) {
+        if (Controls.shootButton.isPressed() && isTouched) {
+            fixTimer+=Gdx.graphics.getDeltaTime();
+
+            // Player has been fixing the pipe for over 1s.
+            if (fixTimer >= 1 && dead) {
+                timeAlive = MathUtils.random(60,180);
+                aliveTimer = 0;
+                dead = false;
+                GameAudio.playPipeFixedSound();
+                microbe.spawnMicrobes();
+                GameAudio.playMicrobeSpawnSound();
+                tiledMapTileLayer.getCell(tileXPosition, 0)
+                        .setTile(tiledMap.getTileSets().getTile(13));
+                tiledMapTileLayer.getCell(tileXPosition, 1)
+                        .setTile(tiledMap.getTileSets().getTile(13));
+                tiledMapTileLayer.getCell(tileXPosition, 2)
+                        .setTile(tiledMap.getTileSets().getTile(5));
+            }
+        }
+
+        if (!Controls.shootButton.isPressed()) {
+            fixTimer = 0;
+        }
+    }
+
     void draw(SpriteBatch batch) {
         for (Pipe i : pipes) {
             if (!i.dead) {
@@ -130,6 +144,7 @@ public class Pipe extends GameObject {
 
     private BodyDef getDefinitionOfBody() {
         bodyDef = new BodyDef();
+
 
         bodyDef.type = BodyDef.BodyType.KinematicBody;
         float posX = spawnPoint.x + (TILE_LENGTH_PIXELS / 2) * scale;
@@ -153,33 +168,19 @@ public class Pipe extends GameObject {
         return fixtureDef;
     }
 
-    private void fixPipe(int tileXPosition) {
-        if (Controls.shootButton.isPressed() && isTouched) {
-            fixTimer+=Gdx.graphics.getDeltaTime();
-
-            // Player has been fixing the pipe for over 1s.
-            if (fixTimer > 1 && dead) {
-                timeAlive = MathUtils.random(60,180);
-                aliveTimer = 0;
-                dead = false;
-                GameAudio.playPipeFixedSound();
-                microbe.spawnMicrobes();
-                GameAudio.playMicrobeSpawnSound();
-                tiledMapTileLayer.getCell(tileXPosition, 0)
-                        .setTile(tiledMap.getTileSets().getTile(13));
-                tiledMapTileLayer.getCell(tileXPosition, 1)
-                        .setTile(tiledMap.getTileSets().getTile(13));
-                tiledMapTileLayer.getCell(tileXPosition, 2)
-                        .setTile(tiledMap.getTileSets().getTile(5));
-            }
-        }
-
-        if (!Controls.shootButton.isPressed()) {
-            fixTimer = 0;
-        }
+    private float setStateTime() {
+        return stateTime += Gdx.graphics.getDeltaTime();
     }
 
-    public boolean isDead() {
+    private Animation<TextureRegion> getAnimation() {
+        return animation;
+    }
+
+    private Animation<TextureRegion> getAnimation2() {
+        return animation2;
+    }
+
+    boolean isDead() {
         return dead;
     }
 }

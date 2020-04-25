@@ -18,7 +18,7 @@ class Phosphorus extends GameObject{
     static final float width = 0.5f;
     static private Texture animationSheet = new Texture("phosphorus2.png");
     private float spawnTimer = 0;
-    private float spawnFrequency = 120;
+    private float spawnFrequency = 2;
     private Animation<TextureRegion> animation;
     private Vector2 spawnPoint;
     private int spawnside;
@@ -75,10 +75,10 @@ class Phosphorus extends GameObject{
     }
 
     void spawnPhosphorus() {
-        spawnFrequency = 120 - (10 * (PlayScreen.levelMultiplier - 1));
+        spawnFrequency = 2 - (0.2f * (PlayScreen.levelMultiplier - 1));
         speed = 2 + (0.2f * (PlayScreen.levelMultiplier - 1));
 
-        spawnTimer++;
+        spawnTimer += Gdx.graphics.getDeltaTime();
         spawnside =  MathUtils.random(1,6);
 
         if (spawnTimer >= spawnFrequency) {
