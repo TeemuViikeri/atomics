@@ -63,10 +63,10 @@ class Item extends GameObject {
         if (spawnTimer >= spawnFrequency) {
             spawnPoint = getItemSpawnPoint();
 
-            int itemInt = MathUtils.random(1, 12);
+            int itemInt = MathUtils.random(1, 13);
             int rotation = MathUtils.random(0, 360);
 
-            if (itemInt < 7) {
+            if (itemInt < 10) {
                 Item item = new Item(spawnPoint, itemInt);
                 item.createBody();
                 item.body.setTransform(spawnPoint, rotation);
@@ -95,12 +95,14 @@ class Item extends GameObject {
     }
 
     void getRandomTexture(int itemInt) {
-        int kala = 1, kortsu = 2, lasit = 3, lusikka = 4, omena = 5, ruuvi = 6, sukka = 7, tutti = 8,
-            kello = 9, puhelin = 10, sormus = 11, tekarit = 12;
+        int kala = 1, kortsu = 2, lasit = 3, lima = 4, lusikka = 5,
+            omena = 6, ruuvi = 7, sukka = 8, tutti = 9,
+            kello = 10, puhelin = 11, sormus = 12, tekarit = 13;
 
         if (itemInt == kala) this.texture = new Texture("kala.png");
         if (itemInt == kortsu) this.texture = new Texture("kortsu.png");
         else if (itemInt == lasit) this.texture = new Texture("lasit.png");
+        else if (itemInt == lima) this.texture = new Texture("slime.png");
         else if (itemInt == lusikka) this.texture = new Texture("lusikka.png");
         else if (itemInt == omena) this.texture = new Texture("omena.png");
         else if (itemInt == ruuvi) this.texture = new Texture("ruuvi.png");

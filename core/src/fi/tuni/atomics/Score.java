@@ -50,4 +50,8 @@ public class Score {
     }
 
     static void collectRareItem() { score += 20; }
+
+    static void collectItem() {
+        score++;
+    }
 }
