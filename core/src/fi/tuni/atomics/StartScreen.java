@@ -86,7 +86,7 @@ public class StartScreen implements Screen {
             startButton.setTouched(false);
         }
         if (exitButton.isTouched()) {
-            java.lang.System.exit(0);
+            atomics.setScreen(new HighScoreScreen(atomics));
             startButton.setTouched(false);
         }
         batch.begin();
