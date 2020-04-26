@@ -24,8 +24,8 @@ class Pipe extends GameObject {
     private final int sheetCols = 4;
     private TiledMapTileLayer tiledMapTileLayer =
             (TiledMapTileLayer) PlayScreen.tiledMap.getLayers().get("airpipes");
-    private static Texture animationSheet = new Texture("bubbleSequence.png");
-    private static Texture animationSheet2 = new Texture("bubble2.png");
+    private Texture animationSheet = new Texture("bubbleSequence.png");
+    private Texture animationSheet2 = new Texture("bubble2.png");
     private Animation<TextureRegion> animation;
     private TextureRegion[] frames;
     private Animation<TextureRegion> animation2;

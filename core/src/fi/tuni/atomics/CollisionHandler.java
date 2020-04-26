@@ -114,7 +114,10 @@ class CollisionHandler implements ContactListener {
 
                     if (bodyB.getUserData() instanceof RareItem) {
                         Score.collectRareItem();
-                        GameAudio.playRareItemPickedSound();
+
+                        if (GameUtil.room == 1) {
+                            GameAudio.playRareItemPickedSound();
+                        }
                     } else if (!(bodyB.getUserData() instanceof RareItem)){
                         Score.collectItem();
                     }
@@ -130,7 +133,10 @@ class CollisionHandler implements ContactListener {
 
                     if (bodyA.getUserData() instanceof RareItem) {
                         Score.collectRareItem();
-                        GameAudio.playRareItemPickedSound();
+
+                        if (GameUtil.room ==1) {
+                            GameAudio.playRareItemPickedSound();
+                        }
                     } else if (!(bodyB.getUserData() instanceof RareItem)) {
                         Score.collectItem();
                     }
