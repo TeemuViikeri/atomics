@@ -90,8 +90,8 @@ class Controls {
 
         Button.ButtonStyle speedButtonStyle = new Button.ButtonStyle();
 
-        buttonSkin.add("down", new Texture("down.png"));
         buttonSkin.add("up", new Texture("up.png"));
+        buttonSkin.add("down", new Texture("down.png"));
 
         Drawable up = buttonSkin.getDrawable("up");
         Drawable down = buttonSkin.getDrawable("down");
@@ -105,22 +105,40 @@ class Controls {
     private Button.ButtonStyle getShootButtonStyle() {
         Skin buttonSkin = new Skin();
 
-        Button.ButtonStyle speedButtonStyle = new Button.ButtonStyle();
+        Button.ButtonStyle shootButtonStyle = new Button.ButtonStyle();
 
-        buttonSkin.add("down", new Texture("shootdown.png"));
         buttonSkin.add("up", new Texture("shootup.png"));
+        buttonSkin.add("down", new Texture("shootdown.png"));
 
         Drawable up = buttonSkin.getDrawable("up");
         Drawable down = buttonSkin.getDrawable("down");
 
-        speedButtonStyle.up = up;
-        speedButtonStyle.down = down;
+        shootButtonStyle.up = up;
+        shootButtonStyle.down = down;
 
-        return speedButtonStyle;
+        return shootButtonStyle;
+    }
+
+    private Button.ButtonStyle getFixButtonStyle() {
+        Skin buttonSkin = new Skin();
+
+        Button.ButtonStyle fixButtonStyle = new Button.ButtonStyle();
+
+        buttonSkin.add("up", new Texture("fix-up-resize.png"));
+        buttonSkin.add("down", new Texture("fix-down-recolor.png"));
+
+        Drawable up = buttonSkin.getDrawable("up");
+        Drawable down = buttonSkin.getDrawable("down");
+
+        fixButtonStyle.up = up;
+        fixButtonStyle.down = down;
+
+        return fixButtonStyle;
     }
 
     private Touchpad.TouchpadStyle getTouchpadStyle() {
         Skin touchpadSkin = new Skin();
+
         touchpadSkin.add("touchBackground", new Texture("touchpadbg.png"));
         touchpadSkin.add("touchKnob", new Texture("touchpadknob.png"));
 
@@ -133,6 +151,18 @@ class Controls {
         touchpadStyle.knob = touchKnob;
 
         return touchpadStyle;
+    }
+
+    void setButtonStyle(Button button) {
+        if (GameUtil.room == 1) {
+            button.setVisible(false);
+        } else if (GameUtil.room == 2) {
+            button.setVisible(true);
+            button.setStyle(getShootButtonStyle());
+        } else if (GameUtil.room == 3) {
+            button.setVisible(true);
+            button.setStyle(getFixButtonStyle());
+        }
     }
 
     static Stage getStage() {

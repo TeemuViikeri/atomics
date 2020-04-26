@@ -26,10 +26,13 @@ class Pipe extends GameObject {
             (TiledMapTileLayer) PlayScreen.tiledMap.getLayers().get("airpipes");
     private Texture animationSheet = new Texture("bubbleSequence.png");
     private Texture animationSheet2 = new Texture("bubble2.png");
+    private Texture hammerAnimationSheet = new Texture("vasaraSequence.png");
     private Animation<TextureRegion> animation;
     private TextureRegion[] frames;
     private Animation<TextureRegion> animation2;
     private TextureRegion[] frames2;
+    private Animation<TextureRegion> hammerAnimation;
+    private TextureRegion[] hammerFrames;
     private Vector2 spawnPoint;
     private float stateTime;
     private GameUtil gameUtil = new GameUtil();
@@ -54,10 +57,16 @@ class Pipe extends GameObject {
                 animationSheet2,
                 animationSheet2.getWidth() / sheetCols,
                 animationSheet2.getHeight() / sheetRows);
+        TextureRegion[][] hammerTemp = TextureRegion.split(
+                hammerAnimationSheet,
+                hammerAnimationSheet.getWidth() / 3,
+                hammerAnimationSheet.getHeight() / 1);
         frames = gameUtil.to1d(temp, sheetRows, sheetCols, this);
         animation = new Animation<>(1 / 10f, frames);
         frames2 = gameUtil.to1d(temp2, sheetRows, sheetCols, this);
         animation2 = new Animation<>(1 / 10f, frames2);
+        hammerFrames = gameUtil.to1d(hammerTemp, 1, 3, this);
+        hammerAnimation = new Animation<>(1 / 10f, hammerFrames);
         createBody();
         microbe.spawnMicrobes();
     }
@@ -132,6 +141,13 @@ class Pipe extends GameObject {
                 batch.draw(i.getAnimation2().getKeyFrame((i).setStateTime(), true),
                         i.spawnPoint.x, i.spawnPoint.y + 0.32f,0.32f,0.32f);
             }
+
+//            Ei toimi vielä
+//            if (i.dead && fixTimer < 1 && isTouched) {
+//                batch.draw(
+//                    i.getHammerAnimation().getKeyFrame((i).setStateTime(), true),
+//                    i.spawnPoint.x, i.spawnPoint.y + 0.32f, 0.32f, 0.32f);
+//            }
         }
     }
 
@@ -177,6 +193,10 @@ class Pipe extends GameObject {
 
     private Animation<TextureRegion> getAnimation2() {
         return animation2;
+    }
+
+    public Animation<TextureRegion> getHammerAnimation() {
+        return hammerAnimation;
     }
 
     boolean isDead() {

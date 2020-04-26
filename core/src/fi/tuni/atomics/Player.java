@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 class Player extends GameObject {
     private static int hitpoints;
-    public static boolean immortal = false;
+    static boolean immortal = false;
     private Controls controls;
     private float desiredAngle;
     private float deltaX;
@@ -130,6 +130,8 @@ class Player extends GameObject {
         } else {
             moving = false;
         }
+
+        controls.setButtonStyle(controls.getShootButton());
     }
 
     private void submarineRotation() {
@@ -167,12 +169,12 @@ class Player extends GameObject {
         GameAudio.playShootingSound();
     }
 
-    public static void loseHitpoint() {
+    static void loseHitpoint() {
         hitpoints--;
         playerLostHitPoint = true;
     }
 
-    public void drawHitpoints(SpriteBatch batch) {
+    void drawHitpoints(SpriteBatch batch) {
         if (hitpoints == 3) {
             batch.draw(hp3, (float) Gdx.graphics.getWidth() * 3/4,
                     PlayScreen.HUD_Y,
@@ -191,7 +193,7 @@ class Player extends GameObject {
         }
     }
 
-    public void update() {
+    void update() {
         if (immortal) {
             immortalTimer+=Gdx.graphics.getDeltaTime();
         }
@@ -201,11 +203,8 @@ class Player extends GameObject {
         }
     }
 
-    public boolean checkIfDead() {
-        if (hitpoints <= 0) {
-            return true;
-        }
-        return false;
+    boolean checkIfDead() {
+        return hitpoints <= 0;
     }
 
     // Getters and setters
