@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -23,9 +22,9 @@ import static fi.tuni.atomics.PlayScreen.tiledMap;
 class Pipe extends GameObject {
     private final int sheetRows = 2;
     private final int sheetCols = 4;
-    private static Texture animationSheet = new Texture("bubbleSequence.png");
     private TiledMapTileLayer tiledMapTileLayer =
             (TiledMapTileLayer) PlayScreen.tiledMap.getLayers().get("airpipes");
+    private static Texture animationSheet = new Texture("bubbleSequence.png");
     private static Texture animationSheet2 = new Texture("bubble2.png");
     private Animation<TextureRegion> animation;
     private TextureRegion[] frames;
