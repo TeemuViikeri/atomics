@@ -6,9 +6,8 @@ import com.badlogic.gdx.audio.Sound;
 
 class GameAudio {
     static Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("water_bgmusic.ogg"));
-    static Music clock = Gdx.audio.newMusic(Gdx.files.internal("clock.ogg"));
+    static Sound clock = Gdx.audio.newSound(Gdx.files.internal("clock.ogg"));
     static Sound gameOverSound = Gdx.audio.newSound(Gdx.files.internal("gameover.ogg"));
-    static float masterVolume = 0.1f;
     static Sound bondingSound = Gdx.audio.newSound(Gdx.files.internal("phosphorusbonding.ogg"));
     static Sound shootingSound = Gdx.audio.newSound(Gdx.files.internal("shoot.ogg"));
     static Sound microbeSpawnSound = Gdx.audio.newSound(Gdx.files.internal("microbedespawn.ogg"));
@@ -20,19 +19,16 @@ class GameAudio {
     static Sound hitItemSound = Gdx.audio.newSound(Gdx.files.internal("hititem.ogg"));
     static Sound vacuumSound = Gdx.audio.newSound(Gdx.files.internal("vacuum.ogg"));
     static Sound pauseSound = Gdx.audio.newSound(Gdx.files.internal("pause.ogg"));
+    static float masterVolume = 0.1f;
 
     static void playBackgroundMusic() {
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("water_bgmusic.ogg"));
         backgroundMusic.setVolume(masterVolume);
         backgroundMusic.setLooping(true);
         backgroundMusic.play();
     }
 
     static void playClock() {
-        clock = Gdx.audio.newMusic(Gdx.files.internal("clock.ogg"));
-        clock.setVolume(masterVolume);
-        clock.setLooping(true);
-        clock.play();
+        clock.loop(masterVolume);
     }
 
     static void playGameOverSound() {

@@ -102,7 +102,6 @@ public class PlayScreen implements Screen {
         pipes = new Pipe();
         pipes.createPipes();
         pause = new Pause(game);
-        clockPlaying = false;
     }
 
     @Override
@@ -169,7 +168,9 @@ public class PlayScreen implements Screen {
                 if (!clockPlaying) {
                     clockPlaying = true;
                     GameAudio.playClock();
-                } else {
+                }
+
+                if (clockPlaying) {
                     gameOverTimer += Gdx.graphics.getDeltaTime();
                 }
 
@@ -179,7 +180,7 @@ public class PlayScreen implements Screen {
                 }
             }
 
-            if (gameUtil.getAmountOfDeadPipes() < 40 && gameUtil.getAmountOfDeadPipes() < 4) {
+            if (gameUtil.getItemCount() < 40 && gameUtil.getAmountOfDeadPipes() < 4) {
                 clockPlaying = false;
                 GameAudio.clock.stop();
             }
@@ -218,9 +219,7 @@ public class PlayScreen implements Screen {
     }
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() { }
 
     @Override
     public void dispose() {
