@@ -13,6 +13,7 @@ class GameAudio {
     static Sound microbeSpawnSound = Gdx.audio.newSound(Gdx.files.internal("microbedespawn.ogg"));
     static Sound playPipeBrokenSound = Gdx.audio.newSound(Gdx.files.internal("pipebroken.ogg"));
     static Sound playPipeFixedSound = Gdx.audio.newSound(Gdx.files.internal("pipefixed.ogg"));
+    static Sound playFixSound = Gdx.audio.newSound(Gdx.files.internal("fix-sound.ogg"));
     static Sound rareItemPickedSound = Gdx.audio.newSound(Gdx.files.internal("rareitempicked.ogg"));
     static Sound collectablePhosphorusPickedSound = Gdx.audio.newSound(Gdx.files.internal("collectablephosphoruspicked.ogg"));
     static Sound loseLifeSound = Gdx.audio.newSound(Gdx.files.internal("loselife.ogg"));
@@ -53,6 +54,10 @@ class GameAudio {
 
     static void playPipeFixedSound() {
         playPipeFixedSound.play(masterVolume);
+    }
+
+    static void playFixSound() {
+        playFixSound.play(masterVolume);
     }
 
     static void playRareItemPickedSound() {

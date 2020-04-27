@@ -41,7 +41,7 @@ class Microbe extends GameObject {
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
                 animationSheet.getHeight() / sheetRows);
-        frames = gameUtil.to1d(temp, sheetRows, sheetCols, this);
+        frames = gameUtil.to1d(temp, sheetRows, sheetCols);
         animation = new Animation<>(1 / 1f, frames);
         createBody();
         applyForce();

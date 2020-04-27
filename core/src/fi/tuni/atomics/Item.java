@@ -99,7 +99,7 @@ class Item extends GameObject {
             omena = 6, ruuvi = 7, sukka = 8, tutti = 9,
             kello = 10, puhelin = 11, sormus = 12, tekarit = 13;
 
-        if (itemInt == kala) this.texture = new Texture("kala.png");
+        if (itemInt == kala) this.texture = new Texture("kala2.png");
         if (itemInt == kortsu) this.texture = new Texture("kortsu.png");
         else if (itemInt == lasit) this.texture = new Texture("lasit.png");
         else if (itemInt == lima) this.texture = new Texture("slime.png");

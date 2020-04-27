@@ -213,7 +213,7 @@ class GameUtil {
         }
     }
 
-    TextureRegion[] to1d(TextureRegion[][] temp, int sheetRows, int sheetCols, Object object) {
+    TextureRegion[] to1d(TextureRegion[][] temp, int sheetRows, int sheetCols) {
         int index = 0;
         TextureRegion[] temporary = new TextureRegion[sheetRows * sheetCols];
         for (int i = 0; i < sheetRows; i++) {
@@ -258,7 +258,7 @@ class GameUtil {
         }
     }
 
-    void checkInWhatRoom(float position) {
+    private void checkInWhatRoom(float position) {
         if ( // Check if in the first room
                 position <= PlayScreen.ROOM_WIDTH_PIXELS * PlayScreen.scale
         ) {

@@ -43,6 +43,7 @@ class Pipe extends GameObject {
     private float fixTimer; // how long the pipe has been in repair.
     boolean isTouched = false; // is the pipe being touched.
     private Microbe microbe = new Microbe();
+    private boolean isFixSoundPlaying = false;
 
         private Pipe(Vector2 position) {
         this.spawnPoint = position;
@@ -60,12 +61,12 @@ class Pipe extends GameObject {
         TextureRegion[][] hammerTemp = TextureRegion.split(
                 hammerAnimationSheet,
                 hammerAnimationSheet.getWidth() / 3,
-                hammerAnimationSheet.getHeight() / 1);
-        frames = gameUtil.to1d(temp, sheetRows, sheetCols, this);
+                hammerAnimationSheet.getHeight());
+        frames = gameUtil.to1d(temp, sheetRows, sheetCols);
         animation = new Animation<>(1 / 10f, frames);
-        frames2 = gameUtil.to1d(temp2, sheetRows, sheetCols, this);
+        frames2 = gameUtil.to1d(temp2, sheetRows, sheetCols);
         animation2 = new Animation<>(1 / 10f, frames2);
-        hammerFrames = gameUtil.to1d(hammerTemp, 1, 3, this);
+        hammerFrames = gameUtil.to1d(hammerTemp, 1, 3);
         hammerAnimation = new Animation<>(1 / 10f, hammerFrames);
         createBody();
         microbe.spawnMicrobes();
@@ -125,6 +126,7 @@ class Pipe extends GameObject {
                         .setTile(tiledMap.getTileSets().getTile(13));
                 tiledMapTileLayer.getCell(tileXPosition, 2)
                         .setTile(tiledMap.getTileSets().getTile(5));
+                GameAudio.playFixSound.stop();
             }
         }
 
@@ -140,14 +142,21 @@ class Pipe extends GameObject {
                         i.spawnPoint.x, i.spawnPoint.y,0.32f,0.32f);
                 batch.draw(i.getAnimation2().getKeyFrame((i).setStateTime(), true),
                         i.spawnPoint.x, i.spawnPoint.y + 0.32f,0.32f,0.32f);
+                i.isFixSoundPlaying = false;
+            } else {
+                if (i.fixTimer > 0 && i.isTouched) {
+                    Atomics.batch.draw(i.getHammerAnimation().
+                        getKeyFrame((i).setStateTime(),true),
+                        i.spawnPoint.x, i.spawnPoint.y - TILE_LENGTH_PIXELS * scale, 0.32f, 0.32f);
+                    if (!i.isFixSoundPlaying) {
+                        i.isFixSoundPlaying = true;
+                        GameAudio.playFixSound.loop(0.1f);
+                    }
+                } else {
+                    i.isFixSoundPlaying = false;
+                    GameAudio.playFixSound.stop();
+                }
             }
-
-//            Ei toimi vielä
-//            if (i.dead && fixTimer < 1 && isTouched) {
-//                batch.draw(
-//                    i.getHammerAnimation().getKeyFrame((i).setStateTime(), true),
-//                    i.spawnPoint.x, i.spawnPoint.y + 0.32f, 0.32f, 0.32f);
-//            }
         }
     }
 
@@ -195,7 +204,7 @@ class Pipe extends GameObject {
         return animation2;
     }
 
-    public Animation<TextureRegion> getHammerAnimation() {
+    private Animation<TextureRegion> getHammerAnimation() {
         return hammerAnimation;
     }
 
