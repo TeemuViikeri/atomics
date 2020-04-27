@@ -26,12 +26,11 @@ public class EndScreen implements Screen {
 
     EndScreen(Atomics atomics) {
         this.atomics = atomics;
-        batch = Atomics.HUDBatch;
+        batch = Atomics.batch;
         camera = new OrthographicCamera();
         score = new Score();
         camera.setToOrtho(false,
-                ROOM_WIDTH_PIXELS * scale,
-                ROOM_HEIGHT_PIXELS * scale);
+                960,640);
         background = new Texture("badlogic.jpg");
         gameUtil = new GameUtil();
         stage = new Stage();
@@ -72,7 +71,10 @@ public class EndScreen implements Screen {
             exitButton.setTouched(false);
         }
         batch.begin();
-        score.draw(batch, "sdöklfgjsökfk", new Vector2(1,1));
+        System.out.println(score.getTextWidth("oot huono pelaa opettele pelaan"));
+        System.out.println(score.getTextWidth("oot huono pelaa opettele pelaan") / 2f);
+        System.out.println(480f - (score.getTextWidth("oot huono pelaa opettele pelaan") / 2f));
+        score.draw(batch, "oot huono opettele pelaa", new Vector2(64f,600));
         batch.end();
     }
 

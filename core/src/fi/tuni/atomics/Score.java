@@ -39,7 +39,12 @@ public class Score {
     }
 
     void draw(SpriteBatch batch, String text, Vector2 pos) {
-        font.draw(batch, text, PlayScreen.TILE_LENGTH_PIXELS * 2, PlayScreen.HUD_Y + layout.height);
+        font.draw(batch, text, pos.x, pos.y);
+    }
+
+    float getTextWidth(String text) {
+        layout.setText(font, text);
+        return layout.width;
     }
 
     float getScore() {

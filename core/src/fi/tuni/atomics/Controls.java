@@ -36,7 +36,6 @@ class Controls {
         Table joystickTable = new Table();
         Table speedButtonTable = new Table();
         Table shootButtonTable = new Table();
-        Table pauseButtonTable = new Table();
         joystickTable.setFillParent(true);
         speedButtonTable.setFillParent(true);
         shootButtonTable.setFillParent(true);
