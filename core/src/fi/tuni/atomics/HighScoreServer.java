@@ -62,7 +62,7 @@ public class HighScoreServer {
 
                 ArrayList<HighScoreEntry> highScores = new ArrayList<>();
 
-                for (int i = 1; i <= 10; i++) {
+                for (int i = 1; i <= 5; i++) {
                     HighScoreEntry score = new HighScoreEntry(
                             jsonObject.get(i).get(0).asString(),
                             jsonObject.get(i).get(1).asInt());

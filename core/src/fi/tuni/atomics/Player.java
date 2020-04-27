@@ -13,6 +13,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 class Player extends GameObject {
     private static int hitpoints;
     static boolean immortal = false;
@@ -90,6 +92,8 @@ class Player extends GameObject {
                         * speed * Gdx.graphics.getDeltaTime());
 
             body.setLinearVelocity(force);
+            System.out.println((float) Math.cos(body.getAngle())
+                    * speed * Gdx.graphics.getDeltaTime());
         }
 
         if (!moving && speed >= speedDecrement) {
