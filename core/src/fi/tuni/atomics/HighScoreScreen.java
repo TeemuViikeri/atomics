@@ -87,6 +87,7 @@ public class HighScoreScreen implements HighScoreListener, Screen {
         batch.setProjectionMatrix(camera.combined);
 
         if (exitButton.isTouched()) {
+            GameAudio.playBackSound();
             atomics.setScreen(new StartScreen(atomics));
             exitButton.setTouched(false);
         }

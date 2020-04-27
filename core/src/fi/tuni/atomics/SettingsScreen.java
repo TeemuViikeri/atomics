@@ -22,11 +22,10 @@ public class SettingsScreen implements Screen {
     private MenuButton languageButton;
     private MenuButton exitButton;
     private Atomics atomics;
-    Texture soundsButtonOnTexture = new Texture("ääni_on.png");
-    Texture soundsButtonOffTexture = new Texture("ääni_off.png");
+    private Texture soundsButtonOnTexture = new Texture("ääni_on.png");
+    private Texture soundsButtonOffTexture = new Texture("ääni_off.png");
     Texture languageEN = new Texture("kieli_en.png");
     Texture languageFI = new Texture("kieli_fi.png");
-
 
     SettingsScreen(Atomics atomics) {
         this.atomics = atomics;
@@ -84,6 +83,7 @@ public class SettingsScreen implements Screen {
 
             if (Memory.getVolume() == 0) {
                 soundsButton.setTexture(soundsButtonOnTexture);
+                GameAudio.playSettingsSwitchSound();
                 Memory.setVolume(0.1f);
             } else {
                 soundsButton.setTexture(soundsButtonOffTexture);
@@ -94,6 +94,7 @@ public class SettingsScreen implements Screen {
         }
 
         if (languageButton.isTouched()) {
+            GameAudio.playSettingsSwitchSound();
 
             if (Localization.getBundle().getLocale().toString().equals("fi")) {
                 Memory.setLanguage("en");
@@ -108,10 +109,12 @@ public class SettingsScreen implements Screen {
                 exitButton.setTexture(new Texture(Localization.getBundle().get("back")));
                 System.out.println(Localization.getBundle().getLocale());
             }
+
             languageButton.setTouched(false);
         }
 
         if (exitButton.isTouched()) {
+            GameAudio.playBackSound();
             atomics.setScreen(new StartScreen(atomics));
             exitButton.setTouched(false);
         }

@@ -78,6 +78,7 @@ public class StartScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         stage.act();
         if (startButton.isTouched()) {
+            GameAudio.playPlayGameSound();
             atomics.setScreen(new PlayScreen(atomics));
             startButton.setTouched(false);
         }

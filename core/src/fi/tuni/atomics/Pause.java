@@ -67,6 +67,7 @@ public class Pause {
         }
 
         if (exit.isTouched()) {
+            GameAudio.playPauseToMenuSound();
             atomics.setScreen(new StartScreen(atomics));
             exit.setTouched(false);
             pauseButton.setTouched(false);

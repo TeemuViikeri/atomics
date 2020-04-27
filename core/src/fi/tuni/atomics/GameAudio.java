@@ -20,6 +20,10 @@ class GameAudio {
     static Sound hitItemSound = Gdx.audio.newSound(Gdx.files.internal("hititem.ogg"));
     static Sound vacuumSound = Gdx.audio.newSound(Gdx.files.internal("vacuum.ogg"));
     static Sound pauseSound = Gdx.audio.newSound(Gdx.files.internal("pause.ogg"));
+    static Sound settingsSwitchSound = Gdx.audio.newSound(Gdx.files.internal("settings-switch.ogg"));
+    static Sound playGameSound = Gdx.audio.newSound(Gdx.files.internal("playgame.ogg"));
+    static Sound pauseToMenuSound = Gdx.audio.newSound(Gdx.files.internal("pausetomenu.ogg"));
+    static Sound backSound = Gdx.audio.newSound(Gdx.files.internal("backtostart.ogg"));
     static float masterVolume = 0.1f;
 
     static void playBackgroundMusic() {
@@ -82,6 +86,22 @@ class GameAudio {
 
     static void playPauseSound() {
         pauseSound.play(masterVolume);
+    }
+
+    static void playSettingsSwitchSound() {
+        settingsSwitchSound.play(masterVolume);
+    }
+
+    static void playPlayGameSound() {
+        playGameSound.play(masterVolume);
+    }
+
+    static void playPauseToMenuSound() {
+        pauseToMenuSound.play(masterVolume);
+    }
+
+    static void playBackSound() {
+        backSound.play(masterVolume);
     }
 
     void dispose() {
