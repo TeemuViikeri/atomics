@@ -21,10 +21,12 @@ public class Pause {
     float pauseScreenWidth = 500f * Gdx.graphics.getWidth() / 960f;
     float pauseScreenHeight = 500f * Gdx.graphics.getHeight() / 640f;
     private boolean pauseSoundPlayed;
+    private Texture resumeTexture;
+    private Texture quitTexture;
 
     Pause(Atomics atomics) {
         this.atomics = atomics;
-        pauseBackground = new Texture("badlogic.jpg");
+        pauseBackground = new Texture("pausemenu.png");
         pauseStage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
                 Gdx.graphics.getHeight()), Atomics.HUDBatch);
 
@@ -39,12 +41,12 @@ public class Pause {
         resume = new MenuButton(resumeWidth, resumeHeight,
                 Gdx.graphics.getWidth() / 2f - resumeWidth / 2,
                 Gdx.graphics.getHeight() / 2f - pauseScreenHeight / 2 + pauseScreenHeight - resumeHeight * 2,
-                new Texture("RESUME.jpg"));
+                new Texture(Localization.getBundle().get("resume")));
 
         exit = new MenuButton(resumeWidth, resumeHeight,
                 Gdx.graphics.getWidth() / 2f - resumeWidth / 2,
                 Gdx.graphics.getHeight() / 2f - pauseScreenHeight / 2 + resumeHeight,
-                new Texture("EXIT.jpg"));
+                new Texture(Localization.getBundle().get("menu")));
 
         resume.setVisible(false);
         exit.setVisible(false);

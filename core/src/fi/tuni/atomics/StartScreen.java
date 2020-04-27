@@ -27,33 +27,15 @@ public class StartScreen implements Screen {
 
     StartScreen(Atomics atomics) {
         this.atomics = atomics;
-        batch = Atomics.batch;
+        batch = Atomics.HUDBatch;
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
                 ROOM_WIDTH_PIXELS * scale,
                 ROOM_HEIGHT_PIXELS * scale);
-        background = new Texture("badlogic.jpg");
+        background = new Texture("menubackground.png");
         gameUtil = new GameUtil();
         stage = new Stage();
-        float startWidth = 500f * Gdx.graphics.getWidth() / 960;
-        float startHeight = 100f * Gdx.graphics.getHeight() / 640;
-        startButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() / 2f - startWidth / 2,
-                Gdx.graphics.getHeight() - startHeight * 2f,
-                new Texture("START.jpg"));
-        settingsButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() / 2f - startWidth / 2,
-                Gdx.graphics.getHeight() / 2f - startHeight / 2,
-                new Texture("START.jpg"));
-        exitButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() / 2f - startWidth / 2,
-                startHeight,
-                new Texture("START.jpg"));
-        stage.addActor(startButton);
-        stage.addActor(settingsButton);
-        stage.addActor(exitButton);
-        Gdx.input.setInputProcessor(stage);
-        System.out.println(Memory.getFirstStartup());
+
         if (!Memory.getFirstStartup()) {
             Memory.setVolume(0.1f);
             Memory.setLanguage("en");
@@ -62,7 +44,26 @@ public class StartScreen implements Screen {
 
         Localization.setLocale(Memory.getLanguage());
         GameAudio.masterVolume = Memory.getVolume();
-        System.out.println(GameAudio.masterVolume);
+
+        float startWidth = 500f * Gdx.graphics.getWidth() / 960;
+        float startHeight = 100f * Gdx.graphics.getHeight() / 640;
+        startButton = new MenuButton(startWidth, startHeight,
+                Gdx.graphics.getWidth() - startWidth,
+                Gdx.graphics.getHeight() - startHeight * 2f,
+                new Texture(Localization.getBundle().get("play")));
+        settingsButton = new MenuButton(startWidth, startHeight,
+                Gdx.graphics.getWidth() - startWidth,
+                Gdx.graphics.getHeight() / 2f - startHeight / 2,
+                new Texture(Localization.getBundle().get("settings")));
+        exitButton = new MenuButton(startWidth, startHeight,
+                Gdx.graphics.getWidth() - startWidth,
+                startHeight,
+                new Texture(Localization.getBundle().get("hiscore")));
+        stage.addActor(startButton);
+        stage.addActor(settingsButton);
+        stage.addActor(exitButton);
+        Gdx.input.setInputProcessor(stage);
+        System.out.println(Memory.getFirstStartup());
     }
 
     @Override
@@ -76,7 +77,6 @@ public class StartScreen implements Screen {
         gameUtil.clearScreen();
         batch.setProjectionMatrix(camera.combined);
         stage.act();
-        stage.draw();
         if (startButton.isTouched()) {
             atomics.setScreen(new PlayScreen(atomics));
             startButton.setTouched(false);
@@ -90,7 +90,9 @@ public class StartScreen implements Screen {
             startButton.setTouched(false);
         }
         batch.begin();
+        batch.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
         batch.end();
+        stage.draw();
     }
 
     @Override

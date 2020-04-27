@@ -37,6 +37,10 @@ public class MenuButton extends Actor {
         this.touched = x;
     }
 
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
+
     @Override
     public void draw(Batch batch, float alpha) {
         batch.draw(texture, getX(), getY(), getWidth(), getHeight());

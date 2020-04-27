@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
@@ -35,6 +36,10 @@ public class Score {
                         score + "    " + getScoreMultiplier() + "x",
                 PlayScreen.TILE_LENGTH_PIXELS * 2,
                 PlayScreen.HUD_Y + layout.height);
+    }
+
+    void draw(SpriteBatch batch, String text, Vector2 pos) {
+        font.draw(batch, text, PlayScreen.TILE_LENGTH_PIXELS * 2, PlayScreen.HUD_Y + layout.height);
     }
 
     float getScore() {

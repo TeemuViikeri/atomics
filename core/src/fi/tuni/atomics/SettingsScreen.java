@@ -22,6 +22,11 @@ public class SettingsScreen implements Screen {
     private MenuButton languageButton;
     private MenuButton exitButton;
     private Atomics atomics;
+    Texture soundsButtonOnTexture = new Texture("ääni_on.png");
+    Texture soundsButtonOffTexture = new Texture("ääni_off.png");
+    Texture languageEN = new Texture("kieli_en.png");
+    Texture languageFI = new Texture("kieli_fi.png");
+
 
     SettingsScreen(Atomics atomics) {
         this.atomics = atomics;
@@ -30,23 +35,33 @@ public class SettingsScreen implements Screen {
         camera.setToOrtho(false,
                 ROOM_WIDTH_PIXELS * scale,
                 ROOM_HEIGHT_PIXELS * scale);
-        background = new Texture("badlogic.jpg");
+        background = new Texture("menubackground.png");
         gameUtil = new GameUtil();
         stage = new Stage();
+
         float startWidth = 500f * Gdx.graphics.getWidth() / 960;
         float startHeight = 100f * Gdx.graphics.getHeight() / 640;
-        soundsButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() / 2f - startWidth / 2,
-                Gdx.graphics.getHeight() - startHeight * 2f,
-                new Texture("START.jpg"));
+        if (Memory.getVolume() == 0.0f) {
+            soundsButton = new MenuButton(startWidth, startHeight,
+                    Gdx.graphics.getWidth() - startWidth,
+                    Gdx.graphics.getHeight() - startHeight * 2f,
+                    soundsButtonOffTexture);
+        } else {
+            soundsButton = new MenuButton(startWidth, startHeight,
+                    Gdx.graphics.getWidth() - startWidth,
+                    Gdx.graphics.getHeight() - startHeight * 2f,
+                    soundsButtonOnTexture);
+        }
+
         languageButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() / 2f - startWidth / 2,
+                Gdx.graphics.getWidth() - startWidth,
                 Gdx.graphics.getHeight() / 2f - startHeight / 2,
-                new Texture("START.jpg"));
+                new Texture(Localization.getBundle().get("languagebutton")));
+
         exitButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() / 2f - startWidth / 2,
+                Gdx.graphics.getWidth() - startWidth,
                 startHeight,
-                new Texture("START.jpg"));
+                new Texture(Localization.getBundle().get("back")));
         stage.addActor(soundsButton);
         stage.addActor(languageButton);
         stage.addActor(exitButton);
@@ -64,36 +79,47 @@ public class SettingsScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camera.combined);
         stage.act();
-        stage.draw();
+
         if (soundsButton.isTouched()) {
 
             if (Memory.getVolume() == 0) {
+                soundsButton.setTexture(soundsButtonOnTexture);
                 Memory.setVolume(0.1f);
             } else {
+                soundsButton.setTexture(soundsButtonOffTexture);
                 Memory.setVolume(0);
             }
 
             soundsButton.setTouched(false);
         }
+
         if (languageButton.isTouched()) {
 
             if (Localization.getBundle().getLocale().toString().equals("fi")) {
                 Memory.setLanguage("en");
                 Localization.setLocale("en");
+                languageButton.setTexture(new Texture(Localization.getBundle().get("languagebutton")));
+                exitButton.setTexture(new Texture(Localization.getBundle().get("back")));
                 System.out.println(Localization.getBundle().getLocale());
             } else {
                 Memory.setLanguage("fi");
                 Localization.setLocale("fi");
+                languageButton.setTexture(new Texture(Localization.getBundle().get("languagebutton")));
+                exitButton.setTexture(new Texture(Localization.getBundle().get("back")));
                 System.out.println(Localization.getBundle().getLocale());
             }
             languageButton.setTouched(false);
         }
+
         if (exitButton.isTouched()) {
             atomics.setScreen(new StartScreen(atomics));
             exitButton.setTouched(false);
         }
+
         batch.begin();
+        batch.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
         batch.end();
+        stage.draw();
     }
 
     @Override

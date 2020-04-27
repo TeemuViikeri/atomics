@@ -14,7 +14,7 @@ public class HighScoreScreen implements HighScoreListener, Screen {
         HighScoreServer.setVerbose(true);
         HighScoreEntry scoreEntry = new HighScoreEntry("Leevi", 1234);
         //HighScoreServer.sendNewHighScore(scoreEntry, this);
-        //HighScoreServer.fetchHighScores(this);
+        HighScoreServer.fetchHighScores(this);
     }
 
     @Override
