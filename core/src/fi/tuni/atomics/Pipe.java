@@ -147,7 +147,9 @@ class Pipe extends GameObject {
                 if (i.fixTimer > 0 && i.isTouched) {
                     Atomics.batch.draw(i.getHammerAnimation().
                         getKeyFrame((i).setStateTime(),true),
-                        i.spawnPoint.x, i.spawnPoint.y - TILE_LENGTH_PIXELS * 2 * scale, 0.5f, 0.5f);
+                        i.spawnPoint.x - TILE_LENGTH_PIXELS / 3 * scale,
+                        i.spawnPoint.y - TILE_LENGTH_PIXELS * 2 * scale,
+                        0.5f, 0.5f);
                     if (!i.isFixSoundPlaying) {
                         i.isFixSoundPlaying = true;
                         GameAudio.playFixSound.loop(0.1f);
