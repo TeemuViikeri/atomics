@@ -28,6 +28,12 @@ class Controls {
     private Touchpad.TouchpadStyle touchpadStyle;
     private Button speedButton;
     static Button shootButton;
+    private Texture speedButtonUpTexture = new Texture("up.png");
+    private Texture speedButtonDownTexture = new Texture("down.png");
+    private Texture shootButtonUpTexture = new Texture("shootup.png");
+    private Texture shootButtonDownTexture = new Texture("shootdown.png");
+    private Texture fixButtonUpTexture = new Texture("fix-up-resize.png");
+    private Texture fixButtonDownTexture = new Texture("fix-down-recolor.png");
 
     void createButtons(final Player player) {
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(),
@@ -89,8 +95,8 @@ class Controls {
 
         Button.ButtonStyle speedButtonStyle = new Button.ButtonStyle();
 
-        buttonSkin.add("up", new Texture("up.png"));
-        buttonSkin.add("down", new Texture("down.png"));
+        buttonSkin.add("up", speedButtonUpTexture);
+        buttonSkin.add("down", speedButtonDownTexture);
 
         Drawable up = buttonSkin.getDrawable("up");
         Drawable down = buttonSkin.getDrawable("down");
@@ -106,8 +112,8 @@ class Controls {
 
         Button.ButtonStyle shootButtonStyle = new Button.ButtonStyle();
 
-        buttonSkin.add("up", new Texture("shootup.png"));
-        buttonSkin.add("down", new Texture("shootdown.png"));
+        buttonSkin.add("up", shootButtonUpTexture);
+        buttonSkin.add("down", shootButtonDownTexture);
 
         Drawable up = buttonSkin.getDrawable("up");
         Drawable down = buttonSkin.getDrawable("down");
@@ -123,8 +129,8 @@ class Controls {
 
         Button.ButtonStyle fixButtonStyle = new Button.ButtonStyle();
 
-        buttonSkin.add("up", new Texture("fix-up-resize.png"));
-        buttonSkin.add("down", new Texture("fix-down-recolor.png"));
+        buttonSkin.add("up", fixButtonUpTexture);
+        buttonSkin.add("down", fixButtonDownTexture);
 
         Drawable up = buttonSkin.getDrawable("up");
         Drawable down = buttonSkin.getDrawable("down");

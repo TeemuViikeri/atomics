@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-public class Score {
+class Score {
     private static int score;
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont font;
@@ -51,7 +51,7 @@ public class Score {
         return score;
     }
 
-    static int getScoreMultiplier() {
+    private static int getScoreMultiplier() {
         return Microbe.microbes.size;
     }
 
@@ -59,7 +59,7 @@ public class Score {
         score += 5 * getScoreMultiplier();
     }
 
-    static void collectRareItem() { score += 20; }
+    static void collectRareItem() { score += 50; }
 
     static void collectItem() {
         score++;

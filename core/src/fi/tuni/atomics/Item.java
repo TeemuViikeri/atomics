@@ -63,10 +63,10 @@ class Item extends GameObject {
         if (spawnTimer >= spawnFrequency) {
             spawnPoint = getItemSpawnPoint();
 
-            int itemInt = MathUtils.random(1, 13);
+            int itemInt = MathUtils.random(1, 40);
             int rotation = MathUtils.random(0, 360);
 
-            if (itemInt < 10) {
+            if (itemInt < 36) {
                 Item item = new Item(spawnPoint, itemInt);
                 item.createBody();
                 item.body.setTransform(spawnPoint, rotation);
@@ -95,22 +95,18 @@ class Item extends GameObject {
     }
 
     void getRandomTexture(int itemInt) {
-        int kala = 1, kortsu = 2, lasit = 3, lima = 4, lusikka = 5,
-            omena = 6, ruuvi = 7, sukka = 8, tutti = 9,
-            kello = 10, puhelin = 11, sormus = 12, tekarit = 13;
-
-        if (itemInt == kala) this.texture = new Texture("kala2.png");
-        if (itemInt == kortsu) this.texture = new Texture("kortsu.png");
-        else if (itemInt == lasit) this.texture = new Texture("lasit.png");
-        else if (itemInt == lima) this.texture = new Texture("slime.png");
-        else if (itemInt == lusikka) this.texture = new Texture("lusikka.png");
-        else if (itemInt == omena) this.texture = new Texture("omena.png");
-        else if (itemInt == ruuvi) this.texture = new Texture("ruuvi.png");
-        else if (itemInt == sukka) this.texture = new Texture("sukka.png");
-        else if (itemInt == tutti) this.texture = new Texture("tutti.png");
-        else if (itemInt == kello) this.texture = new Texture("kello.png");
-        else if (itemInt == puhelin) this.texture = new Texture("puhelin.png");
-        else if (itemInt == sormus) this.texture = new Texture("sormus.png");
-        else if (itemInt == tekarit) this.texture = new Texture("cropped-tekarit.png");
+        if      (itemInt <= 4)  this.texture = new Texture("kala2.png");
+        else if (itemInt <= 8)  this.texture = new Texture("kortsu.png");
+        else if (itemInt <= 12) this.texture = new Texture("lasit.png");
+        else if (itemInt <= 16) this.texture = new Texture("slime.png");
+        else if (itemInt <= 20) this.texture = new Texture("lusikka.png");
+        else if (itemInt <= 24) this.texture = new Texture("omena.png");
+        else if (itemInt <= 28) this.texture = new Texture("ruuvi.png");
+        else if (itemInt <= 32) this.texture = new Texture("sukka.png");
+        else if (itemInt <= 36) this.texture = new Texture("tutti.png");
+        else if (itemInt == 37) this.texture = new Texture("kello.png");
+        else if (itemInt == 38) this.texture = new Texture("puhelin.png");
+        else if (itemInt == 39) this.texture = new Texture("sormus.png");
+        else if (itemInt == 40) this.texture = new Texture("cropped-tekarit.png");
     }
 }

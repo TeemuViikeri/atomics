@@ -58,7 +58,7 @@ public class HighScoreServer {
             public void handleHttpResponse (Net.HttpResponse httpResponse) {
                 String r = httpResponse.getResultAsString();
 
-                JsonValue jsonObject = (new JsonReader().parse(r));
+                JsonValue jsonObject = new JsonReader().parse(r);
 
                 ArrayList<HighScoreEntry> highScores = new ArrayList<>();
 
@@ -68,8 +68,8 @@ public class HighScoreServer {
                             jsonObject.get(i).get(1).asInt());
                     highScores.add(score);
                 }
-                if (verbose)
-                    Gdx.app.log("HighScoreServer", "Fetch: success");
+
+                if (verbose) Gdx.app.log("HighScoreServer", "Fetch: success");
                 source.receiveHighScore(highScores);
             }
 

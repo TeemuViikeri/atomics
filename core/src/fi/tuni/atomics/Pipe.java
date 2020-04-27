@@ -49,7 +49,7 @@ class Pipe extends GameObject {
         this.spawnPoint = position;
         width = 0.5f;
         stateTime = 1f;
-        timeAlive = MathUtils.random(30, 60) - (30f/12f * (PlayScreen.levelMultiplier - 1));
+        timeAlive = MathUtils.random(40, 120) - (40f/12f * (PlayScreen.levelMultiplier - 1));
         TextureRegion[][] temp = TextureRegion.split(
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
@@ -114,7 +114,7 @@ class Pipe extends GameObject {
 
             // Player has been fixing the pipe for over 1s.
             if (fixTimer >= 1 && dead) {
-                timeAlive = MathUtils.random(60,180);
+                timeAlive = MathUtils.random(40, 120) - (40f/12f * (PlayScreen.levelMultiplier - 1));
                 aliveTimer = 0;
                 dead = false;
                 GameAudio.playPipeFixedSound();
@@ -170,7 +170,6 @@ class Pipe extends GameObject {
 
     private BodyDef getDefinitionOfBody() {
         bodyDef = new BodyDef();
-
 
         bodyDef.type = BodyDef.BodyType.KinematicBody;
         float posX = spawnPoint.x + (TILE_LENGTH_PIXELS / 2) * scale;
