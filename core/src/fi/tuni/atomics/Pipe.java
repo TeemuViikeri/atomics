@@ -26,7 +26,7 @@ class Pipe extends GameObject {
             (TiledMapTileLayer) PlayScreen.tiledMap.getLayers().get("airpipes");
     private Texture animationSheet = new Texture("bubbleSequence.png");
     private Texture animationSheet2 = new Texture("bubble2.png");
-    private Texture hammerAnimationSheet = new Texture("vasaraSequence.png");
+    private Texture hammerAnimationSheet = new Texture("vasaraSequence-recolor.png");
     private Animation<TextureRegion> animation;
     private TextureRegion[] frames;
     private Animation<TextureRegion> animation2;
@@ -147,7 +147,7 @@ class Pipe extends GameObject {
                 if (i.fixTimer > 0 && i.isTouched) {
                     Atomics.batch.draw(i.getHammerAnimation().
                         getKeyFrame((i).setStateTime(),true),
-                        i.spawnPoint.x, i.spawnPoint.y - TILE_LENGTH_PIXELS * scale, 0.32f, 0.32f);
+                        i.spawnPoint.x, i.spawnPoint.y - TILE_LENGTH_PIXELS * 2 * scale, 0.5f, 0.5f);
                     if (!i.isFixSoundPlaying) {
                         i.isFixSoundPlaying = true;
                         GameAudio.playFixSound.loop(0.1f);
