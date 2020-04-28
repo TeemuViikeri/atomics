@@ -46,7 +46,7 @@ public class HighScoreScreen implements HighScoreListener, Screen {
         float startHeight = 100f * Gdx.graphics.getHeight() / 640;
         exitButton = new MenuButton(startWidth, startHeight,
                 Gdx.graphics.getWidth() / 2 - startWidth / 2,
-                startHeight,
+                startHeight / 2,
                 new Texture(Localization.getBundle().get("back")));
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
