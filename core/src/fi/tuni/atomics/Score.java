@@ -1,6 +1,7 @@
 package fi.tuni.atomics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -26,6 +27,9 @@ class Score {
         FreeTypeFontGenerator.FreeTypeFontParameter parameter
                 = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 35 * Gdx.graphics.getHeight() / 640;
+        parameter.shadowColor = Color.BLACK;
+        parameter.shadowOffsetX = 3;
+        parameter.shadowOffsetY = 3;
         font = fontGenerator.generateFont(parameter);
         textStyle = new Label.LabelStyle();
         textStyle.font = font;

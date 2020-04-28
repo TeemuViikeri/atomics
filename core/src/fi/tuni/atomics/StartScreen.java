@@ -94,6 +94,7 @@ public class StartScreen implements Screen, HighScoreListener {
             GameAudio.playPlayGameSound();
             if (!Memory.getFirstStartup()) {
                 atomics.setScreen(new tutorialScreen(atomics));
+                Memory.setFirstStartup();
             } else {
                 atomics.setScreen(new PlayScreen(atomics));
             }

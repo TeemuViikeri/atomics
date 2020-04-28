@@ -1,7 +1,6 @@
 package fi.tuni.atomics;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -72,7 +71,8 @@ public class infoScreen implements Screen {
             exitButton.setTouched(false);
         }
         if (tikoButton.isTouched()) {
-            Gdx.net.openURI("https://www.tuni.fi/fi/tule-opiskelemaan/tietojenkasittelyn-tutkinto-ohjelma");
+            Gdx.net.openURI("https://www.tuni.fi/fi/tule-opiskelemaan/" +
+                    "tietojenkasittelyn-tutkinto-ohjelma");
             tikoButton.setTouched(false);
         }
         if (orasButton.isTouched()) {
