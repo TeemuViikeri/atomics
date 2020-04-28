@@ -41,6 +41,7 @@ public class HighScoreServer {
      * Username for the highscore host.
      */
     private static String user;
+    public static int top5Score;
 
     /**
      * fetchHighScores gets high score entries from the server.
@@ -67,6 +68,10 @@ public class HighScoreServer {
                             jsonObject.get(i).get(0).asString(),
                             jsonObject.get(i).get(1).asInt());
                     highScores.add(score);
+
+                    if (i == 4) {
+                        top5Score = jsonObject.get(i).get(1).asInt();
+                    }
                 }
 
                 if (verbose) Gdx.app.log("HighScoreServer", "Fetch: success");
@@ -102,7 +107,7 @@ public class HighScoreServer {
         Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);
 
-        String content = "name=" + highScore.getName() +
+        String content = "player=" + highScore.getName() +
                 "&score=" + highScore.getScore() +
                 "&user=" + user +
                 "&password=" + password;

@@ -1,6 +1,7 @@
 package fi.tuni.atomics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,11 +11,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import java.util.List;
+
 import static fi.tuni.atomics.PlayScreen.ROOM_HEIGHT_PIXELS;
 import static fi.tuni.atomics.PlayScreen.ROOM_WIDTH_PIXELS;
 import static fi.tuni.atomics.PlayScreen.scale;
 
-public class StartScreen implements Screen {
+public class StartScreen implements Screen, HighScoreListener {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Texture background;
@@ -63,7 +66,9 @@ public class StartScreen implements Screen {
         stage.addActor(settingsButton);
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
-        System.out.println(Memory.getFirstStartup());
+        HighScoreServer.readConfig("highscore.config");
+        HighScoreServer.setVerbose(true);
+        HighScoreServer.fetchHighScores(this);
     }
 
     @Override
@@ -118,6 +123,26 @@ public class StartScreen implements Screen {
 
     @Override
     public void dispose() {
+
+    }
+
+    @Override
+    public void receiveHighScore(List<HighScoreEntry> highScores) {
+
+    }
+
+    @Override
+    public void failedToRetrieveHighScores(Throwable t) {
+
+    }
+
+    @Override
+    public void receiveSendReply(Net.HttpResponse httpResponse) {
+
+    }
+
+    @Override
+    public void failedToSendHighScore(Throwable t) {
 
     }
 }

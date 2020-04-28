@@ -13,9 +13,7 @@ class Score {
     private static int score;
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont font;
-    private Label text;
     private Label.LabelStyle textStyle;
-    private Stage stage;
     private GlyphLayout layout;
 
     Score() {
@@ -23,7 +21,7 @@ class Score {
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Raleway-Black.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter
                 = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 30 * Gdx.graphics.getWidth() / 960;
+        parameter.size = 40 * Gdx.graphics.getHeight() / 640;
         font = fontGenerator.generateFont(parameter);
         textStyle = new Label.LabelStyle();
         textStyle.font = font;
@@ -45,6 +43,11 @@ class Score {
     float getTextWidth(String text) {
         layout.setText(font, text);
         return layout.width;
+    }
+
+    float getTextHeight(String text) {
+        layout.setText(font, text);
+        return layout.height;
     }
 
     float getScore() {

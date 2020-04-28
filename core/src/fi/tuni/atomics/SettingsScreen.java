@@ -24,8 +24,6 @@ public class SettingsScreen implements Screen {
     private Atomics atomics;
     private Texture soundsButtonOnTexture = new Texture("ääni_on.png");
     private Texture soundsButtonOffTexture = new Texture("ääni_off.png");
-    Texture languageEN = new Texture("kieli_en.png");
-    Texture languageFI = new Texture("kieli_fi.png");
 
     SettingsScreen(Atomics atomics) {
         this.atomics = atomics;

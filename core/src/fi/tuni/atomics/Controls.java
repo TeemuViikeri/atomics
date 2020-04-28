@@ -46,19 +46,19 @@ class Controls {
         speedButtonTable.setFillParent(true);
         shootButtonTable.setFillParent(true);
 
-        joystickTable.add(touchpad).width(Gdx.graphics.getHeight() / 5.0f)
-                .height(Gdx.graphics.getHeight() / 5.0f)
+        joystickTable.add(touchpad).width(Gdx.graphics.getHeight() / 4.0f)
+                .height(Gdx.graphics.getHeight() / 4.0f)
                 .padLeft(-Gdx.graphics.getWidth() / 3f)
                 .padBottom(-Gdx.graphics.getHeight() / 3.5f)
                 .padTop(Gdx.graphics.getHeight() / 3.5f)
                 .padRight(Gdx.graphics.getWidth() / 3f)
                 .fill();
-        touchpadStyle.knob.setMinWidth(Gdx.graphics.getWidth() / 16.0f);
-        touchpadStyle.knob.setMinHeight(Gdx.graphics.getWidth() / 16.0f);
+        touchpadStyle.knob.setMinWidth(Gdx.graphics.getHeight() / 16.0f);
+        touchpadStyle.knob.setMinHeight(Gdx.graphics.getHeight() / 16.0f);
 
         speedButton = new Button(getButtonStyle());
-        speedButtonTable.add(speedButton).width(Gdx.graphics.getHeight() / 5.0f)
-                .height(Gdx.graphics.getHeight() / 5.0f)
+        speedButtonTable.add(speedButton).width(Gdx.graphics.getHeight() / 4.0f)
+                .height(Gdx.graphics.getHeight() / 4.0f)
                 .padLeft(+Gdx.graphics.getWidth() / 3f)
                 .padBottom(-Gdx.graphics.getHeight() / 3.5f)
                 .padTop(+Gdx.graphics.getHeight() / 3.5f)
@@ -66,13 +66,17 @@ class Controls {
                 .fill();
 
         shootButton = new Button(getShootButtonStyle());
-        shootButtonTable.add(shootButton).width((float) Gdx.graphics.getHeight() / 5.0f)
-                .height((float) Gdx.graphics.getHeight() / 5.0f)
-                .padLeft((float) Gdx.graphics.getWidth() / 3f)
+        shootButtonTable.add(shootButton).width((float) Gdx.graphics.getHeight() / 4.0f)
+                .height((float) Gdx.graphics.getHeight() / 4.0f)
+                .padLeft((float) Gdx.graphics.getWidth() / 4f)
                 .padBottom((float) -Gdx.graphics.getHeight() / 3.5f)
                 .padTop((float) Gdx.graphics.getHeight() / 3.5f)
                 .padRight((float) -Gdx.graphics.getWidth() / 10f)
                 .fill();
+
+        joystickTable.setDebug(true);
+        speedButtonTable.setDebug(true);
+        shootButtonTable.setDebug(true);
 
         stage.addActor(joystickTable);
         stage.addActor(speedButtonTable);

@@ -32,7 +32,7 @@ public class PlayScreen implements Screen {
     private GameUtil gameUtil;
     private Item item;
     private Phosphorus phosphorus;
-    private Score score;
+    public static Score score;
     private Pipe pipes;
     static float HUD_Y;
     private Pause pause;
@@ -203,9 +203,9 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        Controls.getStage().getViewport().update(width, height, true);
-        player.getControls().createButtons(player);
-        score = new Score();
+        //Controls.getStage().getViewport().update(width, height, true);
+        //player.getControls().createButtons(player);
+        //score = new Score();
     }
 
     @Override

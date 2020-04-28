@@ -92,8 +92,6 @@ class Player extends GameObject {
                         * speed * Gdx.graphics.getDeltaTime());
 
             body.setLinearVelocity(force);
-            System.out.println((float) Math.cos(body.getAngle())
-                    * speed * Gdx.graphics.getDeltaTime());
         }
 
         if (!moving && speed >= speedDecrement) {

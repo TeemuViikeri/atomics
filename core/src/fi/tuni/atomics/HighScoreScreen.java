@@ -23,7 +23,6 @@ public class HighScoreScreen implements HighScoreListener, Screen {
     private Atomics atomics;
     GameUtil gameUtil = new GameUtil();
     Score score = new Score();
-    private String asd = "";
     private List<HighScoreEntry> hiscores;
     private boolean fetched = false;
     private MenuButton exitButton;
@@ -35,14 +34,12 @@ public class HighScoreScreen implements HighScoreListener, Screen {
         batch = Atomics.batch;
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
-                960,
-                640);
+                Gdx.graphics.getWidth(),
+                Gdx.graphics.getHeight());
         stage = new Stage();
-        background = new Texture("menubackground.png");
+        background = new Texture("tyhjätausta.png");
         HighScoreServer.readConfig("highscore.config");
         HighScoreServer.setVerbose(true);
-        //HighScoreEntry scoreEntry = new HighScoreEntry("Leevi", 1234);
-        //HighScoreServer.sendNewHighScore(scoreEntry, this);
         HighScoreServer.fetchHighScores(this);
 
         float startWidth = 500f * Gdx.graphics.getWidth() / 960;
@@ -93,15 +90,15 @@ public class HighScoreScreen implements HighScoreListener, Screen {
         }
 
         batch.begin();
+        batch.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
 
-        int y = 600;
+        float y = Gdx.graphics.getHeight() - score.getTextHeight("asdfasdfasfasf") * 2;
         if (fetched) {
             for (HighScoreEntry a : hiscores) {
-                System.out.println(score.getTextWidth(a.getName() + " " + a.getScore()));
                 score.draw(batch, a.getName() + " " + a.getScore(),
-                        new Vector2(480 - score.getTextWidth(a.getName() + " " +
+                        new Vector2(Gdx.graphics.getWidth() / 2f - score.getTextWidth(a.getName() + " " +
                                 a.getScore()) / 2, y));
-                y-=70;
+                y-=score.getTextHeight("asdfasdfsdfasf") * 3;
             }
         }
 

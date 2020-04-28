@@ -1,6 +1,8 @@
 package fi.tuni.atomics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -8,12 +10,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+
+import java.util.List;
 
 import static fi.tuni.atomics.PlayScreen.ROOM_HEIGHT_PIXELS;
 import static fi.tuni.atomics.PlayScreen.ROOM_WIDTH_PIXELS;
 import static fi.tuni.atomics.PlayScreen.scale;
 
-public class EndScreen implements Screen {
+public class EndScreen implements Screen, Input.TextInputListener, HighScoreListener {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Texture background;
@@ -22,15 +27,15 @@ public class EndScreen implements Screen {
     private MenuButton restartButton;
     private MenuButton exitButton;
     private Atomics atomics;
-    private Score score;
+    private String name;
+
 
     EndScreen(Atomics atomics) {
         this.atomics = atomics;
         batch = Atomics.batch;
         camera = new OrthographicCamera();
-        score = new Score();
         camera.setToOrtho(false,
-                960,640);
+                Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         background = new Texture("badlogic.jpg");
         gameUtil = new GameUtil();
         stage = new Stage();
@@ -48,6 +53,12 @@ public class EndScreen implements Screen {
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
         GameAudio.backgroundMusic.stop();
+        HighScoreServer.readConfig("highscore.config");
+        HighScoreServer.setVerbose(true);
+
+        if (PlayScreen.score.getScore() > HighScoreServer.top5Score) {
+            Gdx.input.getTextInput(this, Localization.getBundle().get("newhiscore"), "", "");
+        }
     }
 
     @Override
@@ -57,6 +68,8 @@ public class EndScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        System.out.println(name);
+
         Gdx.input.setInputProcessor(stage);
         Gdx.gl.glClearColor(255,255,0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -71,10 +84,7 @@ public class EndScreen implements Screen {
             exitButton.setTouched(false);
         }
         batch.begin();
-        System.out.println(score.getTextWidth("oot huono pelaa opettele pelaan"));
-        System.out.println(score.getTextWidth("oot huono pelaa opettele pelaan") / 2f);
-        System.out.println(480f - (score.getTextWidth("oot huono pelaa opettele pelaan") / 2f));
-        score.draw(batch, "oot huono opettele pelaa", new Vector2(64f,600));
+        PlayScreen.score.draw(batch, "oot huono opettele pelaa", new Vector2(64f,600));
         batch.end();
     }
 
@@ -100,6 +110,46 @@ public class EndScreen implements Screen {
 
     @Override
     public void dispose() {
+
+    }
+
+    @Override
+    public void input(String text) {
+        name = text;
+        if (name.length() <= 10 && name.length() >= 2) {
+            HighScoreEntry scoreEntry = new HighScoreEntry(name, (int) PlayScreen.score.getScore());
+            HighScoreServer.sendNewHighScore(scoreEntry, this);
+        } else if (name.length() < 2) {
+            Gdx.input.getTextInput(this, Localization.getBundle().get("newhiscore"), "", Localization.getBundle().get("shortname"));
+        } else {
+            Gdx.input.getTextInput(this, Localization.getBundle().get("newhiscore"), "", Localization.getBundle().get("longname"));
+        }
+    }
+
+    @Override
+    public void canceled() {
+        name = "default";
+        HighScoreEntry scoreEntry = new HighScoreEntry(name, (int) PlayScreen.score.getScore());
+        HighScoreServer.sendNewHighScore(scoreEntry, this);
+    }
+
+    @Override
+    public void receiveHighScore(List<HighScoreEntry> highScores) {
+
+    }
+
+    @Override
+    public void failedToRetrieveHighScores(Throwable t) {
+
+    }
+
+    @Override
+    public void receiveSendReply(Net.HttpResponse httpResponse) {
+
+    }
+
+    @Override
+    public void failedToSendHighScore(Throwable t) {
 
     }
 }
