@@ -19,6 +19,8 @@ class Score {
     private GlyphLayout layout;
 
     Score() {
+        Score.collectedNitrogenCounter = 0;
+        Score.collectedPhosphorusCounter = 0;
         score = 0;
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter
