@@ -97,7 +97,6 @@ class Microbe extends GameObject {
                                 * PlayScreen.scale - width * 2),
                 MathUtils.random(3.5f, (PlayScreen.ROOM_HEIGHT_PIXELS
                         - PlayScreen.TILE_LENGTH_PIXELS * 4) * PlayScreen.scale))));
-//        PlayScreen.microbeSpawnSound.play();
     }
 
     void deSpawnMicrobes() {
@@ -140,7 +139,6 @@ class Microbe extends GameObject {
                                         * PlayScreen.scale - 0.5f * 2),
                         MathUtils.random(3.5f, (PlayScreen.ROOM_HEIGHT_PIXELS
                                 - PlayScreen.TILE_LENGTH_PIXELS * 4) * PlayScreen.scale))));
-//                GameAudio.playMicrobeSpawnSound();
             }
         }
     }

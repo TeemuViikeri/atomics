@@ -63,7 +63,6 @@ public class StartScreen implements Screen {
         stage.addActor(settingsButton);
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
-        System.out.println(Memory.getFirstStartup());
     }
 
     @Override

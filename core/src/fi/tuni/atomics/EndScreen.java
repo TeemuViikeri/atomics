@@ -64,6 +64,7 @@ public class EndScreen implements Screen {
         stage.act();
         stage.draw();
         if (restartButton.isTouched()) {
+            GameAudio.playPlayGameSound();
             atomics.setScreen(new PlayScreen(atomics));
         }
         if (exitButton.isTouched()) {
@@ -71,9 +72,6 @@ public class EndScreen implements Screen {
             exitButton.setTouched(false);
         }
         batch.begin();
-        System.out.println(score.getTextWidth("oot huono pelaa opettele pelaan"));
-        System.out.println(score.getTextWidth("oot huono pelaa opettele pelaan") / 2f);
-        System.out.println(480f - (score.getTextWidth("oot huono pelaa opettele pelaan") / 2f));
         score.draw(batch, "oot huono opettele pelaa", new Vector2(64f,600));
         batch.end();
     }

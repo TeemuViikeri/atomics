@@ -97,7 +97,6 @@ public class HighScoreScreen implements HighScoreListener, Screen {
         int y = 600;
         if (fetched) {
             for (HighScoreEntry a : hiscores) {
-                System.out.println(score.getTextWidth(a.getName() + " " + a.getScore()));
                 score.draw(batch, a.getName() + " " + a.getScore(),
                         new Vector2(480 - score.getTextWidth(a.getName() + " " +
                                 a.getScore()) / 2, y));

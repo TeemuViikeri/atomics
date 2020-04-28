@@ -13,9 +13,7 @@ class Score {
     private static int score;
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont font;
-    private Label text;
     private Label.LabelStyle textStyle;
-    private Stage stage;
     private GlyphLayout layout;
 
     Score() {

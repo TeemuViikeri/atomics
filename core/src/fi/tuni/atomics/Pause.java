@@ -11,7 +11,7 @@ import javax.xml.bind.SchemaOutputResolver;
 import static fi.tuni.atomics.PlayScreen.ROOM_HEIGHT_PIXELS;
 import static fi.tuni.atomics.PlayScreen.ROOM_WIDTH_PIXELS;
 
-public class Pause {
+class Pause {
     private MenuButton pauseButton;
     private MenuButton resume;
     private MenuButton exit;
@@ -21,8 +21,6 @@ public class Pause {
     float pauseScreenWidth = 500f * Gdx.graphics.getWidth() / 960f;
     float pauseScreenHeight = 500f * Gdx.graphics.getHeight() / 640f;
     private boolean pauseSoundPlayed;
-    private Texture resumeTexture;
-    private Texture quitTexture;
 
     Pause(Atomics atomics) {
         this.atomics = atomics;
@@ -74,7 +72,6 @@ public class Pause {
             resume.setTouched(false);
             resume.setVisible(false);
             exit.setVisible(false);
-            System.out.println("here");
             pauseSoundPlayed = false;
             PlayScreen.Game_paused = false;
         }
