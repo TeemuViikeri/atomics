@@ -34,16 +34,16 @@ class Pause {
                 Gdx.graphics.getHeight() - (pauseHeight),
                 new Texture("pausebutton.png"));
 
-        float resumeWidth = 400f * Gdx.graphics.getWidth() / 960;
-        float resumeHeight = 100f * Gdx.graphics.getHeight() / 640;
-        resume = new MenuButton(resumeWidth, resumeHeight,
-                Gdx.graphics.getWidth() / 2f - resumeWidth / 2,
-                Gdx.graphics.getHeight() / 2f - pauseScreenHeight / 2 + pauseScreenHeight - resumeHeight * 2,
+        float buttonWidth = 400f * Gdx.graphics.getWidth() / 960;
+        float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
+        resume = new MenuButton(buttonWidth, buttonHeight,
+                Gdx.graphics.getWidth() / 2f - buttonWidth / 2,
+                Gdx.graphics.getHeight() / 2f - pauseScreenHeight / 2 + pauseScreenHeight - buttonHeight * 2,
                 new Texture(Localization.getBundle().get("resume")));
 
-        exit = new MenuButton(resumeWidth, resumeHeight,
-                Gdx.graphics.getWidth() / 2f - resumeWidth / 2,
-                Gdx.graphics.getHeight() / 2f - pauseScreenHeight / 2 + resumeHeight,
+        exit = new MenuButton(buttonWidth, buttonHeight,
+                Gdx.graphics.getWidth() / 2f - buttonWidth / 2,
+                Gdx.graphics.getHeight() / 2f - pauseScreenHeight / 2 + buttonHeight,
                 new Texture(Localization.getBundle().get("menu")));
 
         resume.setVisible(false);

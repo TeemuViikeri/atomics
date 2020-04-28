@@ -34,19 +34,19 @@ public class infoScreen implements Screen {
                 Gdx.graphics.getWidth() / 2f - exitWidth / 2,
                 exitHeight / 2,
                 new Texture(Localization.getBundle().get("back")));
-        float width = 300f * Gdx.graphics.getWidth() / 960;
-        float height = 100f * Gdx.graphics.getHeight() / 640;
-        tikoButton = new MenuButton(width, height,
+        float buttonWidth = 300f * Gdx.graphics.getWidth() / 960;
+        float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
+        tikoButton = new MenuButton(buttonWidth, buttonHeight,
                 16,
-                height * 2f,
+                buttonHeight * 2f,
                 new Texture("tiko.png"));
-        orasButton = new MenuButton(width, height,
-                Gdx.graphics.getWidth() /  2f -width / 2,
-                height * 2f,
+        orasButton = new MenuButton(buttonWidth, buttonHeight,
+                Gdx.graphics.getWidth() /  2f -buttonWidth / 2,
+                buttonHeight * 2f,
                 new Texture("oras.png"));
-        tamkButton = new MenuButton(width, height,
-                Gdx.graphics.getWidth() - width - 16,
-                height * 2f,
+        tamkButton = new MenuButton(buttonWidth, buttonHeight,
+                Gdx.graphics.getWidth() - buttonWidth - 16,
+                buttonHeight * 2f,
                 new Texture("tamk.png"));
         stage.addActor(tamkButton);
         stage.addActor(orasButton);

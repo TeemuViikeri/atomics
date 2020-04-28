@@ -29,12 +29,14 @@ class CollisionHandler implements ContactListener {
                         GameAudio.playVacuumSound(0.08f);
                     }
 
+                    Score.collectedNitrogenCounter++;
                     bodyA.setUserData("dead");
                 } else if (bodyB.getUserData() instanceof Nitrogen) {
                     if (GameUtil.room == 3) {
                         GameAudio.playVacuumSound(0.08f);
                     }
 
+                    Score.collectedNitrogenCounter++;
                     bodyB.setUserData("dead");
                 }
 
@@ -79,10 +81,12 @@ class CollisionHandler implements ContactListener {
             if (bodyA.getUserData() instanceof CollectablePhosphorus) {
                 Score.collectPhosphorus();
                 GameAudio.playCollectablePhosphorusPickedSound();
+                Score.collectedPhosphorusCounter++;
                 bodyA.setUserData("dead");
             } else {
                 Score.collectPhosphorus();
                 GameAudio.playCollectablePhosphorusPickedSound();
+                Score.collectedPhosphorusCounter++;
                 bodyB.setUserData("dead");
             }
         }

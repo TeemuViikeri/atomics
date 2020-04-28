@@ -7,7 +7,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -17,10 +19,16 @@ import java.util.List;
 import static fi.tuni.atomics.PlayScreen.ROOM_HEIGHT_PIXELS;
 import static fi.tuni.atomics.PlayScreen.ROOM_WIDTH_PIXELS;
 import static fi.tuni.atomics.PlayScreen.scale;
+import static fi.tuni.atomics.PlayScreen.score;
 
 public class EndScreen implements Screen, Input.TextInputListener, HighScoreListener {
     private SpriteBatch batch;
     private OrthographicCamera camera;
+    private final int sheetRows = 1;
+    private final int sheetCols = 13;
+    private Texture animationSheet = new Texture("endscreen.png");
+    private Animation<TextureRegion> animation;
+    private float stateTime;
     private Texture background;
     private GameUtil gameUtil;
     private Stage stage;
@@ -39,15 +47,15 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
         background = new Texture("badlogic.jpg");
         gameUtil = new GameUtil();
         stage = new Stage();
-        float startWidth = 200f * Gdx.graphics.getWidth() / 960;
-        float startHeight = 80f * Gdx.graphics.getHeight() / 640;
-        restartButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() / 2f - startWidth,
-                startHeight / 2f,
-                new Texture("START.jpg"));
-        exitButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() / 2f,
-                startHeight / 2f,
+        float buttonWidth = 300f * Gdx.graphics.getWidth() / 960;
+        float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
+        restartButton = new MenuButton(buttonWidth, buttonHeight,
+                32f,
+                Gdx.graphics.getHeight() / 2f - buttonHeight / 2,
+                new Texture(Localization.getBundle().get("endscreenplay")));
+        exitButton = new MenuButton(buttonWidth, buttonHeight,
+                Gdx.graphics.getWidth() - buttonWidth - 32f,
+                Gdx.graphics.getHeight() / 2f - buttonHeight / 2,
                 new Texture(Localization.getBundle().get("menu")));
         stage.addActor(restartButton);
         stage.addActor(exitButton);
@@ -56,8 +64,18 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
         HighScoreServer.readConfig("highscore.config");
         HighScoreServer.setVerbose(true);
 
+        stateTime = 1f;
+        TextureRegion[] frames;
+        TextureRegion[][] temp =  TextureRegion.split(
+                animationSheet,
+                animationSheet.getWidth() / sheetCols,
+                animationSheet.getHeight() / sheetRows);
+        frames = gameUtil.to1d(temp, sheetRows, sheetCols);
+        animation = new Animation<>(0.2f, frames);
+
         if (PlayScreen.score.getScore() > HighScoreServer.top5Score) {
-            Gdx.input.getTextInput(this, Localization.getBundle().get("newhiscore"), "", "");
+            Gdx.input.getTextInput(this,
+                    Localization.getBundle().get("newhiscore"), "", "");
         }
     }
 
@@ -73,7 +91,6 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camera.combined);
         stage.act();
-        stage.draw();
         if (restartButton.isTouched()) {
             GameAudio.playPlayGameSound();
             atomics.setScreen(new PlayScreen(atomics));
@@ -83,8 +100,22 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
             exitButton.setTouched(false);
         }
         batch.begin();
-        PlayScreen.score.draw(batch, "oot huono opettele pelaa", new Vector2(64f,600));
+        batch.draw(animation.getKeyFrame(setStateTime(), true),
+                0,
+                0,
+                Gdx.graphics.getWidth(),
+                Gdx.graphics.getHeight()
+        );
+        PlayScreen.score.draw(batch, "Ansaitsit " + (int) PlayScreen.score.getScore() +
+                        " pistettä! Sait kerättyä talteen " + Score.collectedPhosphorusCounter +
+                        " fosforia ja " + Score.collectedNitrogenCounter +
+                        " typpeä. \nRavinteet menevät eteenpäin kiertoon ja hyötykäyttöön.",
+                new Vector2(32,
+                        Gdx.graphics.getHeight() -
+                                score.getTextHeight("psdglk,spgfsålgksdpågok")));
         batch.end();
+
+        stage.draw();
     }
 
     @Override
@@ -119,9 +150,11 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
             HighScoreEntry scoreEntry = new HighScoreEntry(name, (int) PlayScreen.score.getScore());
             HighScoreServer.sendNewHighScore(scoreEntry, this);
         } else if (name.length() < 2) {
-            Gdx.input.getTextInput(this, Localization.getBundle().get("newhiscore"), "", Localization.getBundle().get("shortname"));
+            Gdx.input.getTextInput(this, Localization.getBundle().get("newhiscore"),
+                    "", Localization.getBundle().get("shortname"));
         } else {
-            Gdx.input.getTextInput(this, Localization.getBundle().get("newhiscore"), "", Localization.getBundle().get("longname"));
+            Gdx.input.getTextInput(this, Localization.getBundle().get("newhiscore"),
+                    "", Localization.getBundle().get("longname"));
         }
     }
 
@@ -150,5 +183,9 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
     @Override
     public void failedToSendHighScore(Throwable t) {
 
+    }
+
+    float setStateTime() {
+        return stateTime+= Gdx.graphics.getDeltaTime();
     }
 }

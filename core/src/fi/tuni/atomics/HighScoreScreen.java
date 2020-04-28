@@ -42,11 +42,11 @@ public class HighScoreScreen implements HighScoreListener, Screen {
         HighScoreServer.setVerbose(true);
         HighScoreServer.fetchHighScores(this);
 
-        float startWidth = 500f * Gdx.graphics.getWidth() / 960;
-        float startHeight = 100f * Gdx.graphics.getHeight() / 640;
-        exitButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() / 2 - startWidth / 2,
-                startHeight / 2,
+        float buttonWidth = 500f * Gdx.graphics.getWidth() / 960;
+        float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
+        exitButton = new MenuButton(buttonWidth, buttonHeight,
+                Gdx.graphics.getWidth() / 2 - buttonWidth / 2,
+                buttonHeight / 2,
                 new Texture(Localization.getBundle().get("back")));
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);

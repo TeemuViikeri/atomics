@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 class Score {
     private static int score;
+    public static int collectedPhosphorusCounter = 0;
+    public static int collectedNitrogenCounter = 0;
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont font;
     private Label.LabelStyle textStyle;
@@ -18,10 +20,10 @@ class Score {
 
     Score() {
         score = 0;
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Raleway-Black.ttf"));
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter
                 = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 40 * Gdx.graphics.getHeight() / 640;
+        parameter.size = 35 * Gdx.graphics.getHeight() / 640;
         font = fontGenerator.generateFont(parameter);
         textStyle = new Label.LabelStyle();
         textStyle.font = font;

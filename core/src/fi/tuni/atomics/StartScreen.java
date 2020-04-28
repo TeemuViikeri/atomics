@@ -43,25 +43,24 @@ public class StartScreen implements Screen, HighScoreListener {
         if (!Memory.getFirstStartup()) {
             Memory.setVolume(0.1f);
             Memory.setLanguage("en");
-            Memory.setFirstStartup();
         }
 
         Localization.setLocale(Memory.getLanguage());
         GameAudio.masterVolume = Memory.getVolume();
 
-        float startWidth = 500f * Gdx.graphics.getWidth() / 960;
-        float startHeight = 100f * Gdx.graphics.getHeight() / 640;
-        startButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() - startWidth,
-                Gdx.graphics.getHeight() - startHeight * 2f,
+        float buttonWidth = 500f * Gdx.graphics.getWidth() / 960;
+        float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
+        startButton = new MenuButton(buttonWidth, buttonHeight,
+                Gdx.graphics.getWidth() - buttonWidth,
+                Gdx.graphics.getHeight() - buttonHeight * 2f,
                 new Texture(Localization.getBundle().get("play")));
-        settingsButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() - startWidth,
-                Gdx.graphics.getHeight() / 2f - startHeight / 2,
+        settingsButton = new MenuButton(buttonWidth, buttonHeight,
+                Gdx.graphics.getWidth() - buttonWidth,
+                Gdx.graphics.getHeight() / 2f - buttonHeight / 2,
                 new Texture(Localization.getBundle().get("settings")));
-        exitButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() - startWidth,
-                startHeight,
+        exitButton = new MenuButton(buttonWidth, buttonHeight,
+                Gdx.graphics.getWidth() - buttonWidth,
+                buttonHeight,
                 new Texture(Localization.getBundle().get("hiscore")));
 
         float infoStartWidth = 300f * Gdx.graphics.getWidth() / 960;
@@ -69,7 +68,7 @@ public class StartScreen implements Screen, HighScoreListener {
         infoButton = new MenuButton(infoStartWidth, infoStartHeight,
                 infoStartWidth / 3,
                 0,
-                new Texture(Localization.getBundle().get("infobutton")));
+                new Texture("info.png"));
         stage.addActor(startButton);
         stage.addActor(settingsButton);
         stage.addActor(exitButton);
@@ -93,7 +92,11 @@ public class StartScreen implements Screen, HighScoreListener {
         stage.act();
         if (startButton.isTouched()) {
             GameAudio.playPlayGameSound();
-            atomics.setScreen(new PlayScreen(atomics));
+            if (!Memory.getFirstStartup()) {
+                atomics.setScreen(new tutorialScreen(atomics));
+            } else {
+                atomics.setScreen(new PlayScreen(atomics));
+            }
             startButton.setTouched(false);
         }
         if (settingsButton.isTouched()) {

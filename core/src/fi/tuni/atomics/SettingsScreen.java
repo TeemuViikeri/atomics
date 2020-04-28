@@ -36,28 +36,28 @@ public class SettingsScreen implements Screen {
         gameUtil = new GameUtil();
         stage = new Stage();
 
-        float startWidth = 500f * Gdx.graphics.getWidth() / 960;
-        float startHeight = 100f * Gdx.graphics.getHeight() / 640;
+        float buttonWidth = 500f * Gdx.graphics.getWidth() / 960;
+        float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
         if (Memory.getVolume() == 0.0f) {
-            soundsButton = new MenuButton(startWidth, startHeight,
-                    Gdx.graphics.getWidth() - startWidth,
-                    Gdx.graphics.getHeight() - startHeight * 2f,
+            soundsButton = new MenuButton(buttonWidth, buttonHeight,
+                    Gdx.graphics.getWidth() - buttonWidth,
+                    Gdx.graphics.getHeight() - buttonHeight * 2f,
                     soundsButtonOffTexture);
         } else {
-            soundsButton = new MenuButton(startWidth, startHeight,
-                    Gdx.graphics.getWidth() - startWidth,
-                    Gdx.graphics.getHeight() - startHeight * 2f,
+            soundsButton = new MenuButton(buttonWidth, buttonHeight,
+                    Gdx.graphics.getWidth() - buttonWidth,
+                    Gdx.graphics.getHeight() - buttonHeight * 2f,
                     soundsButtonOnTexture);
         }
 
-        languageButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() - startWidth,
-                Gdx.graphics.getHeight() / 2f - startHeight / 2,
+        languageButton = new MenuButton(buttonWidth, buttonHeight,
+                Gdx.graphics.getWidth() - buttonWidth,
+                Gdx.graphics.getHeight() / 2f - buttonHeight / 2,
                 new Texture(Localization.getBundle().get("languagebutton")));
 
-        exitButton = new MenuButton(startWidth, startHeight,
-                Gdx.graphics.getWidth() - startWidth,
-                startHeight,
+        exitButton = new MenuButton(buttonWidth, buttonHeight,
+                Gdx.graphics.getWidth() - buttonWidth,
+                buttonHeight,
                 new Texture(Localization.getBundle().get("back")));
         stage.addActor(soundsButton);
         stage.addActor(languageButton);
