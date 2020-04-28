@@ -68,8 +68,6 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
 
     @Override
     public void render(float delta) {
-        System.out.println(name);
-
         Gdx.input.setInputProcessor(stage);
         Gdx.gl.glClearColor(255,255,0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -77,6 +75,7 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
         stage.act();
         stage.draw();
         if (restartButton.isTouched()) {
+            GameAudio.playPlayGameSound();
             atomics.setScreen(new PlayScreen(atomics));
         }
         if (exitButton.isTouched()) {

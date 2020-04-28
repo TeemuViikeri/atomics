@@ -99,13 +99,11 @@ public class SettingsScreen implements Screen {
                 Localization.setLocale("en");
                 languageButton.setTexture(new Texture(Localization.getBundle().get("languagebutton")));
                 exitButton.setTexture(new Texture(Localization.getBundle().get("back")));
-                System.out.println(Localization.getBundle().getLocale());
             } else {
                 Memory.setLanguage("fi");
                 Localization.setLocale("fi");
                 languageButton.setTexture(new Texture(Localization.getBundle().get("languagebutton")));
                 exitButton.setTexture(new Texture(Localization.getBundle().get("back")));
-                System.out.println(Localization.getBundle().getLocale());
             }
 
             languageButton.setTouched(false);
