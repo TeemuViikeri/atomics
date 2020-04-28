@@ -92,7 +92,7 @@ public class StartScreen implements Screen, HighScoreListener {
         stage.act();
         if (startButton.isTouched()) {
             GameAudio.playPlayGameSound();
-            if (!Memory.getFirstStartup()) {
+            if (Memory.getFirstStartup()) {
                 atomics.setScreen(new tutorialScreen(atomics));
                 Memory.setFirstStartup();
             } else {

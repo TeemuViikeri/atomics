@@ -15,6 +15,7 @@ public class tutorialScreen implements Screen {
     private MenuButton nextButton;
     private GameUtil gameUtil;
     private Stage stage;
+    private int tutorialScreenCounter = 1;
 
 
     tutorialScreen(Atomics atomics) {
@@ -26,13 +27,13 @@ public class tutorialScreen implements Screen {
                 Gdx.graphics.getWidth(),
                 Gdx.graphics.getHeight());
         gameUtil = new GameUtil();
-        background = new Texture("tyhjätausta.png");
+        background = new Texture(Localization.getBundle().get("tutorial1"));
 
         float buttonWidth = 500f * Gdx.graphics.getWidth() / 960;
         float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
         nextButton = new MenuButton(buttonWidth, buttonHeight,
-                Gdx.graphics.getWidth() / 2 - buttonWidth / 2,
-                buttonHeight / 2,
+                Gdx.graphics.getWidth() / 2f - buttonWidth / 2,
+                0,
                 new Texture(Localization.getBundle().get("next")));
         stage.addActor(nextButton);
         Gdx.input.setInputProcessor(stage);
@@ -49,7 +50,12 @@ public class tutorialScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
         if (nextButton.isTouched()) {
-
+            if (tutorialScreenCounter == 1) {
+                background = new Texture(Localization.getBundle().get("tutorial2"));
+                tutorialScreenCounter++;
+            } else {
+                atomics.setScreen(new PlayScreen(atomics));
+            }
             nextButton.setTouched(false);
         }
 
