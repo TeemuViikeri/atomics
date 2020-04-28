@@ -24,6 +24,7 @@ class GameAudio {
     static Sound playGameSound = Gdx.audio.newSound(Gdx.files.internal("playgame.ogg"));
     static Sound pauseToMenuSound = Gdx.audio.newSound(Gdx.files.internal("pausetomenu.ogg"));
     static Sound backSound = Gdx.audio.newSound(Gdx.files.internal("backtostart.ogg"));
+    static Sound tractorSound = Gdx.audio.newSound(Gdx.files.internal("traktor.ogg"));
     static float masterVolume = 0.1f;
 
     static void playBackgroundMusic() {
@@ -102,6 +103,10 @@ class GameAudio {
 
     static void playBackSound() {
         backSound.play(masterVolume);
+    }
+
+    static void playTractorSound() {
+        tractorSound.play(masterVolume);
     }
 
     void dispose() {

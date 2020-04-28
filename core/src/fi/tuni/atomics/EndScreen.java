@@ -77,6 +77,8 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
             Gdx.input.getTextInput(this,
                     Localization.getBundle().get("newhiscore"), "", "");
         }
+
+        GameAudio.tractorSound.loop(0.05f);
     }
 
     @Override
@@ -94,10 +96,12 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
         if (restartButton.isTouched()) {
             GameAudio.playPlayGameSound();
             atomics.setScreen(new PlayScreen(atomics));
+            GameAudio.tractorSound.stop();
         }
         if (exitButton.isTouched()) {
             atomics.setScreen(new StartScreen(atomics));
             exitButton.setTouched(false);
+            GameAudio.tractorSound.stop();
         }
         batch.begin();
         batch.draw(animation.getKeyFrame(setStateTime(), true),
