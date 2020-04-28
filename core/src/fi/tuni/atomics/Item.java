@@ -11,19 +11,19 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 class Item extends GameObject {
     private float spawnTimer = 0;
     Vector2 spawnPoint;
-    Texture fishTexture = new Texture("kala2.png");
-    Texture condomTexture = new Texture("kortsu.png");
-    Texture glassesTexture = new Texture("lasit.png");
-    Texture slimeTexture = new Texture("slime.png");
-    Texture spoonTexture = new Texture("lusikka.png");
-    Texture appleTexture = new Texture("omena.png");
-    Texture screwTexture = new Texture("ruuvi.png");
-    Texture sockTexture = new Texture("sukka.png");
-    Texture pacifierTexture = new Texture("tutti.png");
-    Texture clockTexture = new Texture("kello.png");
-    Texture phoneTexture = new Texture("puhelin.png");
-    Texture ringTexture = new Texture("sormus.png");
-    Texture denturesTexture = new Texture("cropped-tekarit.png");
+    private Texture fishTexture = new Texture("kala2.png");
+    private Texture condomTexture = new Texture("kortsu.png");
+    private Texture glassesTexture = new Texture("lasit.png");
+    private Texture slimeTexture = new Texture("slime.png");
+    private Texture spoonTexture = new Texture("lusikka.png");
+    private Texture appleTexture = new Texture("omena.png");
+    private Texture screwTexture = new Texture("ruuvi.png");
+    private Texture sockTexture = new Texture("sukka.png");
+    private Texture pacifierTexture = new Texture("tutti.png");
+    private Texture clockTexture = new Texture("kello.png");
+    private Texture phoneTexture = new Texture("puhelin.png");
+    private Texture ringTexture = new Texture("sormus.png");
+    private Texture denturesTexture = new Texture("cropped-tekarit.png");
 
     private Item(Vector2 spawnPoint, int itemInt) {
         this.spawnPoint = spawnPoint;
@@ -78,8 +78,7 @@ class Item extends GameObject {
 
             int itemInt = MathUtils.random(1, 40);
             int rotation = MathUtils.random(0, 360);
-
-            if (itemInt < 36) {
+            if (itemInt <= 36) {
                 Item item = new Item(spawnPoint, itemInt);
                 item.createBody();
                 item.body.setTransform(spawnPoint, rotation);
