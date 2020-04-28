@@ -26,6 +26,7 @@ public class StartScreen implements Screen, HighScoreListener {
     private MenuButton startButton;
     private MenuButton settingsButton;
     private MenuButton exitButton;
+    private MenuButton infoButton;
     private Atomics atomics;
 
     StartScreen(Atomics atomics) {
@@ -62,9 +63,17 @@ public class StartScreen implements Screen, HighScoreListener {
                 Gdx.graphics.getWidth() - startWidth,
                 startHeight,
                 new Texture(Localization.getBundle().get("hiscore")));
+
+        float infoStartWidth = 300f * Gdx.graphics.getWidth() / 960;
+        float infoStartHeight = 100f * Gdx.graphics.getHeight() / 640;
+        infoButton = new MenuButton(infoStartWidth, infoStartHeight,
+                infoStartWidth / 3,
+                0,
+                new Texture(Localization.getBundle().get("infobutton")));
         stage.addActor(startButton);
         stage.addActor(settingsButton);
         stage.addActor(exitButton);
+        stage.addActor(infoButton);
         Gdx.input.setInputProcessor(stage);
         HighScoreServer.readConfig("highscore.config");
         HighScoreServer.setVerbose(true);
@@ -93,6 +102,10 @@ public class StartScreen implements Screen, HighScoreListener {
         }
         if (exitButton.isTouched()) {
             atomics.setScreen(new HighScoreScreen(atomics));
+            startButton.setTouched(false);
+        }
+        if (infoButton.isTouched()) {
+            atomics.setScreen(new infoScreen(atomics));
             startButton.setTouched(false);
         }
         batch.begin();
