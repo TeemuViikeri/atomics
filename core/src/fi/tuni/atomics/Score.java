@@ -26,7 +26,7 @@ class Score {
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter
                 = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 35 * Gdx.graphics.getHeight() / 640;
+        parameter.size = 40 * Gdx.graphics.getWidth() / 960;
         parameter.shadowColor = Color.BLACK;
         parameter.shadowOffsetX = 3;
         parameter.shadowOffsetY = 3;
