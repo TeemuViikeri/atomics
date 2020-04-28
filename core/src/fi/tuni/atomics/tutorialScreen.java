@@ -29,8 +29,8 @@ public class tutorialScreen implements Screen {
         gameUtil = new GameUtil();
         background = new Texture(Localization.getBundle().get("tutorial1"));
 
-        float buttonWidth = 500f * Gdx.graphics.getWidth() / 960;
-        float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
+        float buttonWidth = 400f * Gdx.graphics.getWidth() / 960;
+        float buttonHeight = 80f * Gdx.graphics.getHeight() / 640;
         nextButton = new MenuButton(buttonWidth, buttonHeight,
                 Gdx.graphics.getWidth() / 2f - buttonWidth / 2,
                 0,
