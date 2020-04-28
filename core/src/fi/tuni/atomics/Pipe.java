@@ -112,9 +112,14 @@ class Pipe extends GameObject {
         if (Controls.shootButton.isPressed() && isTouched) {
             fixTimer+=Gdx.graphics.getDeltaTime();
 
+            if (!isFixSoundPlaying) {
+                isFixSoundPlaying = true;
+                GameAudio.playFixSound.loop(0.1f);
+            }
+
             // Player has been fixing the pipe for over 1s.
             if (fixTimer >= 1 && dead) {
-                timeAlive = MathUtils.random(40, 120) - (40f/12f * (PlayScreen.levelMultiplier - 1));
+                timeAlive = MathUtils.random(40, 120) - (40f/15f * (PlayScreen.levelMultiplier - 1));
                 aliveTimer = 0;
                 dead = false;
                 GameAudio.playPipeFixedSound();
@@ -132,6 +137,8 @@ class Pipe extends GameObject {
 
         if (!Controls.shootButton.isPressed()) {
             fixTimer = 0;
+            isFixSoundPlaying = false;
+            GameAudio.playFixSound.stop();
         }
     }
 
@@ -142,7 +149,6 @@ class Pipe extends GameObject {
                         i.spawnPoint.x, i.spawnPoint.y,0.32f,0.32f);
                 batch.draw(i.getAnimation2().getKeyFrame((i).setStateTime(), true),
                         i.spawnPoint.x, i.spawnPoint.y + 0.32f,0.32f,0.32f);
-                i.isFixSoundPlaying = false;
             } else {
                 if (i.fixTimer > 0 && i.isTouched) {
                     Atomics.batch.draw(i.getHammerAnimation().
@@ -150,13 +156,6 @@ class Pipe extends GameObject {
                         i.spawnPoint.x - TILE_LENGTH_PIXELS / 3 * scale,
                         i.spawnPoint.y - TILE_LENGTH_PIXELS * 2 * scale,
                         0.5f, 0.5f);
-                    if (!i.isFixSoundPlaying) {
-                        i.isFixSoundPlaying = true;
-                        GameAudio.playFixSound.loop(0.1f);
-                    }
-                } else {
-                    i.isFixSoundPlaying = false;
-                    GameAudio.playFixSound.stop();
                 }
             }
         }

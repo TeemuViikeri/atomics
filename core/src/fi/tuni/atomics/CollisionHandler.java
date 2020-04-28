@@ -1,5 +1,6 @@
 package fi.tuni.atomics;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -156,10 +157,14 @@ class CollisionHandler implements ContactListener {
         Body bodyA = contact.getFixtureA().getBody();
         Body bodyB = contact.getFixtureB().getBody();
 
-        if (bodyA.getUserData() instanceof Pipe) {
-            ((Pipe) bodyA.getUserData()).isTouched = false;
-        } else if (bodyB.getUserData() instanceof Pipe) {
-            ((Pipe) bodyB.getUserData()).isTouched = false;
+        if (isPlayerContactingPipe(bodyA, bodyB)) {
+            if (bodyA.getUserData() instanceof Pipe) {
+                ((Pipe) bodyA.getUserData()).isTouched = false;
+                GameAudio.playFixSound.stop();
+            } else if (bodyB.getUserData() instanceof Pipe) {
+                ((Pipe) bodyB.getUserData()).isTouched = false;
+                GameAudio.playFixSound.stop();
+            }
         }
     }
 
