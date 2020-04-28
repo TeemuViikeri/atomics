@@ -33,7 +33,7 @@ public class tutorialScreen implements Screen {
         float buttonHeight = 80f * Gdx.graphics.getHeight() / 640;
         nextButton = new MenuButton(buttonWidth, buttonHeight,
                 Gdx.graphics.getWidth() / 2f - buttonWidth / 2,
-                0,
+                16,
                 new Texture(Localization.getBundle().get("next")));
         stage.addActor(nextButton);
         Gdx.input.setInputProcessor(stage);
