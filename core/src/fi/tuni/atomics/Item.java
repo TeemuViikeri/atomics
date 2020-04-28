@@ -11,6 +11,19 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 class Item extends GameObject {
     private float spawnTimer = 0;
     Vector2 spawnPoint;
+    Texture fishTexture = new Texture("kala2.png");
+    Texture condomTexture = new Texture("kortsu.png");
+    Texture glassesTexture = new Texture("lasit.png");
+    Texture slimeTexture = new Texture("slime.png");
+    Texture spoonTexture = new Texture("lusikka.png");
+    Texture appleTexture = new Texture("omena.png");
+    Texture screwTexture = new Texture("ruuvi.png");
+    Texture sockTexture = new Texture("sukka.png");
+    Texture pacifierTexture = new Texture("tutti.png");
+    Texture clockTexture = new Texture("kello.png");
+    Texture phoneTexture = new Texture("puhelin.png");
+    Texture ringTexture = new Texture("sormus.png");
+    Texture denturesTexture = new Texture("cropped-tekarit.png");
 
     private Item(Vector2 spawnPoint, int itemInt) {
         this.spawnPoint = spawnPoint;
@@ -95,18 +108,18 @@ class Item extends GameObject {
     }
 
     void getRandomTexture(int itemInt) {
-        if      (itemInt <= 4)  this.texture = new Texture("kala2.png");
-        else if (itemInt <= 8)  this.texture = new Texture("kortsu.png");
-        else if (itemInt <= 12) this.texture = new Texture("lasit.png");
-        else if (itemInt <= 16) this.texture = new Texture("slime.png");
-        else if (itemInt <= 20) this.texture = new Texture("lusikka.png");
-        else if (itemInt <= 24) this.texture = new Texture("omena.png");
-        else if (itemInt <= 28) this.texture = new Texture("ruuvi.png");
-        else if (itemInt <= 32) this.texture = new Texture("sukka.png");
-        else if (itemInt <= 36) this.texture = new Texture("tutti.png");
-        else if (itemInt == 37) this.texture = new Texture("kello.png");
-        else if (itemInt == 38) this.texture = new Texture("puhelin.png");
-        else if (itemInt == 39) this.texture = new Texture("sormus.png");
-        else if (itemInt == 40) this.texture = new Texture("cropped-tekarit.png");
+        if      (itemInt <= 4)  this.texture = fishTexture;
+        else if (itemInt <= 8)  this.texture = condomTexture;
+        else if (itemInt <= 12) this.texture = glassesTexture;
+        else if (itemInt <= 16) this.texture = slimeTexture;
+        else if (itemInt <= 20) this.texture = spoonTexture;
+        else if (itemInt <= 24) this.texture = appleTexture;
+        else if (itemInt <= 28) this.texture = screwTexture;
+        else if (itemInt <= 32) this.texture = sockTexture;
+        else if (itemInt <= 36) this.texture = pacifierTexture;
+        else if (itemInt == 37) this.texture = clockTexture;
+        else if (itemInt == 38) this.texture = phoneTexture;
+        else if (itemInt == 39) this.texture = ringTexture;
+        else if (itemInt == 40) this.texture = denturesTexture;
     }
 }
