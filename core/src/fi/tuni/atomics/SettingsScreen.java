@@ -16,7 +16,6 @@ public class SettingsScreen implements Screen {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Texture background;
-    private GameUtil gameUtil;
     private Stage stage;
     private MenuButton soundsButton;
     private MenuButton languageButton;
@@ -34,7 +33,6 @@ public class SettingsScreen implements Screen {
                 ROOM_WIDTH_PIXELS * scale,
                 ROOM_HEIGHT_PIXELS * scale);
         background = new Texture("menubackground.png");
-        gameUtil = new GameUtil();
         stage = new Stage();
 
         float buttonWidth = 500f * Gdx.graphics.getWidth() / 960;

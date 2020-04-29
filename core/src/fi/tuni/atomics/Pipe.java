@@ -20,22 +20,16 @@ import static fi.tuni.atomics.PlayScreen.scale;
 import static fi.tuni.atomics.PlayScreen.tiledMap;
 
 class Pipe extends GameObject {
-    private final int sheetRows = 2;
-    private final int sheetCols = 4;
     private TiledMapTileLayer tiledMapTileLayer =
             (TiledMapTileLayer) PlayScreen.tiledMap.getLayers().get("airpipes");
     private Texture animationSheet = new Texture("bubbleSequence.png");
     private Texture animationSheet2 = new Texture("bubble2.png");
     private Texture hammerAnimationSheet = new Texture("vasaraSequence-recolor.png");
     private Animation<TextureRegion> animation;
-    private TextureRegion[] frames;
     private Animation<TextureRegion> animation2;
-    private TextureRegion[] frames2;
     private Animation<TextureRegion> hammerAnimation;
-    private TextureRegion[] hammerFrames;
     private Vector2 spawnPoint;
     private float stateTime;
-    private GameUtil gameUtil = new GameUtil();
     private Array<Pipe> pipes = new Array<>();
     private boolean dead = false; // is the pipe dead.
     private float timeAlive;
@@ -50,7 +44,9 @@ class Pipe extends GameObject {
         width = 0.5f;
         stateTime = 1f;
         timeAlive = MathUtils.random(40, 120 - (40f/12f * (PlayScreen.levelMultiplier - 1)));
-        TextureRegion[][] temp = TextureRegion.split(
+            int sheetRows = 2;
+            int sheetCols = 4;
+            TextureRegion[][] temp = TextureRegion.split(
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
                 animationSheet.getHeight() / sheetRows);
@@ -62,11 +58,12 @@ class Pipe extends GameObject {
                 hammerAnimationSheet,
                 hammerAnimationSheet.getWidth() / 3,
                 hammerAnimationSheet.getHeight());
-        frames = gameUtil.to1d(temp, sheetRows, sheetCols);
+            GameUtil gameUtil = new GameUtil();
+            TextureRegion[] frames = gameUtil.to1d(temp, sheetRows, sheetCols);
         animation = new Animation<>(1 / 10f, frames);
-        frames2 = gameUtil.to1d(temp2, sheetRows, sheetCols);
+            TextureRegion[] frames2 = gameUtil.to1d(temp2, sheetRows, sheetCols);
         animation2 = new Animation<>(1 / 10f, frames2);
-        hammerFrames = gameUtil.to1d(hammerTemp, 1, 3);
+            TextureRegion[] hammerFrames = gameUtil.to1d(hammerTemp, 1, 3);
         hammerAnimation = new Animation<>(1 / 10f, hammerFrames);
         createBody();
         microbe.spawnMicrobes();

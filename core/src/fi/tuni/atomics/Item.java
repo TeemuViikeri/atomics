@@ -24,7 +24,6 @@ class Item extends GameObject {
     private Texture phoneTexture = new Texture("puhelin.png");
     private Texture ringTexture = new Texture("sormus.png");
     private Texture denturesTexture = new Texture("cropped-tekarit.png");
-    float spawnFrequency;
 
     private Item(Vector2 spawnPoint, int itemInt) {
         this.spawnPoint = spawnPoint;
@@ -71,7 +70,7 @@ class Item extends GameObject {
     }
 
     void spawnItem() {
-        float spawnFrequency = 0;
+        float spawnFrequency;
 
         if (PlayScreen.levelMultiplier <= 11) {
             spawnFrequency = 7 - (7f/15f * (PlayScreen.levelMultiplier - 1));

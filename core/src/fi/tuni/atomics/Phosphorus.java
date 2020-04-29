@@ -11,25 +11,21 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 class Phosphorus extends GameObject{
-    private final int TOP = 1, TOPLEFT = 2, TOPRIGHT = 3, BOTTOM = 4, BOTTOMLEFT = 5,
-            BOTTOMRIGHT = 6;
-    private final int sheetRows = 2;
-    private final int sheetCols = 5;
     static final float width = 0.5f;
     private Texture animationSheet = new Texture("phosphorus2.png");
     private float spawnTimer = 0;
     private float spawnFrequency = 2;
     private Animation<TextureRegion> animation;
     private Vector2 spawnPoint;
-    private int spawnside;
     private float stateTime;
-    private float speed = 2;
     private GameUtil gameUtil = new GameUtil();
 
     private Phosphorus(Vector2 spawnPoint) {
         this.spawnPoint = spawnPoint;
         stateTime = 1f;
         TextureRegion[] frames;
+        int sheetRows = 2;
+        int sheetCols = 5;
         TextureRegion[][] temp =  TextureRegion.split(
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
@@ -78,10 +74,10 @@ class Phosphorus extends GameObject{
         if (PlayScreen.levelMultiplier <= 11) {
             spawnFrequency = 2 - (2f/15f * (PlayScreen.levelMultiplier - 1));
         }
-        speed = 2 + (2/15f * (PlayScreen.levelMultiplier - 1));
+        float speed = 2 + (2 / 15f * (PlayScreen.levelMultiplier - 1));
 
         spawnTimer += Gdx.graphics.getDeltaTime();
-        spawnside =  MathUtils.random(1,6);
+        int spawnside = MathUtils.random(1, 6);
 
         if (spawnTimer >= spawnFrequency) {
             spawnPoint = gameUtil.getSpawnPoint(spawnside);
@@ -89,6 +85,12 @@ class Phosphorus extends GameObject{
             phosphorus.createBody();
             spawnTimer = 0;
 
+            int TOP = 1;
+            int TOPLEFT = 2;
+            int TOPRIGHT = 3;
+            int BOTTOM = 4;
+            int BOTTOMLEFT = 5;
+            int BOTTOMRIGHT = 6;
             if (spawnside == TOP) {
                 phosphorus.body.applyLinearImpulse(new Vector2(0, -speed),
                         phosphorus.body.getWorldCenter(),  true);
@@ -102,10 +104,10 @@ class Phosphorus extends GameObject{
                 phosphorus.body.applyLinearImpulse(new Vector2(0, speed),
                         phosphorus.body.getWorldCenter(),  true);
             } else if (spawnside == BOTTOMLEFT) {
-                phosphorus.body.applyLinearImpulse(new Vector2(1.5f * speed,speed),
+                phosphorus.body.applyLinearImpulse(new Vector2(1.5f * speed, speed),
                         phosphorus.body.getWorldCenter(), true);
             } else if (spawnside == BOTTOMRIGHT) {
-                phosphorus.body.applyLinearImpulse(new Vector2(-1.5f * speed,speed),
+                phosphorus.body.applyLinearImpulse(new Vector2(-1.5f * speed, speed),
                         phosphorus.body.getWorldCenter(), true);
             }
         }

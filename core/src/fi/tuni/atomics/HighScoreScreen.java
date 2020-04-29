@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.List;
 
-public class HighScoreScreen implements HighScoreListener, Screen {
+class HighScoreScreen implements HighScoreListener, Screen {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Texture background;

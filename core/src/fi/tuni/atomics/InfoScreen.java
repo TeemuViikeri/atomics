@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public class InfoScreen implements Screen {
+class InfoScreen implements Screen {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Texture background;

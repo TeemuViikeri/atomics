@@ -14,7 +14,7 @@ import static fi.tuni.atomics.PlayScreen.ROOM_HEIGHT_PIXELS;
 import static fi.tuni.atomics.PlayScreen.ROOM_WIDTH_PIXELS;
 import static fi.tuni.atomics.PlayScreen.scale;
 
-public class StartScreen implements Screen, HighScoreListener {
+class StartScreen implements Screen, HighScoreListener {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Texture background;

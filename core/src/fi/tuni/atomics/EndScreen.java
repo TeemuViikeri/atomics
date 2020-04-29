@@ -12,24 +12,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import java.util.List;
 
-import static fi.tuni.atomics.PlayScreen.ROOM_HEIGHT_PIXELS;
-import static fi.tuni.atomics.PlayScreen.ROOM_WIDTH_PIXELS;
-import static fi.tuni.atomics.PlayScreen.scale;
 import static fi.tuni.atomics.PlayScreen.score;
 
 public class EndScreen implements Screen, Input.TextInputListener, HighScoreListener {
     private SpriteBatch batch;
     private OrthographicCamera camera;
-    private final int sheetRows = 1;
-    private final int sheetCols = 13;
     private Texture animationSheet = new Texture("endscreen.png");
     private Animation<TextureRegion> animation;
     private float stateTime;
-    private GameUtil gameUtil;
     private Stage stage;
     private MenuButton restartButton;
     private MenuButton exitButton;
@@ -44,7 +37,7 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
                 Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        gameUtil = new GameUtil();
+        GameUtil gameUtil = new GameUtil();
         stage = new Stage();
         float buttonWidth = 300f * Gdx.graphics.getWidth() / 960;
         float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
@@ -64,6 +57,8 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
 
         stateTime = 1f;
         TextureRegion[] frames;
+        int sheetRows = 1;
+        int sheetCols = 13;
         TextureRegion[][] temp =  TextureRegion.split(
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,

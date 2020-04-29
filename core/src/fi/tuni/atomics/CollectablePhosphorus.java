@@ -9,21 +9,21 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 class CollectablePhosphorus extends GameObject {
-    private final int sheetRows = 2;
-    private final int sheetCols = 6;
     private Texture animationSheet = new Texture("kerattavasequence.png");
     private Animation<TextureRegion> animation;
     private float stateTime;
-    private GameUtil gameUtil = new GameUtil();
 
     CollectablePhosphorus(float x, float y) {
         stateTime = 1f;
         width = 0.5f;
         TextureRegion[] frames;
+        int sheetRows = 2;
+        int sheetCols = 6;
         TextureRegion[][] temp =  TextureRegion.split(
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
                 animationSheet.getHeight() / sheetRows);
+        GameUtil gameUtil = new GameUtil();
         frames = gameUtil.to1d(temp, sheetRows, sheetCols);
         animation = new Animation<>(1 / 10f, frames);
         createBody(x, y);

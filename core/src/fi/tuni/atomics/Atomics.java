@@ -1,20 +1,17 @@
 package fi.tuni.atomics;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Atomics extends Game {
 	static SpriteBatch batch;
 	static SpriteBatch HUDBatch;
-    private StartScreen startScreen;
 
 	@Override
 	public void create () {
         batch = new SpriteBatch();
         HUDBatch = new SpriteBatch();
-        startScreen = new StartScreen(this);
+		StartScreen startScreen = new StartScreen(this);
         setScreen(startScreen);
     }
 

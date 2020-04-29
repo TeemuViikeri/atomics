@@ -3,11 +3,10 @@ package fi.tuni.atomics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
-public class Memory {
+class Memory {
     static String getLanguage() {
         Preferences prefs = Gdx.app.getPreferences("MyPreferences");
-        String language = prefs.getString("language");
-        return language;
+        return prefs.getString("language");
     }
 
     static void setLanguage(String language) {
@@ -24,8 +23,7 @@ public class Memory {
 
     static float getVolume() {
         Preferences prefs = Gdx.app.getPreferences("MyPreferences");
-        float volume = prefs.getFloat("volume");
-        return volume;
+        return prefs.getFloat("volume");
     }
 
     static void setFirstStartup() {
@@ -36,7 +34,6 @@ public class Memory {
 
     static boolean getFirstStartup() {
         Preferences prefs = Gdx.app.getPreferences("MyPreferences");
-        boolean firstStartup = prefs.getBoolean("firstStartup");
-        return firstStartup;
+        return prefs.getBoolean("firstStartup");
     }
 }

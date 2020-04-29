@@ -1,6 +1,5 @@
 package fi.tuni.atomics;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -13,22 +12,17 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 
 class Microbe extends GameObject {
-    private final int sheetRows = 1;
-    private final int sheetCols = 2;
     private Texture animationSheet = new Texture("happyMicrobe.png");
     private Animation<TextureRegion> animation;
     private Vector2 spawnPoint;
     private float stateTime;
-    private float forceX = 1.5f;
-    private float forceY = -1f;
     private float nitrogenTimer = 0;
     private float nitrogenFrequency = 2;
     private boolean dead = false;
-    private GameUtil gameUtil = new GameUtil();
     static Array<Microbe> microbes = new Array<>();
     private static Nitrogen nitrogen = new Nitrogen();
 
-    Microbe(Vector2 spawnPoint) {
+    private Microbe(Vector2 spawnPoint) {
         this.spawnPoint = spawnPoint;
         stateTime = 1f;
         width = 0.5f / 10;
@@ -37,10 +31,13 @@ class Microbe extends GameObject {
         targetHeight = height * 10;
         speed = 2;
         TextureRegion[] frames;
+        int sheetRows = 1;
+        int sheetCols = 2;
         TextureRegion[][] temp =  TextureRegion.split(
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
                 animationSheet.getHeight() / sheetRows);
+        GameUtil gameUtil = new GameUtil();
         frames = gameUtil.to1d(temp, sheetRows, sheetCols);
         animation = new Animation<>(1 / 1f, frames);
         createBody();
@@ -104,13 +101,15 @@ class Microbe extends GameObject {
         microbes.removeIndex(microbes.size - 1);
     }
 
-    public void die() {
+    void die() {
         dead = true;
     }
 
     private void applyForce() {
         int forceDecider = MathUtils.random(1,2);
 
+        float forceX = 1.5f;
+        float forceY = -1f;
         if (forceDecider == 1) {
             body.applyLinearImpulse(new Vector2(forceX, forceY), body.getWorldCenter(), true);
         } else {

@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 
-public class MenuButton extends Actor {
+ class MenuButton extends Actor {
     private Texture texture;
     private boolean touched = false;
 

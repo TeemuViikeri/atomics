@@ -13,8 +13,6 @@ import com.badlogic.gdx.utils.Array;
 class GameUtil {
     private double accumulator = 0;
     static int room = 2;
-    private final int TOP = 1, TOPLEFT = 2, TOPRIGHT = 3, BOTTOM = 4, BOTTOMLEFT = 5,
-            BOTTOMRIGHT = 6;
 
     void drawBodies(Array<Body> bodies, SpriteBatch batch, Player player) {
         for (Body body: bodies) {
@@ -55,7 +53,7 @@ class GameUtil {
                 0.5f
                 );
             } else if (temp instanceof CollectablePhosphorus) {
-                clearCollectables(temp, 5);
+                clearCollectables(temp);
                 batch.draw(((CollectablePhosphorus) temp)
                         .getAnimation()
                         .getKeyFrame(((CollectablePhosphorus)temp)
@@ -159,8 +157,8 @@ class GameUtil {
         return count;
     }
 
-    private void clearCollectables(GameObject collectable, float timer) {
-        if (collectable.timeAlive >= timer) {
+    private void clearCollectables(GameObject collectable) {
+        if (collectable.timeAlive >= 5) {
             collectable.body.setUserData("dead");
         } else {
             collectable.timeAlive += Gdx.graphics.getDeltaTime();
@@ -300,6 +298,12 @@ class GameUtil {
         float y;
         float x;
 
+        int TOP = 1;
+        int TOPLEFT = 2;
+        int TOPRIGHT = 3;
+        int BOTTOM = 4;
+        int BOTTOMLEFT = 5;
+        int BOTTOMRIGHT = 6;
         if (spawnside == TOP) {
             x = MathUtils.random((PlayScreen.ROOM_WIDTH_PIXELS + PlayScreen.PIPE_HORIZONTAL_PIXELS) * PlayScreen.scale,
                     (PlayScreen.ROOM_WIDTH_PIXELS * 2 + PlayScreen.PIPE_HORIZONTAL_PIXELS) * PlayScreen.scale - Phosphorus.width);

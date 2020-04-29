@@ -41,7 +41,6 @@ class Player extends GameObject {
         controls.createButtons(this);
     }
 
-    // Body creation
     private void createSubmarineBody() {
         body = PlayScreen.world.createBody(getSubmarineBodyDef());
         body.setGravityScale(0);
@@ -63,9 +62,6 @@ class Player extends GameObject {
         fixtureDef = new FixtureDef();
 
         fixtureDef.filter.groupIndex = -1;
-        //fixtureDef.density     = 2f;
-        //fixtureDef.restitution = 1f;
-        //fixtureDef.friction    = 0;
 
         shape = new PolygonShape();
         ((PolygonShape) shape).setAsBox(0.25f, 0.125f);
@@ -74,7 +70,6 @@ class Player extends GameObject {
         return fixtureDef;
     }
 
-    // Inputs
     void submarineMove() {
         float speedDecrement = 3f;
 
@@ -134,12 +129,12 @@ class Player extends GameObject {
     private void submarineRotation() {
         desiredAngle = (float) Math.atan2( -deltaX, deltaY) + (float) Math.toRadians(90);
         float totalRotation = desiredAngle - body.getAngle();
-        // Finds the shortest route
+
         while (totalRotation < -180 * MathUtils.degreesToRadians)
             totalRotation += 360 * MathUtils.degreesToRadians;
         while (totalRotation > 180 * MathUtils.degreesToRadians)
             totalRotation -= 360 * MathUtils.degreesToRadians;
-        // maximum rotation per render
+
         float maxRotation = 1000 * MathUtils.degreesToRadians * Gdx.graphics.getDeltaTime();
         float newAngle = body.getAngle()
                 + Math.min(maxRotation, Math.max(-maxRotation, totalRotation));
