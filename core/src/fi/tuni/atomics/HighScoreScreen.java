@@ -97,10 +97,10 @@ public class HighScoreScreen implements HighScoreListener, Screen {
         float y = Gdx.graphics.getHeight() - score.getTextHeight("asdfasdfasfasf") * 2;
         if (fetched) {
             for (HighScoreEntry a : hiscores) {
-                score.draw(batch, a.getName() + " " + a.getScore(),
+                score.drawHiscores(batch, a.getName() + " " + a.getScore(),
                         new Vector2(Gdx.graphics.getWidth() / 2f -
-                                score.getTextWidth(a.getName() + " " + a.getScore()) / 2, y));
-                y-=score.getTextHeight("asdfasdfsdfasf") * 2.5;
+                                score.getTextWidthHiscores(a.getName() + " " + a.getScore()) / 2, y));
+                y-=score.getTextHeightHiscores("asdfasdfsdfasf") * 2;
             }
         }
 

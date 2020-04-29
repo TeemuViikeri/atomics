@@ -123,7 +123,7 @@ public class PlayScreen implements Screen {
         // HUD render
         Atomics.HUDBatch.begin();
         player.drawHitpoints(Atomics.HUDBatch);
-        score.draw(Atomics.HUDBatch);
+        score.drawScore(Atomics.HUDBatch);
         Atomics.HUDBatch.end();
 
         Controls.getStage().draw();
