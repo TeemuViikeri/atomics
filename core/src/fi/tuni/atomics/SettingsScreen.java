@@ -85,7 +85,9 @@ public class SettingsScreen implements Screen {
                 Memory.setVolume(0.1f);
                 soundsButton.setTexture(soundsButtonOnTexture);
                 GameAudio.playSettingsSwitchSound(Memory.getVolume());
+                GameAudio.masterVolume = Memory.getVolume();
                 GameAudio.playMenuMusic();
+                System.out.println("here");
             } else {
                 isMuted = true;
                 soundsButton.setTexture(soundsButtonOffTexture);
