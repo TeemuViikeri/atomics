@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public class tutorialScreen implements Screen {
+public class TutorialScreen implements Screen {
     private Atomics atomics;
     private SpriteBatch batch;
     private OrthographicCamera camera;
@@ -18,7 +18,7 @@ public class tutorialScreen implements Screen {
     private int tutorialScreenCounter = 1;
 
 
-    tutorialScreen(Atomics atomics) {
+    TutorialScreen(Atomics atomics) {
         this.atomics = atomics;
         batch = Atomics.batch;
         stage = new Stage();

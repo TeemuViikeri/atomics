@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public class infoScreen implements Screen {
+public class InfoScreen implements Screen {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Texture background;
@@ -17,9 +17,10 @@ public class infoScreen implements Screen {
     private MenuButton tikoButton;
     private MenuButton orasButton;
     private MenuButton tamkButton;
+    private MenuButton tutorialButton;
     private Stage stage;
 
-    infoScreen(Atomics atomics) {
+    InfoScreen(Atomics atomics) {
         this.atomics = atomics;
         batch = Atomics.batch;
         camera = new OrthographicCamera();
@@ -29,28 +30,33 @@ public class infoScreen implements Screen {
 
         float exitWidth = 500f * Gdx.graphics.getWidth() / 960;
         float exitHeight = 100f * Gdx.graphics.getHeight() / 640;
+        float buttonWidth = 300f * Gdx.graphics.getWidth() / 960;
+        float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
         exitButton = new MenuButton(exitWidth, exitHeight,
                 Gdx.graphics.getWidth() / 2f - exitWidth / 2,
                 exitHeight / 2,
                 new Texture(Localization.getBundle().get("back")));
-        float buttonWidth = 300f * Gdx.graphics.getWidth() / 960;
-        float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
+        tutorialButton = new MenuButton(exitWidth, exitHeight,
+                Gdx.graphics.getWidth() / 2f - exitWidth / 2,
+                buttonHeight * 2f,
+                new Texture(Localization.getBundle().get("tutorialbutton")));
         tikoButton = new MenuButton(buttonWidth, buttonHeight,
                 16,
-                buttonHeight * 2f,
+                exitHeight * 3.5f,
                 new Texture("tiko.png"));
         orasButton = new MenuButton(buttonWidth, buttonHeight,
                 Gdx.graphics.getWidth() /  2f -buttonWidth / 2,
-                buttonHeight * 2f,
+                exitHeight * 3.5f,
                 new Texture("oras.png"));
         tamkButton = new MenuButton(buttonWidth, buttonHeight,
                 Gdx.graphics.getWidth() - buttonWidth - 16,
-                buttonHeight * 2f,
+                exitHeight * 3.5f,
                 new Texture("tamk.png"));
         stage.addActor(tamkButton);
         stage.addActor(orasButton);
         stage.addActor(exitButton);
         stage.addActor(tikoButton);
+        stage.addActor(tutorialButton);
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -84,6 +90,10 @@ public class infoScreen implements Screen {
         if (tamkButton.isTouched()) {
             Gdx.net.openURI("https://www.tuni.fi/fi/tutustu-meihin/tamk");
             tamkButton.setTouched(false);
+        }
+        if (tutorialButton.isTouched()) {
+            atomics.setScreen(new TutorialScreen(atomics));
+            tutorialButton.setTouched(false);
         }
 
         batch.begin();
