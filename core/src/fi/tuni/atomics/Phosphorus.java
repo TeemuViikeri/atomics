@@ -75,7 +75,9 @@ class Phosphorus extends GameObject{
     }
 
     void spawnPhosphorus() {
-        spawnFrequency = 2 - (2f/15f * (PlayScreen.levelMultiplier - 1));
+        if (PlayScreen.levelMultiplier <= 11) {
+            spawnFrequency = 2 - (2f/15f * (PlayScreen.levelMultiplier - 1));
+        }
         speed = 2 + (2/15f * (PlayScreen.levelMultiplier - 1));
 
         spawnTimer += Gdx.graphics.getDeltaTime();

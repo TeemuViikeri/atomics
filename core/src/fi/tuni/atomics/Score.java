@@ -33,7 +33,7 @@ class Score {
         Score.collectedPhosphorusCounter = 0;
         score = 0;
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
-        parameter.size = 40 * Gdx.graphics.getWidth() / 960;
+        parameter.size = 37 * Gdx.graphics.getWidth() / 960;
         parameter.shadowColor = Color.BLACK;
         parameter.shadowOffsetX = 3;
         parameter.shadowOffsetY = 3;
