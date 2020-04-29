@@ -163,7 +163,8 @@ class Player extends GameObject {
             true
         );
 
-        GameAudio.playShootingSound();
+        if (!SettingsScreen.isMuted)
+            GameAudio.playShootingSound();
     }
 
     static void loseHitpoint() {

@@ -72,9 +72,11 @@ public class PlayScreen implements Screen {
 
         // TiledMap
         gameAudio = new GameAudio();
-        GameAudio.playBackgroundMusic();
         tiledMap = new TmxMapLoader().load("atomics.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
+
+        if (!SettingsScreen.isMuted)
+            GameAudio.playBackgroundMusic();
 
         // Box2D
         world = new World(new Vector2(0, -0.5f), true);
@@ -156,14 +158,18 @@ public class PlayScreen implements Screen {
             }
 
             if (player.checkIfDead()) {
-                GameAudio.clock.stop();
+                if (!SettingsScreen.isMuted)
+                    GameAudio.clock.stop();
+
                 gameUtil.endGame(game);
             }
 
             if (gameUtil.getItemCount() >= 40 || gameUtil.getAmountOfDeadPipes() == 4) {
                 if (!clockPlaying) {
+                    if (!SettingsScreen.isMuted)
+                        GameAudio.playClock();
+
                     clockPlaying = true;
-                    GameAudio.playClock();
                 }
 
                 if (clockPlaying) {
@@ -171,14 +177,19 @@ public class PlayScreen implements Screen {
                 }
 
                 if (gameOverTimer >= 10f) {
-                    GameAudio.clock.stop();
+                    if (!SettingsScreen.isMuted)
+                        GameAudio.clock.stop();
+
                     gameUtil.endGame(game);
                 }
             }
 
             if (gameUtil.getItemCount() < 40 && gameUtil.getAmountOfDeadPipes() < 4) {
+                gameOverTimer = 0;
                 clockPlaying = false;
-                GameAudio.clock.stop();
+
+                if (!SettingsScreen.isMuted)
+                    GameAudio.clock.stop();
             }
 
             // Spawns

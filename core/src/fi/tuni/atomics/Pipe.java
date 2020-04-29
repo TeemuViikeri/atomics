@@ -49,7 +49,7 @@ class Pipe extends GameObject {
         this.spawnPoint = position;
         width = 0.5f;
         stateTime = 1f;
-        timeAlive = MathUtils.random(40, 120) - (40f/12f * (PlayScreen.levelMultiplier - 1));
+        timeAlive = MathUtils.random(40, 120 - (40f/12f * (PlayScreen.levelMultiplier - 1)));
         TextureRegion[][] temp = TextureRegion.split(
                 animationSheet,
                 animationSheet.getWidth() / sheetCols,
@@ -100,8 +100,10 @@ class Pipe extends GameObject {
                 tiledMapTileLayer.getCell((int) tileXPosition, 2)
                         .setTile(tiledMap.getTileSets().getTile(16));
                 i.dead = true;
-                GameAudio.playPipeBrokenSound();
                 microbe.deSpawnMicrobes();
+
+                if (!SettingsScreen.isMuted)
+                    GameAudio.playPipeBrokenSound();
             }
 
             i.fixPipe((int)tileXPosition);
@@ -114,7 +116,9 @@ class Pipe extends GameObject {
 
             if (!isFixSoundPlaying) {
                 isFixSoundPlaying = true;
-                GameAudio.playFixSound.loop(0.1f);
+
+                if (!SettingsScreen.isMuted)
+                    GameAudio.playFixSound.loop(0.1f);
             }
 
             // Player has been fixing the pipe for over 1s.
@@ -122,23 +126,28 @@ class Pipe extends GameObject {
                 timeAlive = MathUtils.random(40, 120) - (40f/15f * (PlayScreen.levelMultiplier - 1));
                 aliveTimer = 0;
                 dead = false;
-                GameAudio.playPipeFixedSound();
                 microbe.spawnMicrobes();
-                GameAudio.playMicrobeSpawnSound();
                 tiledMapTileLayer.getCell(tileXPosition, 0)
                         .setTile(tiledMap.getTileSets().getTile(13));
                 tiledMapTileLayer.getCell(tileXPosition, 1)
                         .setTile(tiledMap.getTileSets().getTile(13));
                 tiledMapTileLayer.getCell(tileXPosition, 2)
                         .setTile(tiledMap.getTileSets().getTile(5));
-                GameAudio.playFixSound.stop();
+
+                if (!SettingsScreen.isMuted) {
+                    GameAudio.playPipeFixedSound();
+                    GameAudio.playMicrobeSpawnSound();
+                    GameAudio.playFixSound.stop();
+                }
             }
         }
 
         if (!Controls.shootButton.isPressed()) {
             fixTimer = 0;
             isFixSoundPlaying = false;
-            GameAudio.playFixSound.stop();
+
+            if (!SettingsScreen.isMuted)
+                GameAudio.playFixSound.stop();
         }
     }
 

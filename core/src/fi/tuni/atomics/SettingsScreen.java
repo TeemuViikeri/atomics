@@ -24,6 +24,7 @@ public class SettingsScreen implements Screen {
     private Atomics atomics;
     private Texture soundsButtonOnTexture = new Texture("ääni_on.png");
     private Texture soundsButtonOffTexture = new Texture("ääni_off.png");
+    static boolean isMuted = false;
 
     SettingsScreen(Atomics atomics) {
         this.atomics = atomics;
@@ -64,6 +65,7 @@ public class SettingsScreen implements Screen {
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
     }
+
     @Override
     public void show() {
 
@@ -78,12 +80,13 @@ public class SettingsScreen implements Screen {
         stage.act();
 
         if (soundsButton.isTouched()) {
-
-            if (Memory.getVolume() == 0) {
-                soundsButton.setTexture(soundsButtonOnTexture);
-                GameAudio.playSettingsSwitchSound();
+            if (isMuted) {
+                isMuted = false;
                 Memory.setVolume(0.1f);
+                soundsButton.setTexture(soundsButtonOnTexture);
+                GameAudio.playSettingsSwitchSound(Memory.getVolume());
             } else {
+                isMuted = true;
                 soundsButton.setTexture(soundsButtonOffTexture);
                 Memory.setVolume(0);
             }
@@ -92,7 +95,8 @@ public class SettingsScreen implements Screen {
         }
 
         if (languageButton.isTouched()) {
-            GameAudio.playSettingsSwitchSound();
+            if (Memory.getVolume() > 0)
+                GameAudio.playSettingsSwitchSound(Memory.getVolume());
 
             if (Localization.getBundle().getLocale().toString().equals("fi")) {
                 Memory.setLanguage("en");
@@ -110,7 +114,9 @@ public class SettingsScreen implements Screen {
         }
 
         if (exitButton.isTouched()) {
-            GameAudio.playBackSound();
+            if (!isMuted)
+                GameAudio.playBackSound();
+
             atomics.setScreen(new StartScreen(atomics));
             exitButton.setTouched(false);
         }

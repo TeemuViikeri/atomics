@@ -61,11 +61,12 @@ class Pause {
             exit.setVisible(false);
             pauseSoundPlayed = false;
             PlayScreen.Game_paused = false;
-            GameAudio.playBackgroundMusic();
+
+            if (!SettingsScreen.isMuted)
+                GameAudio.playBackgroundMusic();
         }
 
         if (exit.isTouched()) {
-            GameAudio.playPauseToMenuSound();
             atomics.setScreen(new StartScreen(atomics));
             exit.setTouched(false);
             pauseButton.setTouched(false);
@@ -74,6 +75,9 @@ class Pause {
             exit.setVisible(false);
             pauseSoundPlayed = false;
             PlayScreen.Game_paused = false;
+
+            if (!SettingsScreen.isMuted)
+                GameAudio.playPauseToMenuSound();
         }
 
         pauseStage.act();
@@ -81,19 +85,23 @@ class Pause {
         if (pauseButton.isTouched()) {
             if (!pauseSoundPlayed) {
                 pauseSoundPlayed = true;
-                GameAudio.playPauseSound();
+
+                if (!SettingsScreen.isMuted)
+                    GameAudio.playPauseSound();
             }
 
             Gdx.input.setInputProcessor(pauseStage);
             resume.setVisible(true);
             exit.setVisible(true);
-            GameAudio.backgroundMusic.stop();
             Atomics.HUDBatch.draw(pauseBackground,
                     Gdx.graphics.getWidth() / 2f - pauseScreenWidth / 2,
                     Gdx.graphics.getHeight() / 2f - pauseScreenHeight / 2,
                     pauseScreenWidth,
                     pauseScreenHeight);
             PlayScreen.Game_paused = true;
+
+            if (!SettingsScreen.isMuted)
+                GameAudio.backgroundMusic.stop();
         }
         Atomics.HUDBatch.end();
         pauseStage.draw();

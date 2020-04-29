@@ -89,8 +89,8 @@ class GameAudio {
         pauseSound.play(masterVolume);
     }
 
-    static void playSettingsSwitchSound() {
-        settingsSwitchSound.play(masterVolume);
+    static void playSettingsSwitchSound(float volume) {
+        settingsSwitchSound.play(volume);
     }
 
     static void playPlayGameSound() {

@@ -90,28 +90,36 @@ public class StartScreen implements Screen, HighScoreListener {
         gameUtil.clearScreen();
         batch.setProjectionMatrix(camera.combined);
         stage.act();
+
         if (startButton.isTouched()) {
-            GameAudio.playPlayGameSound();
+            if (!SettingsScreen.isMuted)
+                GameAudio.playPlayGameSound();
+
             if (!Memory.getFirstStartup()) {
                 atomics.setScreen(new tutorialScreen(atomics));
                 Memory.setFirstStartup();
             } else {
                 atomics.setScreen(new tutorialScreen(atomics));
             }
+
             startButton.setTouched(false);
         }
+
         if (settingsButton.isTouched()) {
             atomics.setScreen(new SettingsScreen(atomics));
             startButton.setTouched(false);
         }
+
         if (exitButton.isTouched()) {
             atomics.setScreen(new HighScoreScreen(atomics));
             startButton.setTouched(false);
         }
+
         if (infoButton.isTouched()) {
             atomics.setScreen(new infoScreen(atomics));
             startButton.setTouched(false);
         }
+
         batch.begin();
         batch.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
         batch.end();

@@ -66,7 +66,9 @@ public class infoScreen implements Screen {
         stage.act();
 
         if (exitButton.isTouched()) {
-            GameAudio.playBackSound();
+            if (!SettingsScreen.isMuted)
+                GameAudio.playBackSound();
+
             atomics.setScreen(new StartScreen(atomics));
             exitButton.setTouched(false);
         }

@@ -36,6 +36,7 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
     private MenuButton exitButton;
     private Atomics atomics;
     private String name;
+    private boolean isTractorSoundPlaying;
 
 
     EndScreen(Atomics atomics) {
@@ -60,7 +61,6 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
         stage.addActor(restartButton);
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
-        GameAudio.backgroundMusic.stop();
         HighScoreServer.readConfig("highscore.config");
         HighScoreServer.setVerbose(true);
 
@@ -72,13 +72,12 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
                 animationSheet.getHeight() / sheetRows);
         frames = gameUtil.to1d(temp, sheetRows, sheetCols);
         animation = new Animation<>(0.2f, frames);
+        isTractorSoundPlaying = false;
 
         if (PlayScreen.score.getScore() > HighScoreServer.top5Score) {
             Gdx.input.getTextInput(this,
                     Localization.getBundle().get("newhiscore"), "", "");
         }
-
-        GameAudio.tractorSound.loop(0.05f);
     }
 
     @Override
@@ -93,16 +92,32 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camera.combined);
         stage.act();
-        if (restartButton.isTouched()) {
-            GameAudio.playPlayGameSound();
-            atomics.setScreen(new PlayScreen(atomics));
-            GameAudio.tractorSound.stop();
+
+        if (!isTractorSoundPlaying) {
+            if (!SettingsScreen.isMuted) {
+                isTractorSoundPlaying = true;
+                GameAudio.backgroundMusic.stop();
+                GameAudio.tractorSound.loop(0.05f);
+            }
         }
+
+        if (restartButton.isTouched()) {
+            if (!SettingsScreen.isMuted) {
+                GameAudio.playPlayGameSound();
+                GameAudio.tractorSound.stop();
+            }
+
+            atomics.setScreen(new PlayScreen(atomics));
+        }
+
         if (exitButton.isTouched()) {
+            if (!SettingsScreen.isMuted)
+                GameAudio.tractorSound.stop();
+
             atomics.setScreen(new StartScreen(atomics));
             exitButton.setTouched(false);
-            GameAudio.tractorSound.stop();
         }
+
         batch.begin();
         batch.draw(animation.getKeyFrame(setStateTime(), true),
                 0,
@@ -189,7 +204,7 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
 
     }
 
-    float setStateTime() {
+    private float setStateTime() {
         return stateTime+= Gdx.graphics.getDeltaTime();
     }
 }

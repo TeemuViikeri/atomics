@@ -342,15 +342,20 @@ class GameUtil {
 
     void endGame(Atomics game) {
         if (PlayScreen.clockPlaying) {
-            GameAudio.clock.stop();
+            if (!SettingsScreen.isMuted)
+                GameAudio.clock.stop();
+
             PlayScreen.clockPlaying = false;
             PlayScreen.gameOverTimer = 0;
         }
 
+        if (!SettingsScreen.isMuted) {
+            GameAudio.backgroundMusic.stop();
+            GameAudio.playGameOverSound();
+        }
+
         PlayScreen.levelMultiplier = 1;
         PlayScreen.breakpoint = 250;
-        GameAudio.backgroundMusic.stop();
-        GameAudio.playGameOverSound();
         game.setScreen(new EndScreen(game));
     }
 }
