@@ -19,6 +19,7 @@ class Score {
     private BitmapFont font2;
     private Label.LabelStyle textStyle;
     private GlyphLayout layout;
+    private GameUtil gameUtil = new GameUtil();
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter
             = new FreeTypeFontGenerator.FreeTypeFontParameter();
     private FreeTypeFontGenerator.FreeTypeFontParameter parameterHiscores
@@ -47,7 +48,8 @@ class Score {
 
     void drawScore(SpriteBatch batch) {
         font.draw(batch, Localization.getBundle().get("score") +
-                        score + "    " + getScoreMultiplier() + "x",
+                        score + "    " + getScoreMultiplier() + "x" + "    " +
+                        Localization.getBundle().get("items") + gameUtil.getItemCount() + "/40",
                 PlayScreen.TILE_LENGTH_PIXELS * 2,
                 PlayScreen.HUD_Y + layout.height);
     }
