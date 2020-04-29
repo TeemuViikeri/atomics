@@ -16,13 +16,16 @@ class Score {
     public static int collectedNitrogenCounter = 0;
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont font;
-    private BitmapFont font2;
+    private BitmapFont fontHiscores;
+    private BitmapFont fontInfoScreen;
     private Label.LabelStyle textStyle;
     private GlyphLayout layout;
     private GameUtil gameUtil = new GameUtil();
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter
             = new FreeTypeFontGenerator.FreeTypeFontParameter();
     private FreeTypeFontGenerator.FreeTypeFontParameter parameterHiscores
+            = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    private FreeTypeFontGenerator.FreeTypeFontParameter parameterInfoScreen
             = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
     Score() {
@@ -38,7 +41,12 @@ class Score {
         parameterHiscores.shadowColor = Color.BLACK;
         parameterHiscores.shadowOffsetX = 3;
         parameterHiscores.shadowOffsetY = 3;
-        font2 = fontGenerator.generateFont(parameterHiscores);
+        parameterInfoScreen.size = 22 * Gdx.graphics.getWidth() / 960;
+        parameterInfoScreen.shadowColor = Color.BLACK;
+        parameterInfoScreen.shadowOffsetX = 3;
+        parameterInfoScreen.shadowOffsetY = 3;
+        fontInfoScreen = fontGenerator.generateFont(parameterInfoScreen);
+        fontHiscores = fontGenerator.generateFont(parameterHiscores);
         font = fontGenerator.generateFont(parameter);
         textStyle = new Label.LabelStyle();
         textStyle.font = font;
@@ -59,16 +67,30 @@ class Score {
     }
 
     void drawHiscores(SpriteBatch batch, String text, Vector2 pos) {
-        font2.draw(batch, text, pos.x, pos.y);
+        fontHiscores.draw(batch, text, pos.x, pos.y);
+    }
+
+    void drawInfoScreen(SpriteBatch batch, String text, Vector2 pos) {
+        fontInfoScreen.draw(batch, text, pos.x, pos.y);
     }
 
     float getTextWidthHiscores(String text) {
-        layout.setText(font2, text);
+        layout.setText(fontHiscores, text);
         return layout.width;
     }
 
     float getTextHeightHiscores(String text) {
-        layout.setText(font2, text);
+        layout.setText(fontHiscores, text);
+        return layout.height;
+    }
+
+    float getTextWidthInfoScreen(String text) {
+        layout.setText(fontHiscores, text);
+        return layout.width;
+    }
+
+    float getTextHeightInfoScreen(String text) {
+        layout.setText(fontHiscores, text);
         return layout.height;
     }
 
