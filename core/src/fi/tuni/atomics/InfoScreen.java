@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class InfoScreen implements Screen {
@@ -20,6 +21,7 @@ public class InfoScreen implements Screen {
     private MenuButton tutorialButton;
     private Stage stage;
     static boolean tutorialFromInfoScreen;
+    private Score score;
 
     InfoScreen(Atomics atomics) {
         this.atomics = atomics;
@@ -27,6 +29,7 @@ public class InfoScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         stage = new Stage();
+        score = new Score();
         background = new Texture("tyhjätausta.png");
 
         float exitWidth = 500f * Gdx.graphics.getWidth() / 960;
@@ -100,6 +103,9 @@ public class InfoScreen implements Screen {
 
         batch.begin();
         batch.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
+        score.drawInfoScreen(batch, Localization.getBundle().get("backgroundmusic"),
+                new Vector2(32, Gdx.graphics.getHeight() -
+                                score.getTextHeightInfoScreen("ABCDEFG") /  2));
         batch.end();
 
         stage.draw();
