@@ -156,7 +156,10 @@ class StartScreen implements Screen, HighScoreListener {
 
     @Override
     public void dispose() {
-
+        batch.dispose();
+        background.dispose();
+        stage.dispose();
+        atomics.dispose();
     }
 
     @Override
@@ -176,9 +179,5 @@ class StartScreen implements Screen, HighScoreListener {
 
     @Override
     public void failedToSendHighScore(Throwable t) {
-        batch.dispose();
-        background.dispose();
-        stage.dispose();
-        atomics.dispose();
     }
 }
