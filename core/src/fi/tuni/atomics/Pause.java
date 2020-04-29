@@ -2,14 +2,10 @@ package fi.tuni.atomics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import javax.xml.bind.SchemaOutputResolver;
-
-import static fi.tuni.atomics.PlayScreen.ROOM_HEIGHT_PIXELS;
-import static fi.tuni.atomics.PlayScreen.ROOM_WIDTH_PIXELS;
+import static fi.tuni.atomics.PlayScreen.TILE_LENGTH_PIXELS;
 
 class Pause {
     private MenuButton pauseButton;
@@ -18,8 +14,8 @@ class Pause {
     private Texture pauseBackground;
     private Stage pauseStage;
     private Atomics atomics;
-    float pauseScreenWidth = 500f * Gdx.graphics.getWidth() / 960f;
-    float pauseScreenHeight = 500f * Gdx.graphics.getHeight() / 640f;
+    private float pauseScreenWidth = 500f * Gdx.graphics.getWidth() / 960f;
+    private float pauseScreenHeight = 500f * Gdx.graphics.getHeight() / 640f;
     private boolean pauseSoundPlayed;
 
     Pause(Atomics atomics) {
@@ -30,8 +26,10 @@ class Pause {
 
         float pauseWidth = 50f * Gdx.graphics.getWidth() / 960;
         float pauseHeight = 50f * Gdx.graphics.getHeight() / 640;
-        pauseButton = new MenuButton(pauseWidth, pauseHeight, 0,
-                Gdx.graphics.getHeight() - (pauseHeight),
+        pauseButton = new MenuButton(
+                pauseWidth, pauseHeight,
+                Gdx.graphics.getWidth() - (pauseWidth + TILE_LENGTH_PIXELS),
+                Gdx.graphics.getHeight() - (pauseHeight + TILE_LENGTH_PIXELS - 6f),
                 new Texture("pausebutton.png"));
 
         float buttonWidth = 400f * Gdx.graphics.getWidth() / 960;
