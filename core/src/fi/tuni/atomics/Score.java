@@ -124,6 +124,7 @@ class Score {
 
     public void dispose() {
         font.dispose();
-        font2.dispose();
+        fontHiscores.dispose();
+        fontInfoScreen.dispose();
     }
 }

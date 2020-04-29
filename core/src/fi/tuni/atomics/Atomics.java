@@ -35,6 +35,5 @@ public class Atomics extends Game {
 	public void dispose () {
 		batch.dispose();
 		HUDBatch.dispose();
-		this.dispose();
 	}
 }
