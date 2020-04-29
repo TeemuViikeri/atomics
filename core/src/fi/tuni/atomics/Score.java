@@ -70,7 +70,7 @@ class Score {
         score += 5 * getScoreMultiplier();
     }
 
-    static void collectRareItem() { score += 50; }
+    static void collectRareItem() { score += 100; }
 
     static void collectItem() {
         score++;

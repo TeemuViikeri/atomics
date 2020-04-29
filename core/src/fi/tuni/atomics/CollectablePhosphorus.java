@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 class CollectablePhosphorus extends GameObject {
     private final int sheetRows = 2;
     private final int sheetCols = 6;
-    static private Texture animationSheet = new Texture("kerattavasequence.png");
+    private Texture animationSheet = new Texture("kerattavasequence.png");
     private Animation<TextureRegion> animation;
     private float stateTime;
     private GameUtil gameUtil = new GameUtil();

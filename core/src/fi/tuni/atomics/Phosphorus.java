@@ -16,7 +16,7 @@ class Phosphorus extends GameObject{
     private final int sheetRows = 2;
     private final int sheetCols = 5;
     static final float width = 0.5f;
-    static private Texture animationSheet = new Texture("phosphorus2.png");
+    private Texture animationSheet = new Texture("phosphorus2.png");
     private float spawnTimer = 0;
     private float spawnFrequency = 2;
     private Animation<TextureRegion> animation;
