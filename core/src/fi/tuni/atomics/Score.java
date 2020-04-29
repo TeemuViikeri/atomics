@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 class Score {
     private static int score;
-    public static int collectedPhosphorusCounter = 0;
-    public static int collectedNitrogenCounter = 0;
+    static int collectedPhosphorusCounter = 0;
+    static int collectedNitrogenCounter = 0;
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont font;
     private BitmapFont fontHiscores;

@@ -118,7 +118,7 @@ class Pipe extends GameObject {
                 isFixSoundPlaying = true;
 
                 if (!SettingsScreen.isMuted)
-                    GameAudio.playFixSound.loop(0.1f);
+                    GameAudio.playFixSound();
             }
 
             // Player has been fixing the pipe for over 1s.
