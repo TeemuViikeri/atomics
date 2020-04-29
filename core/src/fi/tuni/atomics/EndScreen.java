@@ -97,14 +97,14 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
             if (!SettingsScreen.isMuted) {
                 isTractorSoundPlaying = true;
                 GameAudio.backgroundMusic.stop();
-                GameAudio.tractorSound.loop(0.05f);
+                GameAudio.playTractorSound();
             }
         }
 
         if (restartButton.isTouched()) {
             if (!SettingsScreen.isMuted) {
                 GameAudio.playPlayGameSound();
-                GameAudio.tractorSound.stop();
+                GameAudio.playTractorSound();
             }
 
             atomics.setScreen(new PlayScreen(atomics));

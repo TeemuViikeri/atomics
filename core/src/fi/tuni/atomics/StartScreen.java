@@ -28,6 +28,7 @@ public class StartScreen implements Screen, HighScoreListener {
     private MenuButton exitButton;
     private MenuButton infoButton;
     private Atomics atomics;
+    private boolean isMusicPlaying;
 
     StartScreen(Atomics atomics) {
         this.atomics = atomics;
@@ -91,9 +92,18 @@ public class StartScreen implements Screen, HighScoreListener {
         batch.setProjectionMatrix(camera.combined);
         stage.act();
 
-        if (startButton.isTouched()) {
+        if (!isMusicPlaying) {
+            isMusicPlaying = true;
+
             if (!SettingsScreen.isMuted)
+                GameAudio.playMenuMusic();
+        }
+
+        if (startButton.isTouched()) {
+            if (!SettingsScreen.isMuted) {
                 GameAudio.playPlayGameSound();
+                GameAudio.menuMusic.stop();
+            }
 
             if (!Memory.getFirstStartup()) {
                 atomics.setScreen(new tutorialScreen(atomics));
@@ -102,6 +112,7 @@ public class StartScreen implements Screen, HighScoreListener {
                 atomics.setScreen(new tutorialScreen(atomics));
             }
 
+            isMusicPlaying = false;
             startButton.setTouched(false);
         }
 

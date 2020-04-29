@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 
 class GameAudio {
     static Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("water_bgmusic.ogg"));
+    static Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal("menumusic.ogg"));
     static Sound clock = Gdx.audio.newSound(Gdx.files.internal("clock.ogg"));
     static Sound gameOverSound = Gdx.audio.newSound(Gdx.files.internal("gameover.ogg"));
     static Sound bondingSound = Gdx.audio.newSound(Gdx.files.internal("phosphorusbonding.ogg"));
@@ -31,6 +32,12 @@ class GameAudio {
         backgroundMusic.setVolume(masterVolume);
         backgroundMusic.setLooping(true);
         backgroundMusic.play();
+    }
+
+    static void playMenuMusic() {
+        menuMusic.setVolume(masterVolume);
+        menuMusic.setLooping(true);
+        menuMusic.play();
     }
 
     static void playClock() {
@@ -106,7 +113,7 @@ class GameAudio {
     }
 
     static void playTractorSound() {
-        tractorSound.play(masterVolume);
+        tractorSound.loop(0.05f);
     }
 
     void dispose() {

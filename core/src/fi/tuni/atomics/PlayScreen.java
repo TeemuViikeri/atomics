@@ -28,7 +28,7 @@ public class PlayScreen implements Screen {
     private GameUtil gameUtil;
     private Item item;
     private Phosphorus phosphorus;
-    public static Score score;
+    static Score score;
     private Pipe pipes;
     static float HUD_Y;
     private Pause pause;
@@ -38,6 +38,7 @@ public class PlayScreen implements Screen {
     static float scale = 1/100f;
     static int levelMultiplier = 1;
     static int breakpoint = 250;
+    static boolean Game_paused = false;
     static float TILE_LENGTH_PIXELS = 32;
     static float TILES_AMOUNT_WIDTH = 106;
     static float TILES_AMOUNT_HEIGHT = 20;
@@ -57,7 +58,6 @@ public class PlayScreen implements Screen {
     static float SECOND_SCREEN_LEFT_SPAWN_POINT = 38 * TILE_LENGTH_PIXELS * scale;
     static float SECOND_SCREEN_RIGHT_SPAWN_POINT = 68 * TILE_LENGTH_PIXELS * scale;
     static float THIRD_SCREEN_SPAWN_POINT = 76 * TILE_LENGTH_PIXELS * scale;
-    static boolean Game_paused = false;
 
     PlayScreen(Atomics game) {
         this.game = game;
@@ -118,6 +118,11 @@ public class PlayScreen implements Screen {
         Atomics.batch.begin();
         gameUtil.drawBodies(bodies, Atomics.batch, player);
         pipes.draw(Atomics.batch);
+        score.draw(Atomics.batch, gameOverTimer + "",
+                (new Vector2(
+                ROOM_WIDTH_PIXELS * GameUtil.room +
+                PIPE_HORIZONTAL_PIXELS * (GameUtil.room - 1),
+                WORLD_HEIGHT_PIXELS / 2)));
         Atomics.batch.end();
 
         // HUD render
