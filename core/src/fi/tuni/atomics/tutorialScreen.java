@@ -53,6 +53,18 @@ public class tutorialScreen implements Screen {
             if (tutorialScreenCounter == 1) {
                 background = new Texture(Localization.getBundle().get("tutorial2"));
                 tutorialScreenCounter++;
+            } else if (tutorialScreenCounter == 2) {
+                background = new Texture(Localization.getBundle().get("tutorial2"));
+                tutorialScreenCounter++;
+            } else if (tutorialScreenCounter == 3) {
+                background = new Texture(Localization.getBundle().get("tutorial3"));
+                tutorialScreenCounter++;
+            } else if (tutorialScreenCounter == 4) {
+                background = new Texture(Localization.getBundle().get("tutorial4"));
+                tutorialScreenCounter++;
+            } else if (tutorialScreenCounter == 5) {
+                background = new Texture(Localization.getBundle().get("tutorial5"));
+                tutorialScreenCounter++;
             } else {
                 atomics.setScreen(new PlayScreen(atomics));
             }
