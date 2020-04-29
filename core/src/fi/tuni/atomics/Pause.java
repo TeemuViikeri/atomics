@@ -109,4 +109,9 @@ class Pause {
         return pauseButton;
     }
 
+    public void dispose() {
+        atomics.dispose();
+        pauseBackground.dispose();
+        pauseStage.dispose();
+    }
 }

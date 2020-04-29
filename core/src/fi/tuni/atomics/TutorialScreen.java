@@ -66,7 +66,10 @@ public class TutorialScreen implements Screen {
                 background = new Texture(Localization.getBundle().get("tutorial5"));
                 tutorialScreenCounter++;
             } else {
-                atomics.setScreen(new PlayScreen(atomics));
+                if (InfoScreen.tutorialFromInfoScreen)
+                    atomics.setScreen(new InfoScreen(atomics));
+                else
+                  atomics.setScreen(new PlayScreen(atomics));
             }
             nextButton.setTouched(false);
         }
@@ -99,6 +102,9 @@ public class TutorialScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        atomics.dispose();
+        batch.dispose();
+        background.dispose();
+        stage.dispose();
     }
 }

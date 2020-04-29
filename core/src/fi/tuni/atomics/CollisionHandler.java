@@ -17,30 +17,34 @@ class CollisionHandler implements ContactListener {
 
         if (isBulletContactingWall(bodyA, bodyB)) {
             if (bodyA.getUserData() instanceof Bullet) {
+                ((Bullet) bodyA.getUserData()).dispose();
                 bodyA.setUserData("dead");
             } else {
+                ((Bullet) bodyB.getUserData()).dispose();
                 bodyB.setUserData("dead");
             }
         }
 
         if (isNitrogenContactingWall(bodyA, bodyB)) {
-                if (bodyA.getUserData() instanceof Nitrogen) {
-                    if (GameUtil.room == 3) {
-                        if (!SettingsScreen.isMuted)
-                            GameAudio.playVacuumSound(0.08f);
-                    }
-
-                    Score.collectedNitrogenCounter++;
-                    bodyA.setUserData("dead");
-                } else if (bodyB.getUserData() instanceof Nitrogen) {
-                    if (GameUtil.room == 3) {
-                        if (!SettingsScreen.isMuted)
-                            GameAudio.playVacuumSound(0.08f);
-                    }
-
-                    Score.collectedNitrogenCounter++;
-                    bodyB.setUserData("dead");
+            if (bodyA.getUserData() instanceof Nitrogen) {
+                if (GameUtil.room == 3) {
+                    if (!SettingsScreen.isMuted)
+                        GameAudio.playVacuumSound(0.08f);
                 }
+
+                ((Nitrogen) bodyA.getUserData()).dispose();
+                Score.collectedNitrogenCounter++;
+                bodyA.setUserData("dead");
+            } else if (bodyB.getUserData() instanceof Nitrogen) {
+                if (GameUtil.room == 3) {
+                    if (!SettingsScreen.isMuted)
+                        GameAudio.playVacuumSound(0.08f);
+                }
+
+                ((Nitrogen) bodyB.getUserData()).dispose();
+                Score.collectedNitrogenCounter++;
+                bodyB.setUserData("dead");
+            }
 
         }
 
@@ -56,15 +60,17 @@ class CollisionHandler implements ContactListener {
             if (!SettingsScreen.isMuted)
                 GameAudio.playBondingSound();
 
-            bodyA.setUserData("dead");
-            bodyB.setUserData("dead");
-            }
+            if (bodyA.getUserData() instanceof Bullet) {
+                ((Bullet) bodyA.getUserData()).dispose();
+                ((Phosphorus) bodyB.getUserData()).dispose();
 
-        if (isMicrobeContactingWall(bodyA, bodyB)) {
-            if (bodyA.getUserData() instanceof Microbe) {
-
-            } else if (bodyB.getUserData() instanceof Microbe) {
-
+                bodyA.setUserData("dead");
+                bodyB.setUserData("dead");
+            } else {
+                ((Phosphorus) bodyA.getUserData()).dispose();
+                ((Bullet) bodyB.getUserData()).dispose();
+                bodyA.setUserData("dead");
+                bodyB.setUserData("dead");
             }
         }
 
@@ -77,8 +83,10 @@ class CollisionHandler implements ContactListener {
             }
 
             if (bodyA.getUserData() instanceof Phosphorus) {
+                ((Phosphorus) bodyA.getUserData()).dispose();
                 bodyA.setUserData("dead");
             } else {
+                ((Phosphorus) bodyB.getUserData()).dispose();
                 bodyB.setUserData("dead");
             }
         }
@@ -90,6 +98,7 @@ class CollisionHandler implements ContactListener {
                 if (!SettingsScreen.isMuted)
                     GameAudio.playCollectablePhosphorusPickedSound();
 
+                ((CollectablePhosphorus) bodyA.getUserData()).dispose();
                 Score.collectedPhosphorusCounter++;
                 bodyA.setUserData("dead");
             } else {
@@ -98,6 +107,7 @@ class CollisionHandler implements ContactListener {
                 if (!SettingsScreen.isMuted)
                     GameAudio.playCollectablePhosphorusPickedSound();
 
+                ((CollectablePhosphorus) bodyB.getUserData()).dispose();
                 Score.collectedPhosphorusCounter++;
                 bodyB.setUserData("dead");
             }
@@ -112,9 +122,11 @@ class CollisionHandler implements ContactListener {
             }
 
             if (bodyA.getUserData() instanceof Microbe) {
+                ((Microbe) bodyA.getUserData()).dispose();
                 ((Microbe) bodyA.getUserData()).die();
                 bodyA.setUserData("dead");
             } else {
+                ((Microbe) bodyB.getUserData()).dispose();
                 ((Microbe) bodyB.getUserData()).die();
                 bodyB.setUserData("dead");
             }
@@ -131,6 +143,8 @@ class CollisionHandler implements ContactListener {
 
                     if (bodyB.getUserData() instanceof RareItem) {
                         Score.collectRareItem();
+                        ((RareItem) bodyB.getUserData()).dispose();
+
 
                         if (GameUtil.room == 1) {
                             if (!SettingsScreen.isMuted)
@@ -138,8 +152,11 @@ class CollisionHandler implements ContactListener {
                         }
                     } else if (!(bodyB.getUserData() instanceof RareItem)){
                         Score.collectItem();
+                        ((Item) bodyB.getUserData()).dispose();
+
                     }
 
+                    ((Item) bodyB.getUserData()).dispose();
                     bodyB.setUserData("dead");
                 }
             } else if (bodyB.getUserData() instanceof Wall) {
@@ -152,13 +169,15 @@ class CollisionHandler implements ContactListener {
 
                     if (bodyA.getUserData() instanceof RareItem) {
                         Score.collectRareItem();
+                        ((RareItem) bodyA.getUserData()).dispose();
 
                         if (GameUtil.room ==1) {
                             if (!SettingsScreen.isMuted)
                                 GameAudio.playRareItemPickedSound();
                         }
-                    } else if (!(bodyB.getUserData() instanceof RareItem)) {
+                    } else if (!(bodyA.getUserData() instanceof RareItem)) {
                         Score.collectItem();
+                        ((Item) bodyA.getUserData()).dispose();
                     }
 
                     bodyA.setUserData("dead");
@@ -218,12 +237,6 @@ class CollisionHandler implements ContactListener {
         if (a.getUserData() instanceof Player && b.getUserData() instanceof Phosphorus) {
             return true;
         } else return a.getUserData() instanceof Phosphorus && b.getUserData() instanceof Player;
-    }
-
-    private boolean isMicrobeContactingWall(Body a, Body b) {
-        if (a.getUserData() instanceof Microbe && b.getUserData() instanceof Wall) {
-            return true;
-        } else return a.getUserData() instanceof Wall && b.getUserData() instanceof Microbe;
     }
 
     private boolean isPlayerContactingMicrobe(Body a, Body b) {

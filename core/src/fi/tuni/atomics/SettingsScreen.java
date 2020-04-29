@@ -151,6 +151,11 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        batch.dispose();
+        atomics.dispose();
+        background.dispose();
+        soundsButtonOnTexture.dispose();
+        soundsButtonOffTexture.dispose();
+        stage.dispose();
     }
 }

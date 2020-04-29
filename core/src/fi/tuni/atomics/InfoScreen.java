@@ -19,6 +19,7 @@ public class InfoScreen implements Screen {
     private MenuButton tamkButton;
     private MenuButton tutorialButton;
     private Stage stage;
+    static boolean tutorialFromInfoScreen;
 
     InfoScreen(Atomics atomics) {
         this.atomics = atomics;
@@ -92,6 +93,7 @@ public class InfoScreen implements Screen {
             tamkButton.setTouched(false);
         }
         if (tutorialButton.isTouched()) {
+            tutorialFromInfoScreen = true;
             atomics.setScreen(new TutorialScreen(atomics));
             tutorialButton.setTouched(false);
         }
@@ -125,6 +127,9 @@ public class InfoScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        batch.dispose();
+        stage.dispose();
+        background.dispose();
+        atomics.dispose();
     }
 }

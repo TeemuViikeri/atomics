@@ -185,4 +185,14 @@ class Controls {
     Button getShootButton() {
         return shootButton;
     }
+
+    public void dispose() {
+        stage.dispose();
+        speedButtonUpTexture.dispose();
+        speedButtonDownTexture.dispose();
+        shootButtonUpTexture.dispose();
+        shootButtonDownTexture.dispose();
+        fixButtonUpTexture.dispose();
+        fixButtonDownTexture.dispose();
+    }
 }

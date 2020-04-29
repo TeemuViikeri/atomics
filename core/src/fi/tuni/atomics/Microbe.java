@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Array;
 class Microbe extends GameObject {
     private final int sheetRows = 1;
     private final int sheetCols = 2;
-    static private Texture animationSheet = new Texture("happyMicrobe.png");
+    private Texture animationSheet = new Texture("happyMicrobe.png");
     private Animation<TextureRegion> animation;
     private Vector2 spawnPoint;
     private float stateTime;
@@ -141,5 +141,9 @@ class Microbe extends GameObject {
                                 - PlayScreen.TILE_LENGTH_PIXELS * 4) * PlayScreen.scale))));
             }
         }
+    }
+
+    public void dispose() {
+        animationSheet.dispose();
     }
 }

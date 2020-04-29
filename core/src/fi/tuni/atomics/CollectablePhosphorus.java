@@ -72,4 +72,8 @@ class CollectablePhosphorus extends GameObject {
     Animation<TextureRegion> getAnimation() {
         return animation;
     }
+
+    public void dispose() {
+        animationSheet.dispose();
+    }
 }

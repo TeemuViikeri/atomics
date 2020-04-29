@@ -229,4 +229,12 @@ class Player extends GameObject {
     float getDeltaY() {
         return deltaY;
     }
+
+    public void dispose() {
+        texture.dispose();
+        controls.dispose();
+        hp1.dispose();
+        hp2.dispose();
+        hp3.dispose();
+    }
 }

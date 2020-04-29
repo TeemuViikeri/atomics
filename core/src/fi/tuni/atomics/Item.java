@@ -121,4 +121,20 @@ class Item extends GameObject {
         else if (itemInt == 39) this.texture = ringTexture;
         else if (itemInt == 40) this.texture = denturesTexture;
     }
+
+    public void dispose() {
+        fishTexture.dispose();
+        condomTexture.dispose();
+        glassesTexture.dispose();
+        slimeTexture.dispose();
+        spoonTexture.dispose();
+        appleTexture.dispose();
+        screwTexture.dispose();
+        sockTexture.dispose();
+        pacifierTexture.dispose();
+        clockTexture.dispose();
+        phoneTexture.dispose();
+        ringTexture.dispose();
+        denturesTexture.dispose();
+    }
 }

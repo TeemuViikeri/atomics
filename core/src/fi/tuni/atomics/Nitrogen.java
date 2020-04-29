@@ -76,4 +76,8 @@ class Nitrogen extends GameObject {
 
         body.setLinearVelocity(force);
     }
+
+    public void dispose() {
+        texture.dispose();
+    }
 }

@@ -117,6 +117,26 @@ class GameAudio {
     }
 
     void dispose() {
-        this.dispose();
+        backgroundMusic.dispose();
+        menuMusic.dispose();
+        clock.dispose();
+        gameOverSound.dispose();
+        bondingSound.dispose();
+        shootingSound.dispose();
+        microbeSpawnSound.dispose();
+        playPipeBrokenSound.dispose();
+        playPipeFixedSound.dispose();
+        playFixSound.dispose();
+        rareItemPickedSound.dispose();
+        collectablePhosphorusPickedSound.dispose();
+        loseLifeSound.dispose();
+        hitItemSound.dispose();
+        vacuumSound.dispose();
+        pauseSound.dispose();
+        settingsSwitchSound.dispose();
+        playGameSound.dispose();
+        pauseToMenuSound.dispose();
+        backSound.dispose();
+        tractorSound.dispose();
     }
 }

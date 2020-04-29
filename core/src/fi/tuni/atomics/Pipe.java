@@ -220,6 +220,13 @@ class Pipe extends GameObject {
     boolean isDead() {
         return dead;
     }
+
+    public void dispose() {
+        animationSheet.dispose();
+        animationSheet2.dispose();
+        hammerAnimationSheet.dispose();
+        microbe.dispose();
+    }
 }
 
 

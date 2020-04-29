@@ -1,6 +1,5 @@
 package fi.tuni.atomics;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
@@ -11,10 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.List;
-
-import static fi.tuni.atomics.PlayScreen.ROOM_HEIGHT_PIXELS;
-import static fi.tuni.atomics.PlayScreen.ROOM_WIDTH_PIXELS;
-import static fi.tuni.atomics.PlayScreen.scale;
 
 public class HighScoreScreen implements HighScoreListener, Screen {
     private SpriteBatch batch;
@@ -130,6 +125,9 @@ public class HighScoreScreen implements HighScoreListener, Screen {
 
     @Override
     public void dispose() {
-
+        batch.dispose();
+        stage.dispose();
+        background.dispose();
+        atomics.dispose();
     }
 }

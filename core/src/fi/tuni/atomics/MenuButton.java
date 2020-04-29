@@ -50,4 +50,8 @@ public class MenuButton extends Actor {
     public void act(float delta) {
         super.act(delta);
     }
+
+    public void dispose() {
+        texture.dispose();
+    }
 }

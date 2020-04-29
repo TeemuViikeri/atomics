@@ -215,9 +215,6 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        //Controls.getStage().getViewport().update(width, height, true);
-        //player.getControls().createButtons(player);
-        //score = new Score();
     }
 
     @Override
@@ -235,6 +232,16 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
+        game.dispose();
         gameAudio.dispose();
+        debugRenderer.dispose();
+        score.dispose();
+        world.dispose();
+        tiledMap.dispose();
+        player.dispose();
+        pause.dispose();
+        item.dispose();
+        phosphorus.dispose();
+        pipes.dispose();
     }
 }

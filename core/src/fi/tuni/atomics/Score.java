@@ -99,4 +99,9 @@ class Score {
     static void collectItem() {
         score++;
     }
+
+    public void dispose() {
+        font.dispose();
+        font2.dispose();
+    }
 }

@@ -47,4 +47,8 @@ class Bullet extends GameObject {
 
         return fixtureDef;
     }
+
+    public void dispose() {
+        texture.dispose();
+    }
 }

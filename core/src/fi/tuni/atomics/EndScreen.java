@@ -29,7 +29,6 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
     private Texture animationSheet = new Texture("endscreen.png");
     private Animation<TextureRegion> animation;
     private float stateTime;
-    private Texture background;
     private GameUtil gameUtil;
     private Stage stage;
     private MenuButton restartButton;
@@ -45,7 +44,6 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
         camera = new OrthographicCamera();
         camera.setToOrtho(false,
                 Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        background = new Texture("badlogic.jpg");
         gameUtil = new GameUtil();
         stage = new Stage();
         float buttonWidth = 300f * Gdx.graphics.getWidth() / 960;
@@ -104,10 +102,11 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
         if (restartButton.isTouched()) {
             if (!SettingsScreen.isMuted) {
                 GameAudio.playPlayGameSound();
-                GameAudio.playTractorSound();
+                GameAudio.tractorSound.stop();
             }
 
             atomics.setScreen(new PlayScreen(atomics));
+            restartButton.setTouched(false);
         }
 
         if (exitButton.isTouched()) {
@@ -159,7 +158,10 @@ public class EndScreen implements Screen, Input.TextInputListener, HighScoreList
 
     @Override
     public void dispose() {
-
+        batch.dispose();
+        stage.dispose();
+        animationSheet.dispose();
+        atomics.dispose();
     }
 
     @Override

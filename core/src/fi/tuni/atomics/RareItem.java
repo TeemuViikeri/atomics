@@ -11,4 +11,9 @@ class RareItem extends Item {
         targetWidth = width * 10;
         targetHeight = height * 10;
     }
+
+    public void dispose() {
+        texture.dispose();
+        super.dispose();
+    }
 }
