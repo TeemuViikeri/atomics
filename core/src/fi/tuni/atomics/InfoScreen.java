@@ -31,14 +31,14 @@ public class InfoScreen implements Screen {
         float exitWidth = 500f * Gdx.graphics.getWidth() / 960;
         float exitHeight = 100f * Gdx.graphics.getHeight() / 640;
         float buttonWidth = 300f * Gdx.graphics.getWidth() / 960;
-        float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
+        float buttonHeight = 130f * Gdx.graphics.getHeight() / 640;
         exitButton = new MenuButton(exitWidth, exitHeight,
                 Gdx.graphics.getWidth() / 2f - exitWidth / 2,
                 exitHeight / 2,
                 new Texture(Localization.getBundle().get("back")));
         tutorialButton = new MenuButton(exitWidth, exitHeight,
                 Gdx.graphics.getWidth() / 2f - exitWidth / 2,
-                buttonHeight * 2f,
+                exitHeight * 2f,
                 new Texture(Localization.getBundle().get("tutorialbutton")));
         tikoButton = new MenuButton(buttonWidth, buttonHeight,
                 16,

@@ -33,7 +33,7 @@ class Score {
         parameter.shadowColor = Color.BLACK;
         parameter.shadowOffsetX = 3;
         parameter.shadowOffsetY = 3;
-        parameterHiscores.size = 40 * Gdx.graphics.getHeight() / 640;
+        parameterHiscores.size = 50 * Gdx.graphics.getHeight() / 640;
         parameterHiscores.shadowColor = Color.BLACK;
         parameterHiscores.shadowOffsetX = 3;
         parameterHiscores.shadowOffsetY = 3;
