@@ -16,20 +16,29 @@ class Score {
     public static int collectedNitrogenCounter = 0;
     private FreeTypeFontGenerator fontGenerator;
     private BitmapFont font;
+    private BitmapFont font2;
     private Label.LabelStyle textStyle;
     private GlyphLayout layout;
+    private GameUtil gameUtil = new GameUtil();
+    private FreeTypeFontGenerator.FreeTypeFontParameter parameter
+            = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    private FreeTypeFontGenerator.FreeTypeFontParameter parameterHiscores
+            = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
     Score() {
         Score.collectedNitrogenCounter = 0;
         Score.collectedPhosphorusCounter = 0;
         score = 0;
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter
-                = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 40 * Gdx.graphics.getWidth() / 960;
         parameter.shadowColor = Color.BLACK;
         parameter.shadowOffsetX = 3;
         parameter.shadowOffsetY = 3;
+        parameterHiscores.size = 50 * Gdx.graphics.getHeight() / 640;
+        parameterHiscores.shadowColor = Color.BLACK;
+        parameterHiscores.shadowOffsetX = 3;
+        parameterHiscores.shadowOffsetY = 3;
+        font2 = fontGenerator.generateFont(parameterHiscores);
         font = fontGenerator.generateFont(parameter);
         textStyle = new Label.LabelStyle();
         textStyle.font = font;
@@ -37,15 +46,30 @@ class Score {
         layout.setText(font, "Score:");
     }
 
-    void draw(SpriteBatch batch) {
+    void drawScore(SpriteBatch batch) {
         font.draw(batch, Localization.getBundle().get("score") +
-                        score + "    " + getScoreMultiplier() + "x",
+                        score + "    " + getScoreMultiplier() + "x" + "    " +
+                        Localization.getBundle().get("items") + gameUtil.getItemCount() + "/40",
                 PlayScreen.TILE_LENGTH_PIXELS * 2,
                 PlayScreen.HUD_Y + layout.height);
     }
 
     void draw(SpriteBatch batch, String text, Vector2 pos) {
         font.draw(batch, text, pos.x, pos.y);
+    }
+
+    void drawHiscores(SpriteBatch batch, String text, Vector2 pos) {
+        font2.draw(batch, text, pos.x, pos.y);
+    }
+
+    float getTextWidthHiscores(String text) {
+        layout.setText(font2, text);
+        return layout.width;
+    }
+
+    float getTextHeightHiscores(String text) {
+        layout.setText(font2, text);
+        return layout.height;
     }
 
     float getTextWidth(String text) {

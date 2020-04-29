@@ -3,13 +3,10 @@ package fi.tuni.atomics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import java.util.List;
 
@@ -106,10 +103,10 @@ public class StartScreen implements Screen, HighScoreListener {
             }
 
             if (!Memory.getFirstStartup()) {
-                atomics.setScreen(new tutorialScreen(atomics));
+                atomics.setScreen(new TutorialScreen(atomics));
                 Memory.setFirstStartup();
             } else {
-                atomics.setScreen(new tutorialScreen(atomics));
+                atomics.setScreen(new PlayScreen(atomics));
             }
 
             isMusicPlaying = false;
@@ -127,7 +124,7 @@ public class StartScreen implements Screen, HighScoreListener {
         }
 
         if (infoButton.isTouched()) {
-            atomics.setScreen(new infoScreen(atomics));
+            atomics.setScreen(new InfoScreen(atomics));
             startButton.setTouched(false);
         }
 
