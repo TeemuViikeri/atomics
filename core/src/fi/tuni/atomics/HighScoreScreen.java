@@ -16,8 +16,8 @@ public class HighScoreScreen implements HighScoreListener, Screen {
     private OrthographicCamera camera;
     private Texture background;
     private Atomics atomics;
-    GameUtil gameUtil = new GameUtil();
-    Score score = new Score();
+    private GameUtil gameUtil = new GameUtil();
+    private Score score = new Score();
     private List<HighScoreEntry> hiscores;
     private boolean fetched = false;
     private MenuButton exitButton;
@@ -40,7 +40,7 @@ public class HighScoreScreen implements HighScoreListener, Screen {
         float buttonWidth = 500f * Gdx.graphics.getWidth() / 960;
         float buttonHeight = 100f * Gdx.graphics.getHeight() / 640;
         exitButton = new MenuButton(buttonWidth, buttonHeight,
-                Gdx.graphics.getWidth() / 2 - buttonWidth / 2,
+                Gdx.graphics.getWidth() / 2f - buttonWidth / 2,
                 buttonHeight / 2,
                 new Texture(Localization.getBundle().get("back")));
         stage.addActor(exitButton);
